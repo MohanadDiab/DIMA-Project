@@ -67,27 +67,6 @@ class _RegisterViewState extends State<RegisterView> {
                 await user?.sendEmailVerification();
                 Navigator.of(context).pushNamed(verifyEmailRoute);
               } on FirebaseAuthException catch (e) {
-                if (e.code == 'weak-passowrd') {
-                  await showErrorDialog(
-                    context,
-                    'Weak password',
-                  );
-                } else if (e.code == 'email-already-in-use') {
-                  await showErrorDialog(
-                    context,
-                    "Email already in use!",
-                  );
-                } else if (e.code == 'invalid-email') {
-                  await showErrorDialog(
-                    context,
-                    "Invalid email",
-                  );
-                } else {
-                  await showErrorDialog(
-                    context,
-                    "Error: ${e.code}",
-                  );
-                }
               } catch (e) {
                 await showErrorDialog(
                   context,
