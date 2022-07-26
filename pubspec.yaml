@@ -38,6 +38,9 @@ dependencies:
   cloud_firestore: ^3.2.1
   firebase_analytics: ^9.1.12
   firebase_auth: ^3.4.1
+  sqflite: ^2.0.3
+  path: ^1.8.1
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
