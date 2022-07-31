@@ -2,4 +2,4 @@ const loginROute = '/login/';
 const registerRoute = '/register/';
 const notesRoute = '/notes/';
 const verifyEmailRoute = '/verify-email/';
-const newNoteRoute = '/notes/new-note/';
+const createOrUpdatedNoteView = '/notes/new-note/';

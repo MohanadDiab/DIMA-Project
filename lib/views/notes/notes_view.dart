@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testapp/services/auth/auth_service.dart';
 import 'package:testapp/services/crud/notes_service.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
+import 'package:testapp/views/notes/create_update_note_view.dart';
 import 'package:testapp/views/notes/notes_list_view.dart';
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
@@ -32,7 +33,7 @@ class _NotesViewState extends State<NotesView> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(newNoteRoute);
+              Navigator.of(context).pushNamed(createOrUpdatedNoteView);
             },
           ),
           PopupMenuButton<MenuAction>(
@@ -77,6 +78,12 @@ class _NotesViewState extends State<NotesView> {
                           notes: allNotes,
                           onDeleteNote: (note) async {
                             await _notesService.deleteNote(id: note.id);
+                          },
+                          onTap: (note) {
+                            Navigator.of(context).pushNamed(
+                              createOrUpdatedNoteView,
+                              arguments: note,
+                            );
                           },
                         );
                       } else {
