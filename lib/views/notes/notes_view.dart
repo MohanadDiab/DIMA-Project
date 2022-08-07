@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constants/routes.dart';
+import 'package:testapp/enums/menu_action.dart';
+import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_service.dart';
+import 'package:testapp/services/auth/bloc/auth_bloc.dart';
+import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_note.dart';
 import 'package:testapp/services/cloud/firebase_cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 import 'package:testapp/views/notes/notes_list_view.dart';
-import '../../constants/routes.dart';
-import '../../enums/menu_action.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
+
+extension Count<T extends Iterable> on Stream<T> {
+  Stream<int> get getLength => map((event) => event.length);
+}
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
 
   @override
-  State<NotesView> createState() => _NotesViewState();
+  _NotesViewState createState() => _NotesViewState();
 }
 
 class _NotesViewState extends State<NotesView> {
@@ -28,13 +36,24 @@ class _NotesViewState extends State<NotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Notes'),
+        title: StreamBuilder(
+          stream: _notesService.allNotes(ownerUserId: userId).getLength,
+          builder: (context, AsyncSnapshot<int> snapshot) {
+            if (snapshot.hasData) {
+              final noteCount = snapshot.data ?? 0;
+              final text = context.loc.notes_title(noteCount);
+              return Text(text);
+            } else {
+              return const Text('');
+            }
+          },
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(createOrUpdatedNoteView);
+              Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
             },
+            icon: const Icon(Icons.add),
           ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
@@ -42,23 +61,21 @@ class _NotesViewState extends State<NotesView> {
                 case MenuAction.logout:
                   final shouldLogout = await showLogOutDialog(context);
                   if (shouldLogout) {
-                    await AuthService.firebase().logOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      loginROute,
-                      (_) => false,
-                    );
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogOut(),
+                        );
                   }
               }
             },
             itemBuilder: (context) {
-              return const [
+              return [
                 PopupMenuItem<MenuAction>(
                   value: MenuAction.logout,
-                  child: Text("Log out"),
+                  child: Text(context.loc.logout_button),
                 ),
               ];
             },
-          ),
+          )
         ],
       ),
       body: StreamBuilder(
@@ -76,7 +93,7 @@ class _NotesViewState extends State<NotesView> {
                   },
                   onTap: (note) {
                     Navigator.of(context).pushNamed(
-                      createOrUpdatedNoteView,
+                      createOrUpdateNoteRoute,
                       arguments: note,
                     );
                   },

@@ -15,20 +15,19 @@ Future<T?> showGenericDialog<T>({
       return AlertDialog(
         title: Text(title),
         content: Text(content),
-        actions: options.keys.map(
-          (optionTitle) {
-            final value = options[optionTitle];
-            return TextButton(
-                onPressed: () {
-                  if (value != null) {
-                    Navigator.of(context).pop(value);
-                  } else {
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Text(optionTitle));
-          },
-        ).toList(),
+        actions: options.keys.map((optionTitle) {
+          final value = options[optionTitle];
+          return TextButton(
+            onPressed: () {
+              if (value != null) {
+                Navigator.of(context).pop(value);
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Text(optionTitle),
+          );
+        }).toList(),
       );
     },
   );

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_service.dart';
 import 'package:testapp/utilities/dialogs/cannot_share_empty_note_dialog.dart';
-import 'package:testapp/utilities/generic/get_arguments.dart';
+import 'package:testapp/utilities/generics/get_arguments.dart';
 import 'package:testapp/services/cloud/cloud_note.dart';
 import 'package:testapp/services/cloud/firebase_cloud_storage.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({Key? key}) : super(key: key);
 
   @override
-  State<CreateUpdateNoteView> createState() => _CreateUpdateNoteViewState();
+  _CreateUpdateNoteViewState createState() => _CreateUpdateNoteViewState();
 }
 
 class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
@@ -69,7 +70,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     }
   }
 
-  void _saveNoteIfNotEmpty() async {
+  void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
     if (note != null && text.isNotEmpty) {
@@ -83,7 +84,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   @override
   void dispose() {
     _deleteNoteIfTextIsEmpty();
-    _saveNoteIfNotEmpty();
+    _saveNoteIfTextNotEmpty();
     _textController.dispose();
     super.dispose();
   }
@@ -92,7 +93,9 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Note'),
+        title: Text(
+          context.loc.note,
+        ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -103,9 +106,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                 Share.share(text);
               }
             },
-            icon: const Icon(
-              Icons.share,
-            ),
+            icon: const Icon(Icons.share),
           ),
         ],
       ),
@@ -119,8 +120,8 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                 controller: _textController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Start typing your note...',
+                decoration: InputDecoration(
+                  hintText: context.loc.start_typing_your_note,
                 ),
               );
             default:

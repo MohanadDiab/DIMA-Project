@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/routes.dart';
-import 'package:testapp/services/auth/auth_service.dart';
+import 'package:testapp/helpers/loading/loading_screen.dart';
+import 'package:testapp/services/auth/bloc/auth_bloc.dart';
+import 'package:testapp/services/auth/bloc/auth_event.dart';
+import 'package:testapp/services/auth/bloc/auth_state.dart';
+import 'package:testapp/services/auth/firebase_auth_provider.dart';
+import 'package:testapp/views/forgot_password_view.dart';
 import 'package:testapp/views/login_view.dart';
+import 'package:testapp/views/page_builder.dart';
 import 'package:testapp/views/notes/create_update_note_view.dart';
-import 'package:testapp/views/notes/notes_view.dart';
 import 'package:testapp/views/register_view.dart';
 import 'package:testapp/views/verify_email_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(
     MaterialApp(
-      title: 'Flutter Demo',
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      title: 'Delever',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: const HomePage(),
+      home: BlocProvider<AuthBloc>(
+        create: (context) => AuthBloc(FirebaseAuthProvider()),
+        child: const HomePage(),
+      ),
       routes: {
-        loginROute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        notesRoute: (context) => const NotesView(),
-        verifyEmailRoute: (context) => const VerifyEmailView(),
-        createOrUpdatedNoteView: (context) => const CreateUpdateNoteView(),
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
     ),
   );
@@ -33,23 +41,33 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: AuthService.firebase().initialize(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            final user = AuthService.firebase().currentUser;
-            if (user != null) {
-              if (user.isEmailVerified) {
-                return const NotesView();
-              } else {
-                return const VerifyEmailView();
-              }
-            } else {
-              return const LoginView();
-            }
-          default:
-            return const CircularProgressIndicator();
+    context.read<AuthBloc>().add(const AuthEventInitialize());
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+            context: context,
+            text: state.loadingText ?? 'Please wait a moment',
+          );
+        } else {
+          LoadingScreen().hide();
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthStateLoggedIn) {
+          return const MapView();
+        } else if (state is AuthStateNeedsVerification) {
+          return const VerifyEmailView();
+        } else if (state is AuthStateLoggedOut) {
+          return const LoginView();
+        } else if (state is AuthStateForgotPassword) {
+          return const ForgotPasswordView();
+        } else if (state is AuthStateRegistering) {
+          return const RegisterView();
+        } else {
+          return const Scaffold(
+            body: CircularProgressIndicator(),
+          );
         }
       },
     );
