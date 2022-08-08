@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
@@ -56,21 +57,13 @@ class _DriverProfileState extends State<DriverProfile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Mohanad Diab',
-                          style: GoogleFonts.oswald(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
-                            color: color2,
-                          ),
+                        GenericText(
+                          text: 'Mohanad Diab',
+                          color: color2,
                         ),
-                        Text(
-                          'Deliveryman Account',
-                          style: GoogleFonts.oswald(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
-                            color: color2,
-                          ),
+                        GenericText(
+                          text: 'Deliveryman Account',
+                          color: color2,
                         ),
                       ],
                     ),
@@ -92,13 +85,9 @@ class _DriverProfileState extends State<DriverProfile> {
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  'Settings',
-                  style: GoogleFonts.oswald(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 24,
-                    color: Colors.grey.shade700,
-                  ),
+                GenericText(
+                  text: 'Settings',
+                  color: color4,
                 ),
                 const SizedBox(
                   height: 20,
@@ -114,6 +103,7 @@ class _DriverProfileState extends State<DriverProfile> {
                 GenericButton(
                   primaryColor: color4,
                   pressColor: color3,
+                  textColor: color2,
                   text: 'Edit info',
                   onPressed: () {},
                 ),
@@ -123,8 +113,12 @@ class _DriverProfileState extends State<DriverProfile> {
                 GenericButton(
                   primaryColor: color4,
                   pressColor: color3,
+                  textColor: color2,
                   text: 'Change language',
-                  onPressed: () {},
+                  onPressed: () {
+                    final user = FirebaseAuth.instance.currentUser;
+                    print(user.toString());
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -132,6 +126,7 @@ class _DriverProfileState extends State<DriverProfile> {
                 GenericButton(
                   primaryColor: color4,
                   pressColor: color3,
+                  textColor: color2,
                   text: 'Sign out',
                   onPressed: () async {
                     final shouldLogout = await showLogOutDialog(context);
@@ -147,44 +142,6 @@ class _DriverProfileState extends State<DriverProfile> {
           ],
         ),
       ],
-    );
-  }
-}
-
-class GenericButton extends StatelessWidget {
-  const GenericButton({
-    Key? key,
-    required this.primaryColor,
-    required this.pressColor,
-    required this.text,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final Color primaryColor;
-  final Color pressColor;
-  final String text;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        onPrimary: pressColor,
-        primary: primaryColor,
-        fixedSize: Size(MediaQuery.of(context).size.width * .8, 60),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: GoogleFonts.oswald(
-          fontWeight: FontWeight.w500,
-          fontSize: 24,
-          color: color2,
-        ),
-      ),
     );
   }
 }

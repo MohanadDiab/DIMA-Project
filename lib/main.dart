@@ -8,7 +8,7 @@ import 'package:testapp/services/auth/bloc/auth_state.dart';
 import 'package:testapp/services/auth/firebase_auth_provider.dart';
 import 'package:testapp/views/forgot_password_view.dart';
 import 'package:testapp/views/login_view.dart';
-import 'package:testapp/views/page_builder.dart';
+import 'package:testapp/views/driver_pages/page_builder.dart';
 import 'package:testapp/views/notes/create_update_note_view.dart';
 import 'package:testapp/views/register_view.dart';
 import 'package:testapp/views/verify_email_view.dart';

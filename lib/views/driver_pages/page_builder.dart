@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-
+import 'package:testapp/views/driver_pages/driver_chat.dart';
 import 'package:testapp/views/maps/driver_map.dart';
-import 'package:testapp/views/profile/driver_profile.dart';
+import 'package:testapp/views/driver_pages/driver_profile.dart';
+import 'package:testapp/views/driver_pages/driver_requests.dart';
 
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
@@ -56,12 +56,8 @@ class _MapViewState extends State<MapView> {
 
 final _widgetList = <Widget>[
   DriverMap(),
-  Container(
-    color: Colors.green,
-  ),
-  Container(
-    color: Colors.blue,
-  ),
+  const DriverRequestsView(),
+  const ChatPage(),
   const DriverProfile(),
 ];
 
