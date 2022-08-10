@@ -79,68 +79,21 @@ class DriverMapState extends State<DriverMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _originController,
-                    decoration: InputDecoration(hintText: ' Origin'),
-                    onChanged: (value) {
-                      print(value);
-                    },
-                  ),
-                  TextFormField(
-                    controller: _destinationController,
-                    decoration: InputDecoration(hintText: ' Destination'),
-                    onChanged: (value) {
-                      print(value);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              onPressed: () async {
-                var directions = await LocationService().getDirections(
-                  _originController.text,
-                  _destinationController.text,
-                );
-                _goToPlace(
-                  directions['start_location']['lat'],
-                  directions['start_location']['lng'],
-                  directions['bounds_ne'],
-                  directions['bounds_sw'],
-                );
-
-                _setPolyline(directions['polyline_decoded']);
-              },
-              icon: Icon(Icons.search),
-            ),
-          ],
-        ),
-        Expanded(
-          child: GoogleMap(
-            mapType: MapType.normal,
-            markers: _markers,
-            polygons: _polygons,
-            polylines: _polylines,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-            onTap: (point) {
-              setState(() {
-                polygonLatLngs.add(point);
-                _setPolygon();
-              });
-            },
-          ),
-        ),
-      ],
+    return GoogleMap(
+      mapType: MapType.normal,
+      markers: _markers,
+      polygons: _polygons,
+      polylines: _polylines,
+      initialCameraPosition: _kGooglePlex,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+      onTap: (point) {
+        setState(() {
+          polygonLatLngs.add(point);
+          _setPolygon();
+        });
+      },
     );
   }
 

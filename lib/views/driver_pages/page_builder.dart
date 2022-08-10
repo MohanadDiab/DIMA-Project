@@ -55,10 +55,10 @@ class _MapViewState extends State<MapView> {
 }
 
 final _widgetList = <Widget>[
-  DriverMap(),
-  const DriverRequestsView(),
-  const ChatPage(),
-  const DriverProfile(),
+  const Text('Hi'),
+  const Text('Hi'),
+  const Text('Hi'),
+  const Text('Hi'),
 ];
 
 final _navyItems = <BottomNavyBarItem>[
