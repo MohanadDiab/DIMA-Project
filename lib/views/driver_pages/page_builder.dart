@@ -33,21 +33,26 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SizedBox.expand(
-          child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() => _currentIndex = index);
+        body: _widgetList[_currentIndex],
+        bottomNavigationBar: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            indicatorColor: Colors.blueGrey.shade100,
+            labelTextStyle: MaterialStateProperty.all(
+              const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          child: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) => setState(
+              () {
+                _currentIndex = index;
               },
-              children: _widgetList),
-        ),
-        bottomNavigationBar: BottomNavyBar(
-          selectedIndex: _currentIndex,
-          onItemSelected: (index) {
-            setState(() => _currentIndex = index);
-            _pageController.jumpToPage(index);
-          },
-          items: _navyItems,
+            ),
+            destinations: _navyItems,
+          ),
         ),
       ),
     );
@@ -55,15 +60,15 @@ class _MapViewState extends State<MapView> {
 }
 
 final _widgetList = <Widget>[
-  const Text('Hi'),
-  const Text('Hi'),
-  const Text('Hi'),
-  const Text('Hi'),
+  DriverMap(),
+  DriverRequestsView(),
+  ChatPage(),
+  DriverProfile(),
 ];
 
-final _navyItems = <BottomNavyBarItem>[
-  BottomNavyBarItem(title: Text('Orders'), icon: Icon(Icons.map)),
-  BottomNavyBarItem(title: Text('Requests'), icon: Icon(Icons.shop)),
-  BottomNavyBarItem(title: Text('Chats'), icon: Icon(Icons.chat_bubble)),
-  BottomNavyBarItem(title: Text('Settings'), icon: Icon(Icons.settings)),
+final _navyItems = <NavigationDestination>[
+  NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
+  NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
+  NavigationDestination(icon: Icon(Icons.chat_bubble), label: 'chats'),
+  NavigationDestination(icon: Icon(Icons.settings), label: 'settings'),
 ];

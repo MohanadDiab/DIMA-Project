@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/services/cloud/drivers.dart';
 
 class DriverRequestsView extends StatefulWidget {
   const DriverRequestsView({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
   final bool _pinned = true;
   final bool _snap = false;
   final bool _floating = false;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +32,8 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                 text: 'Deliveries',
                 color: color2,
               ),
-              background: const Image(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/intro screen.jpg'),
+              background: Container(
+                color: color3,
               ),
             ),
           ),
@@ -49,7 +51,6 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                 padding: const EdgeInsets.all(20),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  height: 400,
                   decoration: BoxDecoration(
                     color: color4,
                   ),
@@ -66,55 +67,37 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                         color: color1,
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        color: color2,
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GenericText(
-                                  text: 'Maxwell Norman',
-                                  color: color4,
-                                ),
-                                const Expanded(child: SizedBox()),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.message),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.location_on_outlined,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: 2.5,
-                              color: color4,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GenericText(
-                                  text: 'Item #3',
-                                  color: color4,
-                                ),
-                                const Expanded(child: SizedBox()),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                      Icons.photo_size_select_actual_rounded),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      FutureBuilder(
+                        future: DriverCloud().getDriverRequests(userId: userId),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                            case ConnectionState.done:
+                              if (snapshot.hasData) {
+                                return ListView.separated(
+                                  separatorBuilder: (context, index) {
+                                    return const Divider(
+                                      height: 10,
+                                    );
+                                  },
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    return Box1(
+                                      name: snapshot.data[index].data()['name'],
+                                      order:
+                                          snapshot.data[index].data()['item'],
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            default:
+                              return const CircularProgressIndicator();
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -126,7 +109,6 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                 padding: const EdgeInsets.all(20),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  height: 400,
                   decoration: BoxDecoration(
                     color: color4,
                   ),
@@ -143,52 +125,40 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                         color: color1,
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        color: color2,
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GenericText(
-                                  text: 'Maxwell Norman',
-                                  color: color4,
-                                ),
-                                const Expanded(child: SizedBox()),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.message),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: 2.5,
-                              color: color4,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GenericText(
-                                  text: '27 Customers',
-                                  color: color4,
-                                ),
-                                const Expanded(child: SizedBox()),
-                                const Icon(Icons.location_on_outlined),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                GenericText(
-                                  text: 'Milan',
-                                  color: color4,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      FutureBuilder(
+                        future: DriverCloud()
+                            .getSellerRequests(userId: 'mockseller1'),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                            case ConnectionState.done:
+                              if (snapshot.hasData) {
+                                return ListView.separated(
+                                  separatorBuilder: (context, index) {
+                                    return const Divider(
+                                      height: 10,
+                                    );
+                                  },
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    return Expanded(
+                                      child: Box(
+                                        name:
+                                            snapshot.data[index].data()['name'],
+                                        numberOfOrders: snapshot.data.length,
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            default:
+                              return const CircularProgressIndicator();
+                          }
+                        },
                       ),
                     ],
                   ),

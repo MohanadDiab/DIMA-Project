@@ -54,3 +54,123 @@ class GenericText extends StatelessWidget {
     );
   }
 }
+
+class Box extends StatelessWidget {
+  const Box({Key? key, required this.name, required this.numberOfOrders})
+      : super(key: key);
+
+  final String name;
+  final int numberOfOrders;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: color2,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GenericText(
+                text: name,
+                color: color4,
+              ),
+              const Expanded(child: SizedBox()),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.message),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+            ],
+          ),
+          Container(
+            height: 2.5,
+            color: color4,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GenericText(
+                text: '$numberOfOrders Customers',
+                color: color4,
+              ),
+              const Expanded(child: SizedBox()),
+              const Icon(Icons.location_on_outlined),
+              const SizedBox(
+                width: 5,
+              ),
+              GenericText(
+                text: 'Milan',
+                color: color4,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Box1 extends StatelessWidget {
+  const Box1({Key? key, required this.name, required this.order})
+      : super(key: key);
+
+  final String name;
+  final String order;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: color2,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GenericText(
+                text: name,
+                color: color4,
+              ),
+              const Expanded(child: SizedBox()),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.message),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.location_on_outlined,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 2.5,
+            color: color4,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GenericText(
+                text: order,
+                color: color4,
+              ),
+              const Expanded(child: SizedBox()),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.photo_size_select_actual_rounded),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
