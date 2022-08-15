@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:testapp/views/driver_pages/driver_chat.dart';
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';

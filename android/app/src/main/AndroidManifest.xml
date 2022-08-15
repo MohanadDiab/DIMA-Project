@@ -2,7 +2,8 @@
     package="com.dima.testapp">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <application
-        android:label="testapp"
+        android:usesCleartextTraffic="true"
+        android:label="Delever"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -4,6 +4,15 @@ class DriverCloud {
   final requests = FirebaseFirestore.instance.collection('drivers');
   final requestsS = FirebaseFirestore.instance.collection('sellers');
 
+  Future<bool> isDriver({required String userId}) async {
+    final driver = await requests.doc(userId).get();
+    if (driver.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>?> getDriverProfile(
       {required String userId}) async {
     final driver = await requests.doc(userId).get();
