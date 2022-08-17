@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +8,14 @@ import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 
-class DriverProfile extends StatefulWidget {
-  const DriverProfile({Key? key}) : super(key: key);
+class SellerProfile extends StatefulWidget {
+  const SellerProfile({Key? key}) : super(key: key);
 
   @override
-  State<DriverProfile> createState() => _DriverProfileState();
+  State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _DriverProfileState extends State<DriverProfile> {
+class _SellerProfileState extends State<SellerProfile> {
   String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -37,7 +36,7 @@ class _DriverProfileState extends State<DriverProfile> {
           ],
         ),
         FutureBuilder(
-          future: DriverCloud().getDriverProfile(userId: userId),
+          future: DriverCloud().getSellerProfile(userId: userId),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case (ConnectionState.waiting):
@@ -62,7 +61,7 @@ class _DriverProfileState extends State<DriverProfile> {
                                   color: color2,
                                 ),
                                 GenericText(
-                                  text: 'Deliveryman Account',
+                                  text: 'Seller Account',
                                   color: color2,
                                 ),
                               ],

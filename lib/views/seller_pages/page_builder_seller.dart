@@ -1,41 +1,76 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
-import 'package:testapp/services/auth/bloc/auth_bloc.dart';
-import 'package:testapp/services/auth/bloc/auth_event.dart';
-import 'package:testapp/utilities/dialogs/logout_dialog.dart';
+import 'package:testapp/views/driver_pages/driver_chat.dart';
+import 'package:testapp/views/maps/driver_map.dart';
+import 'package:testapp/views/driver_pages/driver_profile.dart';
+import 'package:testapp/views/driver_pages/driver_requests.dart';
+import 'package:testapp/views/seller_pages/request_view.dart';
+import 'package:testapp/views/seller_pages/seller_profile.dart';
+import 'package:testapp/views/seller_pages/seller_requests.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({Key? key}) : super(key: key);
+class SellerPageBuilder extends StatefulWidget {
+  const SellerPageBuilder({Key? key}) : super(key: key);
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<SellerPageBuilder> createState() => _SellerPageBuilderState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _SellerPageBuilderState extends State<SellerPageBuilder> {
+  int _currentIndex = 0;
+
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: GenericButton(
-          primaryColor: color4,
-          pressColor: color3,
-          textColor: color2,
-          text: 'Sign out',
-          onPressed: () async {
-            final shouldLogout = await showLogOutDialog(context);
-            if (shouldLogout) {
-              context.read<AuthBloc>().add(
-                    const AuthEventLogOut(),
-                  );
-            }
-          },
+    return SafeArea(
+      child: Scaffold(
+        body: _widgetList[_currentIndex],
+        bottomNavigationBar: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            indicatorColor: Colors.blueGrey.shade100,
+            labelTextStyle: MaterialStateProperty.all(
+              const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          child: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) => setState(
+              () {
+                _currentIndex = index;
+              },
+            ),
+            destinations: _navyItems,
+          ),
         ),
       ),
     );
   }
 }
+
+const _widgetList = <Widget>[
+  Demo(),
+  SellerRequests(),
+  Text('hi'),
+  SellerProfile(),
+];
+
+const _navyItems = <NavigationDestination>[
+  NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
+  NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
+  NavigationDestination(icon: Icon(Icons.chat_bubble), label: 'chats'),
+  NavigationDestination(icon: Icon(Icons.settings), label: 'settings'),
+];

@@ -4,14 +4,14 @@ import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
 
-class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+class DriverPageBuilder extends StatefulWidget {
+  const DriverPageBuilder({Key? key}) : super(key: key);
 
   @override
-  State<MapView> createState() => _MapViewState();
+  State<DriverPageBuilder> createState() => _DriverPageBuilderState();
 }
 
-class _MapViewState extends State<MapView> {
+class _DriverPageBuilderState extends State<DriverPageBuilder> {
   int _currentIndex = 0;
 
   late PageController _pageController;
@@ -58,14 +58,14 @@ class _MapViewState extends State<MapView> {
   }
 }
 
-final _widgetList = <Widget>[
+const _widgetList = <Widget>[
   DriverMap(),
   DriverRequestsView(),
   ChatPage(),
   DriverProfile(),
 ];
 
-final _navyItems = <NavigationDestination>[
+const _navyItems = <NavigationDestination>[
   NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
   NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
   NavigationDestination(icon: Icon(Icons.chat_bubble), label: 'chats'),

@@ -7,7 +7,7 @@ import 'package:testapp/constants/routes.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
-import 'package:testapp/services/cloud/drivers.dart';
+import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -30,7 +30,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: [
             const SizedBox(height: 75),
             Lottie.asset('assets/animation.json'),
-            const Expanded(child: SizedBox()),
+            GenericText3(text: 'Welcome to Delever', color: color5),
+            const SizedBox(height: 25),
+            Container(
+              height: 2.5,
+              width: 250,
+              color: color3,
+            ),
+            const SizedBox(height: 25),
             FutureBuilder(
               future: DriverCloud().isDriver(userId: userId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -52,7 +59,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             );
                           } else {
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                                sellerUI, (route) => false);
+                              sellerUI,
+                              (route) => false,
+                            );
                           }
                         },
                         textColor: color2);
@@ -78,7 +87,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 }
               },
             ),
-            const SizedBox(height: 75),
+            const Expanded(child: SizedBox()),
+            GenericText2(text: 'Version number:1.00', color: color4),
+            GenericText2(text: 'Build number:1.00', color: color4),
+            const SizedBox(height: 25),
           ],
         ),
       ),

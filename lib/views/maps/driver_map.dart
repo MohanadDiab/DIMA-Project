@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:testapp/services/cloud/drivers.dart';
+import 'package:testapp/services/cloud/cloud_service.dart';
 
 class DriverMap extends StatefulWidget {
   const DriverMap({Key? key}) : super(key: key);

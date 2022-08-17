@@ -60,6 +60,9 @@ dependencies:
   bubble: ^1.2.1
   permission_handler: ^10.0.0
   lottie: ^1.4.1
+  firebase_storage: ^10.3.5
+  file_picker: ^5.0.1
+  flutter_google_places: ^0.3.0
 
 dev_dependencies:
   flutter_test:

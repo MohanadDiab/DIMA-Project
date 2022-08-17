@@ -174,3 +174,47 @@ class Box1 extends StatelessWidget {
     );
   }
 }
+
+class GenericText2 extends StatelessWidget {
+  const GenericText2({Key? key, required this.text, required this.color})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+        fontWeight: FontWeight.w300,
+        fontSize: 16,
+        color: color,
+      ),
+      maxLines: 5,
+      textAlign: TextAlign.center,
+    );
+  }
+}
+
+class GenericText3 extends StatelessWidget {
+  const GenericText3({Key? key, required this.text, required this.color})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+        fontWeight: FontWeight.w500,
+        fontSize: 30,
+        color: color,
+      ),
+      maxLines: 5,
+      textAlign: TextAlign.center,
+    );
+  }
+}
