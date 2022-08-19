@@ -37,7 +37,7 @@ class _DriverProfileState extends State<DriverProfile> {
           ],
         ),
         FutureBuilder(
-          future: DriverCloud().getDriverProfile(userId: userId),
+          future: CloudService().getDriverProfile(userId: userId),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case (ConnectionState.waiting):
@@ -107,7 +107,7 @@ class _DriverProfileState extends State<DriverProfile> {
                           textColor: color2,
                           text: 'Edit info',
                           onPressed: () {
-                            DriverCloud().createDriverProfile(
+                            CloudService().createDriverProfile(
                               userId: userId,
                               name: 'Mohanad Diab',
                               city: 'Amman',

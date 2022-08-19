@@ -63,6 +63,7 @@ dependencies:
   firebase_storage: ^10.3.5
   file_picker: ^5.0.1
   flutter_google_places: ^0.3.0
+  geocoding: ^2.0.4
 
 dev_dependencies:
   flutter_test:

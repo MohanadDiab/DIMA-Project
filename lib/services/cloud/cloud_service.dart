@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:testapp/views/seller_pages/seller_requests.dart';
 
-class DriverCloud {
+class CloudService {
   final driverCollection = FirebaseFirestore.instance.collection('drivers');
   final sellerCollection = FirebaseFirestore.instance.collection('sellers');
 
-  Future<bool> sellerRequestsIsEmpty({required String userId}) async {
+  Future<Object> sellerRequestsIsEmpty({required String userId}) async {
     final sellerRequestsCollection =
         await sellerCollection.doc(userId).collection('seller_requests').get();
     final isEmpty = sellerRequestsCollection.docs;
@@ -48,6 +49,7 @@ class DriverCloud {
       {required String userId}) async {
     final sellerRequests =
         await sellerCollection.doc(userId).collection('seller_requests').get();
+
     final sellerRequestsDocs = sellerRequests.docs;
     return sellerRequestsDocs;
   }
@@ -74,10 +76,15 @@ class DriverCloud {
     required String item,
     required int number,
     required String notes,
+    required String address,
     required double lat,
     required double long,
     required String pictureUrl,
   }) async {
+    if (notes.isEmpty) {
+      notes = 'None';
+    }
+    final date = DateTime.now();
     await sellerCollection
         .doc(userId)
         .collection('seller_requests')
@@ -88,6 +95,8 @@ class DriverCloud {
       'item': item,
       'notes': notes,
       'picture_url': pictureUrl,
+      'location': GeoPoint(lat, long),
+      'address': address,
     });
   }
 }

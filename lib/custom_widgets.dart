@@ -218,3 +218,31 @@ class GenericText3 extends StatelessWidget {
     );
   }
 }
+
+class GenericText4 extends StatelessWidget {
+  const GenericText4(
+      {Key? key,
+      required this.text,
+      required this.color,
+      required this.stringWeight})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+  final FontWeight stringWeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+        fontWeight: stringWeight,
+        fontSize: 20,
+        color: color,
+      ),
+      maxLines: 5,
+      textAlign: TextAlign.center,
+      softWrap: true,
+    );
+  }
+}

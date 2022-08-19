@@ -28,8 +28,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 75),
+            const SizedBox(height: 125),
             Lottie.asset('assets/animation.json'),
+            const SizedBox(height: 75),
             GenericText3(text: 'Welcome to Delever', color: color5),
             const SizedBox(height: 25),
             Container(
@@ -39,7 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             const SizedBox(height: 25),
             FutureBuilder(
-              future: DriverCloud().isDriver(userId: userId),
+              future: CloudService().isDriver(userId: userId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case (ConnectionState.waiting):

@@ -6,14 +6,14 @@ import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 
-class DriverMap extends StatefulWidget {
-  const DriverMap({Key? key}) : super(key: key);
+class SellerMap extends StatefulWidget {
+  const SellerMap({Key? key}) : super(key: key);
 
   @override
-  State<DriverMap> createState() => DriverMapState();
+  State<SellerMap> createState() => SellerMapState();
 }
 
-class DriverMapState extends State<DriverMap> {
+class SellerMapState extends State<SellerMap> {
   final CameraPosition _initialPosition =
       const CameraPosition(target: LatLng(26.8206, 30.8025));
   final Completer<GoogleMapController> _controller = Completer();
@@ -30,7 +30,8 @@ class DriverMapState extends State<DriverMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: GenericText(text: "Orders", color: color2),
+        backgroundColor: color3,
+        title: GenericText(text: 'Orders', color: color2),
         centerTitle: true,
       ),
       drawer: _drawer(),
@@ -52,14 +53,15 @@ class DriverMapState extends State<DriverMap> {
       elevation: 16.0,
       child: Column(
         children: <Widget>[
-          const UserAccountsDrawerHeader(
-            accountName: Text("xyz"),
-            accountEmail: Text("xyz@gmail.com"),
-            currentAccountPicture: CircleAvatar(
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: color3),
+            accountName: const Text("xyz"),
+            accountEmail: const Text("xyz@gmail.com"),
+            currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,
               child: Text("xyz"),
             ),
-            otherAccountsPictures: <Widget>[
+            otherAccountsPictures: const <Widget>[
               CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text("abc"),
@@ -67,12 +69,12 @@ class DriverMapState extends State<DriverMap> {
             ],
           ),
           const ListTile(
-            title: Text("Deliveries"),
+            title: Text("Orders"),
             leading: Icon(Icons.delivery_dining),
           ),
           const Divider(),
           FutureBuilder(
-            future: CloudService().getDriverRequests(userId: userId),
+            future: CloudService().getSellerRequests(userId: userId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:

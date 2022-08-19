@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/views/driver_pages/driver_chat.dart';
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
@@ -61,13 +60,11 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
 const _widgetList = <Widget>[
   DriverMap(),
   DriverRequestsView(),
-  ChatPage(),
   DriverProfile(),
 ];
 
 const _navyItems = <NavigationDestination>[
   NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
   NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
-  NavigationDestination(icon: Icon(Icons.chat_bubble), label: 'chats'),
   NavigationDestination(icon: Icon(Icons.settings), label: 'settings'),
 ];

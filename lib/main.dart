@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/routes.dart';
 import 'package:testapp/helpers/loading/loading_screen.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
@@ -26,9 +27,6 @@ void main() {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       title: 'Delever',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
         child: const HomePage(),

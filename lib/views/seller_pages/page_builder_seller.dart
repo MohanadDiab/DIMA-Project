@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/views/driver_pages/driver_chat.dart';
-import 'package:testapp/views/maps/driver_map.dart';
-import 'package:testapp/views/driver_pages/driver_profile.dart';
-import 'package:testapp/views/driver_pages/driver_requests.dart';
-import 'package:testapp/views/seller_pages/request_view.dart';
+import 'package:testapp/views/seller_pages/seller_map.dart';
 import 'package:testapp/views/seller_pages/seller_profile.dart';
 import 'package:testapp/views/seller_pages/seller_requests.dart';
 
@@ -62,15 +58,13 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
 }
 
 const _widgetList = <Widget>[
-  Demo(),
+  SellerMap(),
   SellerRequests(),
-  Text('hi'),
   SellerProfile(),
 ];
 
 const _navyItems = <NavigationDestination>[
   NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
   NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
-  NavigationDestination(icon: Icon(Icons.chat_bubble), label: 'chats'),
   NavigationDestination(icon: Icon(Icons.settings), label: 'settings'),
 ];

@@ -18,10 +18,10 @@ class CloudStorage {
   Future<String?> getImageURL({required String imageName}) async {
     try {
       String downloadURL =
-          await storage.ref('items/$imageName').getDownloadURL();
+          await storage.ref('items').child(imageName).getDownloadURL();
       return downloadURL;
     } on FirebaseException catch (e) {
-      return null;
+      return 'there has been an error';
     }
   }
 }

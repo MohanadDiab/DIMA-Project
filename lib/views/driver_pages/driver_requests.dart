@@ -69,7 +69,8 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                       ),
                       const SizedBox(height: 10),
                       FutureBuilder(
-                        future: DriverCloud().getDriverRequests(userId: userId),
+                        future:
+                            CloudService().getDriverRequests(userId: userId),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           switch (snapshot.connectionState) {
@@ -127,7 +128,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                       ),
                       const SizedBox(height: 10),
                       FutureBuilder(
-                        future: DriverCloud()
+                        future: CloudService()
                             .getSellerRequests(userId: 'mockseller1'),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
