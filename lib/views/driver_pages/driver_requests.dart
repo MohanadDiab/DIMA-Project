@@ -93,6 +93,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
+                                              const Icon(Icons.person),
                                               GenericText(
                                                 text: snapshot.data[index]
                                                     .data()['name'],
@@ -122,6 +123,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
+                                              const Icon(Icons.store),
                                               GenericText(
                                                 text: snapshot.data[index]
                                                     .data()['item'],
@@ -205,6 +207,8 @@ class SellerRequestsList extends StatefulWidget {
 }
 
 class _SellerRequestsListState extends State<SellerRequestsList> {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -238,9 +242,72 @@ class _SellerRequestsListState extends State<SellerRequestsList> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return Expanded(
-                        child: Box(
-                          name: snapshot.data[index].data()['name'],
-                          numberOfOrders: 4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: color2,
+                            border: Border.all(color: color4),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GenericText(
+                                    text: snapshot.data[index].data()['name'],
+                                    color: color4,
+                                  ),
+                                  const Expanded(child: SizedBox()),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.call),
+                                  ),
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                height: 2.5,
+                                color: color4,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GenericText(
+                                    text: '5 Customers',
+                                    color: color4,
+                                  ),
+                                  const Expanded(child: SizedBox()),
+                                  const Icon(Icons.location_on_outlined),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  GenericText(
+                                    text: 'Milan',
+                                    color: color4,
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: GenericButton(
+                                    primaryColor: color4,
+                                    pressColor: color2,
+                                    text: 'Take request',
+                                    onPressed: () async {
+                                      CloudService().assignToDriver(
+                                        userId: userId,
+                                        sellerName:
+                                            snapshot.data[index].data()['name'],
+                                      );
+                                      setState(() {});
+                                    },
+                                    textColor: color2),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

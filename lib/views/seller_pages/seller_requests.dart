@@ -108,8 +108,21 @@ class _SellerRequestsState extends State<SellerRequests> {
                           child: CircularProgressIndicator(),
                         );
                       case ConnectionState.done:
+                        final isActive = snapshot.data[0].data()['is_active'];
                         return Column(
                           children: [
+                            Visibility(
+                              visible: isActive,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.circle_notifications),
+                                  GenericText(
+                                      text: 'Status: in delivery',
+                                      color: color5),
+                                ],
+                              ),
+                            ),
                             SizedBox(
                               child: ListView.separated(
                                 separatorBuilder: (context, index) {
@@ -277,96 +290,103 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 ),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(25),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        onPrimary: color3,
-                                                        primary: color2,
-                                                        fixedSize: Size(
-                                                            MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .8,
-                                                            60),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
+                                            Visibility(
+                                              visible: !isActive,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(25),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          onPrimary: color3,
+                                                          primary: color2,
+                                                          fixedSize: Size(
+                                                              MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  .8,
+                                                              60),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditRequests(
+                                                                      cname:
+                                                                          name),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: GenericText4(
+                                                          text: 'Edit',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
                                                         ),
                                                       ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                EditRequests(
-                                                                    cname:
-                                                                        name),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: GenericText4(
-                                                        text: 'Edit',
-                                                        color: color5,
-                                                        stringWeight:
-                                                            FontWeight.w600,
-                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(width: 15),
-                                                  Expanded(
-                                                    child: ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        onPrimary: color3,
-                                                        primary: color2,
-                                                        fixedSize: Size(
-                                                            MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .8,
-                                                            60),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
+                                                    const SizedBox(width: 15),
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          onPrimary: color3,
+                                                          primary: color2,
+                                                          fixedSize: Size(
+                                                              MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  .8,
+                                                              60),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Long press to delete entry'),
+                                                            ),
+                                                          );
+                                                        },
+                                                        onLongPress: () async {
+                                                          await CloudService()
+                                                              .deleteSellerRequest(
+                                                                  userId:
+                                                                      userId,
+                                                                  name: name);
+                                                          setState(() {});
+                                                        },
+                                                        child: GenericText4(
+                                                          text: 'Delete',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
                                                         ),
                                                       ),
-                                                      onPressed: () {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Long press to delete entry'),
-                                                          ),
-                                                        );
-                                                      },
-                                                      onLongPress: () async {
-                                                        await CloudService()
-                                                            .deleteSellerRequest(
-                                                                userId: userId,
-                                                                name: name);
-                                                        setState(() {});
-                                                      },
-                                                      child: GenericText4(
-                                                        text: 'Delete',
-                                                        color: color5,
-                                                        stringWeight:
-                                                            FontWeight.w600,
-                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],

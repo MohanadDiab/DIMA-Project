@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:testapp/views/seller_pages/seller_requests.dart';
 
 class CloudService {
   // Instantiating
@@ -103,6 +104,11 @@ class CloudService {
     return sellerRequestsDocs;
   }
 
+  Future<bool> isRequestActive({required userId}) async {
+    final doc = await sellerCollection.doc(userId).get();
+    return doc.data()!['request_active'];
+  }
+
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       getAllRequests() async {
     final sellerRequests = await sellerCollection.get();
@@ -119,6 +125,38 @@ class CloudService {
         .doc(name)
         .get();
     return request.data();
+  }
+
+  //update
+
+  Future<void> assignToDriver({
+    required String userId,
+    required String sellerName,
+  }) async {
+    final request =
+        await sellerCollection.where('name', isEqualTo: sellerName).get();
+    final sellerId = request.docs[0].id;
+    final sellerRequest = await sellerCollection
+        .doc(sellerId)
+        .collection('seller_requests')
+        .get();
+    final addedRequest = sellerRequest.docs;
+    for (var element in addedRequest) {
+      var id = element.id;
+      await sellerCollection
+          .doc(sellerId)
+          .collection('seller_requests')
+          .doc(id)
+          .set(
+        {'is_active': true},
+        SetOptions(merge: true),
+      );
+      await driverCollection
+          .doc(userId)
+          .collection('driver_requests')
+          .doc(id)
+          .set(element.data());
+    }
   }
 
   // Delete
