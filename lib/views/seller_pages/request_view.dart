@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
@@ -96,7 +95,7 @@ class _RequestsState extends State<Requests> {
     try {
       final pictureURL = await storage.getImageURL(imageName: storageName);
 
-      await CloudService().createRequest(
+      await CloudService().createUpdateRequest(
         address: locationController.text,
         userId: userId,
         name: nameController.text,

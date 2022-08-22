@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GenericButton extends StatelessWidget {
   const GenericButton({
@@ -65,8 +66,12 @@ class Box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: color2,
+        border: Border.all(color: color4),
+        borderRadius: BorderRadius.circular(25),
+      ),
       padding: const EdgeInsets.all(10),
-      color: color2,
       child: Column(
         children: [
           Row(
@@ -79,7 +84,7 @@ class Box extends StatelessWidget {
               const Expanded(child: SizedBox()),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.message),
+                icon: const Icon(Icons.call),
               ),
               const SizedBox(
                 width: 20,
@@ -108,6 +113,15 @@ class Box extends StatelessWidget {
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: GenericButton(
+                primaryColor: color4,
+                pressColor: color2,
+                text: 'Request',
+                onPressed: () {},
+                textColor: color2),
+          ),
         ],
       ),
     );
@@ -115,8 +129,11 @@ class Box extends StatelessWidget {
 }
 
 class Box1 extends StatelessWidget {
-  const Box1({Key? key, required this.name, required this.order})
-      : super(key: key);
+  const Box1({
+    Key? key,
+    required this.name,
+    required this.order,
+  }) : super(key: key);
 
   final String name;
   final String order;
@@ -124,8 +141,11 @@ class Box1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: color2,
+        borderRadius: BorderRadius.circular(25),
+      ),
       padding: const EdgeInsets.all(10),
-      color: color2,
       child: Column(
         children: [
           Row(
@@ -138,13 +158,10 @@ class Box1 extends StatelessWidget {
               const Expanded(child: SizedBox()),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.message),
+                icon: const Icon(Icons.call),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.location_on_outlined,
-                ),
+              const SizedBox(
+                width: 20,
               ),
             ],
           ),
@@ -169,6 +186,15 @@ class Box1 extends StatelessWidget {
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: GenericButton(
+                primaryColor: color4,
+                pressColor: color2,
+                text: 'See location',
+                onPressed: () {},
+                textColor: color2),
+          )
         ],
       ),
     );
@@ -245,4 +271,9 @@ class GenericText4 extends StatelessWidget {
       softWrap: true,
     );
   }
+}
+
+Future<void> call({required String number}) async {
+  final Uri launchUri = Uri(scheme: 'tel', path: number);
+  await launchUrl(launchUri);
 }

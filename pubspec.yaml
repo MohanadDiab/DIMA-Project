@@ -64,6 +64,7 @@ dependencies:
   file_picker: ^5.0.1
   flutter_google_places: ^0.3.0
   geocoding: ^2.0.4
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:

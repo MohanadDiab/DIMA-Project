@@ -1,10 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:testapp/views/seller_pages/seller_requests.dart';
 
 class CloudService {
+  // Instantiating
   final driverCollection = FirebaseFirestore.instance.collection('drivers');
   final sellerCollection = FirebaseFirestore.instance.collection('sellers');
 
+  // Create
+
+  Future<void> createDriverProfile({
+    required String userId,
+    required String name,
+    required String city,
+    required int number,
+  }) async {
+    await driverCollection.doc(userId).set(
+      {
+        'name': name,
+        'city': city,
+        'number': number,
+        'user_id': userId,
+      },
+    );
+  }
+
+  Future<void> createUpdateRequest({
+    required String userId,
+    required String name,
+    required String item,
+    required int number,
+    required String notes,
+    required String address,
+    required double lat,
+    required double long,
+    required String pictureUrl,
+  }) async {
+    if (notes.isEmpty) {
+      notes = 'None';
+    }
+    final date = DateTime.now();
+    await sellerCollection
+        .doc(userId)
+        .collection('seller_requests')
+        .doc(name)
+        .set({
+      'name': name,
+      'number': number,
+      'item': item,
+      'notes': notes,
+      'picture_url': pictureUrl,
+      'location': GeoPoint(lat, long),
+      'address': address,
+    });
+  }
+
+  // Read
   Future<Object> sellerRequestsIsEmpty({required String userId}) async {
     final sellerRequestsCollection =
         await sellerCollection.doc(userId).collection('seller_requests').get();
@@ -54,49 +103,32 @@ class CloudService {
     return sellerRequestsDocs;
   }
 
-  Future<void> createDriverProfile({
-    required String userId,
-    required String name,
-    required String city,
-    required int number,
-  }) async {
-    await driverCollection.doc(userId).set(
-      {
-        'name': name,
-        'city': city,
-        'number': number,
-        'user_id': userId,
-      },
-    );
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getAllRequests() async {
+    final sellerRequests = await sellerCollection.get();
+
+    final sellerRequestsDocs = sellerRequests.docs;
+    return sellerRequestsDocs;
   }
 
-  Future<void> createRequest({
-    required String userId,
-    required String name,
-    required String item,
-    required int number,
-    required String notes,
-    required String address,
-    required double lat,
-    required double long,
-    required String pictureUrl,
-  }) async {
-    if (notes.isEmpty) {
-      notes = 'None';
-    }
-    final date = DateTime.now();
+  Future<Map<String, dynamic>?> getSellerRequestInfo(
+      {required String userId, required String name}) async {
+    final request = await sellerCollection
+        .doc(userId)
+        .collection('seller_requests')
+        .doc(name)
+        .get();
+    return request.data();
+  }
+
+  // Delete
+
+  Future<void> deleteSellerRequest(
+      {required String userId, required String name}) async {
     await sellerCollection
         .doc(userId)
         .collection('seller_requests')
         .doc(name)
-        .set({
-      'name': name,
-      'number': number,
-      'item': item,
-      'notes': notes,
-      'picture_url': pictureUrl,
-      'location': GeoPoint(lat, long),
-      'address': address,
-    });
+        .delete();
   }
 }

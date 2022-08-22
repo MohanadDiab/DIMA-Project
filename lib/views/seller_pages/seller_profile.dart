@@ -30,7 +30,7 @@ class _SellerProfileState extends State<SellerProfile> {
             ),
             Expanded(
               child: Container(
-                color: color2,
+                color: Colors.white,
               ),
             ),
           ],
@@ -47,103 +47,117 @@ class _SellerProfileState extends State<SellerProfile> {
                 return ListView(
                   children: [
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 90,
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GenericText(
-                                  text: snapshot.data['name'],
-                                  color: color2,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 90,
+                              child: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GenericText(
+                                      text: snapshot.data['name'],
+                                      color: color2,
+                                    ),
+                                    GenericText(
+                                      text: 'Seller Account',
+                                      color: color2,
+                                    ),
+                                  ],
                                 ),
-                                GenericText(
-                                  text: 'Seller Account',
-                                  color: color2,
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          height: 120,
-                          decoration: BoxDecoration(
-                            border: Border.all(
+                            Container(
+                              height: 120,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: color4,
+                                  width: 5,
+                                ),
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      snapshot.data['picture_url']),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            GenericText(
+                              text: 'Settings',
                               color: color4,
-                              width: 5,
                             ),
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(snapshot.data['picture_url']),
-                              fit: BoxFit.contain,
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 5,
+                              color: color4,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        GenericText(
-                          text: 'Settings',
-                          color: color4,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          height: 5,
-                          color: color4,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        GenericButton(
-                          primaryColor: color4,
-                          pressColor: color3,
-                          textColor: color2,
-                          text: 'Edit info',
-                          onPressed: () {
-                            CloudService().createDriverProfile(
-                              userId: userId,
-                              name: 'Mohanad Diab',
-                              city: 'Amman',
-                              number: 0790389008,
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        GenericButton(
-                          primaryColor: color4,
-                          pressColor: color3,
-                          textColor: color2,
-                          text: 'Change language',
-                          onPressed: () {
-                            final user = FirebaseAuth.instance.currentUser;
-                            print(user.toString());
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        GenericButton(
-                          primaryColor: color4,
-                          pressColor: color3,
-                          textColor: color2,
-                          text: 'Sign out',
-                          onPressed: () async {
-                            final shouldLogout =
-                                await showLogOutDialog(context);
-                            if (shouldLogout) {
-                              context.read<AuthBloc>().add(
-                                    const AuthEventLogOut(),
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: Column(
+                            children: [
+                              GenericButton(
+                                primaryColor: color4,
+                                pressColor: color3,
+                                textColor: color2,
+                                text: 'Edit info',
+                                onPressed: () {
+                                  CloudService().createDriverProfile(
+                                    userId: userId,
+                                    name: 'Mohanad Diab',
+                                    city: 'Amman',
+                                    number: 0790389008,
                                   );
-                            }
-                          },
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              GenericButton(
+                                primaryColor: color4,
+                                pressColor: color3,
+                                textColor: color2,
+                                text: 'Change language',
+                                onPressed: () {
+                                  final user =
+                                      FirebaseAuth.instance.currentUser;
+                                  print(user.toString());
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              GenericButton(
+                                primaryColor: color4,
+                                pressColor: color3,
+                                textColor: color2,
+                                text: 'Sign out',
+                                onPressed: () async {
+                                  final shouldLogout =
+                                      await showLogOutDialog(context);
+                                  if (shouldLogout) {
+                                    context.read<AuthBloc>().add(
+                                          const AuthEventLogOut(),
+                                        );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
