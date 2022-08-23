@@ -24,7 +24,7 @@ class SellerMapState extends State<SellerMap> {
 
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final double _zoom = 15;
-  final Set<Marker> _markers = Set();
+  final Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {

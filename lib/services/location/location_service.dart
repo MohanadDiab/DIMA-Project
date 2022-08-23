@@ -26,7 +26,6 @@ class LocationService {
     var json = convert.jsonDecode(response.body);
     var results = json['result'] as Map<String, dynamic>;
 
-    print(results);
     return results;
   }
 

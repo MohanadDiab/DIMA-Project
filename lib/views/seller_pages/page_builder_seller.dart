@@ -41,6 +41,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           ),
           child: NavigationBar(
             selectedIndex: _currentIndex,

@@ -23,6 +23,7 @@ class _RequestsState extends State<Requests> {
 
   late final TextEditingController _nameTextController;
   late final TextEditingController _itemTextController;
+  late final TextEditingController _priceTextController;
   late final TextEditingController _notesTextController;
   late final TextEditingController _numberTextController;
   late final TextEditingController _locationTextController;
@@ -39,6 +40,7 @@ class _RequestsState extends State<Requests> {
   void initState() {
     _nameTextController = TextEditingController();
     _itemTextController = TextEditingController();
+    _priceTextController = TextEditingController();
     _notesTextController = TextEditingController();
     _numberTextController = TextEditingController();
     _locationTextController = TextEditingController();
@@ -54,6 +56,8 @@ class _RequestsState extends State<Requests> {
   void dispose() {
     _nameTextController.dispose();
     _itemTextController.dispose();
+    _priceTextController.dispose();
+
     _notesTextController.dispose();
     _numberTextController.dispose();
     _locationTextController.dispose();
@@ -73,7 +77,6 @@ class _RequestsState extends State<Requests> {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     final request = '$baseURL?input=$input&key=$KAPIKey';
     var response = await get(Uri.parse(request));
-    var data = response.body.toString();
     if (response.statusCode == 200) {
       setState(() {
         _placesList = jsonDecode(response.body.toString())['predictions'];
@@ -89,6 +92,7 @@ class _RequestsState extends State<Requests> {
     required TextEditingController notesController,
     required TextEditingController numberController,
     required TextEditingController locationController,
+    required TextEditingController priceController,
     required double lat,
     required double long,
   }) async {
@@ -96,6 +100,7 @@ class _RequestsState extends State<Requests> {
       final pictureURL = await storage.getImageURL(imageName: storageName);
 
       await CloudService().createUpdateRequest(
+        price: double.parse(priceController.text),
         address: locationController.text,
         userId: userId,
         name: nameController.text,
@@ -119,7 +124,6 @@ class _RequestsState extends State<Requests> {
         ),
       );
     }
-    ;
   }
 
   Future<String?> pickingImage(
@@ -213,6 +217,29 @@ class _RequestsState extends State<Requests> {
                     ),
                   ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GenericText(text: 'Item price', color: color5),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _priceTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'Price of the item',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25),
+                child: GenericText2(
+                    text:
+                        'Note: a delivery price will be added later, enter the original price of the item.',
+                    color: color3),
               ),
               Padding(
                 padding: const EdgeInsets.all(25),
@@ -336,6 +363,7 @@ class _RequestsState extends State<Requests> {
                 text: 'Save order',
                 onPressed: () async {
                   savingCustomerInfo(
+                    priceController: _priceTextController,
                     locationController: _locationTextController,
                     nameController: _nameTextController,
                     itemController: _itemTextController,

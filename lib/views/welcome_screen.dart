@@ -37,9 +37,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             );
           case (ConnectionState.done):
             return Scaffold(
-              body: Center(
-                child: Container(
-                  color: Colors.white,
+              body: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(50),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

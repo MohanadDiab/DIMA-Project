@@ -37,22 +37,8 @@ class DriverMapState extends State<DriverMap> {
 
   Future getMyCurrentLocation() async {
     var location = Location();
-    location.getLocation().then((value) => myLocation = value);
+    myLocation = await location.getLocation();
     var sourceLocation = LatLng(myLocation.latitude!, myLocation.longitude!);
-    GoogleMapController googleMapController = await _controller.future;
-
-    location.onLocationChanged.listen((newloc) {
-      myLocation = newloc;
-      googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            zoom: _zoom,
-            target: LatLng(newloc.latitude!, newloc.longitude!),
-          ),
-        ),
-      );
-      setState(() {});
-    });
 
     return Marker(
       markerId: const MarkerId('Current position'),
@@ -144,13 +130,28 @@ class DriverMapState extends State<DriverMap> {
       elevation: 16.0,
       child: Column(
         children: <Widget>[
-          const UserAccountsDrawerHeader(
-            accountName: Text("xyz"),
-            accountEmail: Text("xyz@gmail.com"),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text("xyz"),
-            ),
+          FutureBuilder(
+            future: CloudService().getDriverProfile(userId: userId),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.done:
+                  if (snapshot.hasData) {
+                    return UserAccountsDrawerHeader(
+                      accountName: Text(snapshot.data['name']),
+                      accountEmail: Text(snapshot.data['city']),
+                      currentAccountPicture: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(snapshot.data['picture_url']),
+                      ),
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                default:
+                  return const CircularProgressIndicator();
+              }
+            },
           ),
           const ListTile(
             title: Text("Deliveries"),
@@ -200,7 +201,7 @@ class DriverMapState extends State<DriverMap> {
                   return const CircularProgressIndicator();
               }
             },
-          )
+          ),
         ],
       ),
     );

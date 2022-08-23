@@ -10,7 +10,7 @@ class CloudStorage {
     File file = File(filePath);
     try {
       await storage.ref('items/$fileName').putFile(file);
-    } on FirebaseException catch (e) {
+    } on FirebaseException catch (_) {
       throw AnErrorHasOccured();
     }
   }
@@ -20,7 +20,7 @@ class CloudStorage {
       String downloadURL =
           await storage.ref('items').child(imageName).getDownloadURL();
       return downloadURL;
-    } on FirebaseException catch (e) {
+    } on FirebaseException catch (_) {
       return 'there has been an error';
     }
   }

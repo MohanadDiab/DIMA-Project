@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:testapp/views/seller_pages/seller_requests.dart';
 
 class CloudService {
   // Instantiating
@@ -28,6 +27,7 @@ class CloudService {
     required String userId,
     required String name,
     required String item,
+    required double price,
     required int number,
     required String notes,
     required String address,
@@ -38,7 +38,6 @@ class CloudService {
     if (notes.isEmpty) {
       notes = 'None';
     }
-    final date = DateTime.now();
     await sellerCollection
         .doc(userId)
         .collection('seller_requests')
@@ -46,11 +45,13 @@ class CloudService {
         .set({
       'name': name,
       'number': number,
+      'price': price,
       'item': item,
       'notes': notes,
       'picture_url': pictureUrl,
       'location': GeoPoint(lat, long),
       'address': address,
+      'is_active': false,
     });
   }
 
@@ -151,12 +152,42 @@ class CloudService {
         {'is_active': true},
         SetOptions(merge: true),
       );
+      await sellerCollection
+          .doc(sellerId)
+          .collection('seller_requests')
+          .doc(id)
+          .set(
+        {'is_delivered': false},
+        SetOptions(merge: true),
+      );
       await driverCollection
           .doc(userId)
           .collection('driver_requests')
           .doc(id)
           .set(element.data());
+      await driverCollection
+          .doc(userId)
+          .collection('driver_requests')
+          .doc(id)
+          .set(
+        {'is_delivered': false},
+        SetOptions(merge: true),
+      );
     }
+  }
+
+  Future<void> itemDelivered({
+    required String userId,
+    required String customer,
+  }) async {
+    await driverCollection
+        .doc(userId)
+        .collection('driver_requests')
+        .doc(customer)
+        .set(
+      {'is_delivered': true},
+      SetOptions(merge: true),
+    );
   }
 
   // Delete

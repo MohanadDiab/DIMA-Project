@@ -13,6 +13,7 @@ class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 

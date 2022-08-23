@@ -36,10 +36,6 @@ class _SellerRequestsState extends State<SellerRequests> {
               icon: const Icon(Icons.add)),
         ],
       ),
-      drawer: Drawer(
-        elevation: 16,
-        child: Container(color: color3),
-      ),
       body: FutureBuilder(
         future: CloudService().sellerRequestsIsEmpty(userId: userId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -108,7 +104,8 @@ class _SellerRequestsState extends State<SellerRequests> {
                           child: CircularProgressIndicator(),
                         );
                       case ConnectionState.done:
-                        final isActive = snapshot.data[0].data()['is_active'];
+                        final bool isActive =
+                            snapshot.data[0].data()['is_active'];
                         return Column(
                           children: [
                             Visibility(
@@ -134,6 +131,8 @@ class _SellerRequestsState extends State<SellerRequests> {
                                 shrinkWrap: true,
                                 itemCount: snapshot.data.length,
                                 itemBuilder: (context, index) {
+                                  final price =
+                                      snapshot.data[index].data()['price'];
                                   final name =
                                       snapshot.data[index].data()['name'];
                                   final item =
@@ -208,6 +207,22 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                   color: color5,
                                                   stringWeight: FontWeight.w400,
                                                 ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.money),
+                                                GenericText4(
+                                                  text: 'price: ',
+                                                  color: color5,
+                                                  stringWeight: FontWeight.w600,
+                                                ),
+                                                GenericText4(
+                                                  text: price.toString(),
+                                                  color: color5,
+                                                  stringWeight: FontWeight.w400,
+                                                ),
+                                                const Icon(Icons.attach_money),
                                               ],
                                             ),
                                             Row(

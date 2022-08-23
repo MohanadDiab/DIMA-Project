@@ -41,6 +41,7 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           ),
           child: NavigationBar(
             selectedIndex: _currentIndex,

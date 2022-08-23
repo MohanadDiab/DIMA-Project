@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,10 +122,7 @@ class _DriverProfileState extends State<DriverProfile> {
                           pressColor: color3,
                           textColor: color2,
                           text: 'Change language',
-                          onPressed: () {
-                            final user = FirebaseAuth.instance.currentUser;
-                            print(user.toString());
-                          },
+                          onPressed: () {},
                         ),
                         const SizedBox(
                           height: 20,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
@@ -68,122 +67,316 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return const Center(
-                                  child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(),
+                              );
                             case ConnectionState.done:
                               if (snapshot.data.isNotEmpty) {
-                                return ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  separatorBuilder: (context, index) {
-                                    return const Divider(
-                                      height: 10,
-                                    );
-                                  },
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: color2,
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.person),
-                                              GenericText(
-                                                text: snapshot.data[index]
-                                                    .data()['name'],
-                                                color: color4,
-                                              ),
-                                              const Expanded(child: SizedBox()),
-                                              IconButton(
-                                                onPressed: () {
-                                                  call(
-                                                      number: snapshot
-                                                          .data[index]
-                                                          .data()['number']
-                                                          .toString());
-                                                },
-                                                icon: const Icon(Icons.call),
-                                              ),
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            height: 2.5,
-                                            color: color4,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.store),
-                                              GenericText(
-                                                text: snapshot.data[index]
-                                                    .data()['item'],
-                                                color: color4,
-                                              ),
-                                              const Expanded(child: SizedBox()),
-                                              IconButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Material(
-                                                        type: MaterialType
-                                                            .transparency,
-                                                        child: Container(
-                                                          height: 120,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            image:
-                                                                DecorationImage(
-                                                              image: NetworkImage(snapshot
-                                                                      .data[index]
-                                                                      .data()[
-                                                                  'picture_url']),
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                            ),
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      child: ListView.separated(
+                                        separatorBuilder: (context, index) {
+                                          return const Divider(
+                                            height: 20,
+                                          );
+                                        },
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: snapshot.data.length,
+                                        itemBuilder: (context, index) {
+                                          final price = snapshot.data[index]
+                                              .data()['price'];
+                                          final name = snapshot.data[index]
+                                              .data()['name'];
+                                          final item = snapshot.data[index]
+                                              .data()['item'];
+                                          final notes = snapshot.data[index]
+                                              .data()['notes'];
+                                          final pic = snapshot.data[index]
+                                              .data()['picture_url'];
+
+                                          final numberC = snapshot.data[index]
+                                              .data()['number'];
+
+                                          final String address = snapshot
+                                              .data[index]
+                                              .data()['address']
+                                              .split(',')[0];
+                                          final bool isDelivered = snapshot
+                                              .data[index]
+                                              .data()['is_delivered'];
+
+                                          final int number = index + 1;
+
+                                          return Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                GenericText4(
+                                                    text: 'order#$number',
+                                                    color: color5,
+                                                    stringWeight:
+                                                        FontWeight.w600),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                            Icons.person),
+                                                        GenericText4(
+                                                          text: 'Name: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text: name,
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.call),
+                                                        GenericText4(
+                                                          text: 'Number: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text: numberC
+                                                              .toString(),
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.store),
+                                                        GenericText4(
+                                                          text: 'Item: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text: item,
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.money),
+                                                        GenericText4(
+                                                          text: 'price: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text:
+                                                              price.toString(),
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                        const Icon(
+                                                            Icons.attach_money),
+                                                        GenericText4(
+                                                          text: '+ 3',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                        const Icon(
+                                                            Icons.attach_money),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons
+                                                            .location_history_outlined),
+                                                        GenericText4(
+                                                          text: 'Address: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text: address,
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                            Icons.textsms),
+                                                        GenericText4(
+                                                          text: 'Notes: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        GenericText4(
+                                                          text: notes,
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.image),
+                                                        GenericText4(
+                                                          text: 'Item image: ',
+                                                          color: color5,
+                                                          stringWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Material(
+                                                              type: MaterialType
+                                                                  .transparency,
+                                                              child: Container(
+                                                                height: 120,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image:
+                                                                        NetworkImage(
+                                                                            pic),
+                                                                    fit: BoxFit
+                                                                        .contain,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        height: 120,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: color4,
+                                                            width: 5,
+                                                          ),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                pic),
+                                                            fit: BoxFit.contain,
                                                           ),
                                                         ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                icon: const Icon(Icons
-                                                    .photo_size_select_actual_rounded),
-                                              ),
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(15),
-                                            child: GenericButton(
-                                                primaryColor: color4,
-                                                pressColor: color2,
-                                                text: 'See location',
-                                                onPressed: () {},
-                                                textColor: color2),
-                                          )
-                                        ],
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: !isDelivered,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(25),
+                                                        child: GenericButton(
+                                                          primaryColor:
+                                                              Colors.green,
+                                                          pressColor: color2,
+                                                          text: 'Call',
+                                                          onPressed: () {
+                                                            call(
+                                                                number: numberC
+                                                                    .toString());
+                                                          },
+                                                          textColor: color2,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: !isDelivered,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          left: 25,
+                                                          right: 25,
+                                                          bottom: 25,
+                                                        ),
+                                                        child: GenericButton(
+                                                          primaryColor: color3,
+                                                          pressColor: color2,
+                                                          text:
+                                                              'Set as completed',
+                                                          onPressed: () async {
+                                                            CloudService()
+                                                                .itemDelivered(
+                                                                    userId:
+                                                                        userId,
+                                                                    customer:
+                                                                        name);
+                                                            setState(() {});
+                                                          },
+                                                          textColor: color2,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: isDelivered,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(25),
+                                                        child: GenericButton(
+                                                          primaryColor:
+                                                              Colors.green,
+                                                          pressColor: color2,
+                                                          text: 'Delivered',
+                                                          onPressed: () {},
+                                                          textColor: color2,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 );
                               } else {
                                 return const SellerRequestsList();
                               }
                             default:
-                              return const CircularProgressIndicator();
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
                           }
                         },
                       ),
@@ -251,6 +444,11 @@ class _SellerRequestsListState extends State<SellerRequestsList> {
                           padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
+                              CircleAvatar(
+                                radius: 75,
+                                backgroundImage: NetworkImage(
+                                    snapshot.data[index].data()['picture_url']),
+                              ),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -260,7 +458,13 @@ class _SellerRequestsListState extends State<SellerRequestsList> {
                                   ),
                                   const Expanded(child: SizedBox()),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      call(
+                                        number: snapshot.data[index]
+                                            .data()['number']
+                                            .toString(),
+                                      );
+                                    },
                                     icon: const Icon(Icons.call),
                                   ),
                                   const SizedBox(

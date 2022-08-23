@@ -132,11 +132,7 @@ class _SellerProfileState extends State<SellerProfile> {
                                 pressColor: color3,
                                 textColor: color2,
                                 text: 'Change language',
-                                onPressed: () {
-                                  final user =
-                                      FirebaseAuth.instance.currentUser;
-                                  print(user.toString());
-                                },
+                                onPressed: () {},
                               ),
                               const SizedBox(
                                 height: 20,

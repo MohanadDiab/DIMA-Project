@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
