@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testapp/constants/colors.dart';
+import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_exceptions.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
@@ -61,39 +63,72 @@ class _RegisterViewState extends State<RegisterView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(context.loc.register),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.loc.register_view_prompt),
-                TextField(
-                  controller: _email,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  autofocus: true,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: context.loc.email_text_field_placeholder,
+        body: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 250,
+                    width: 250,
+                    decoration: const BoxDecoration(
+                      image:
+                          DecorationImage(image: AssetImage('assets/logo.png')),
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: _password,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    hintText: context.loc.password_text_field_placeholder,
+                  GenericText(text: 'Register with your email', color: color3),
+                  const SizedBox(height: 25),
+                  Container(
+                    height: 2,
+                    color: color3,
                   ),
-                ),
-                Center(
-                  child: Column(
+                  const SizedBox(height: 25),
+                  Row(
                     children: [
-                      TextButton(
+                      const Icon(Icons.email),
+                      const SizedBox(width: 5),
+                      GenericText(text: 'Email address', color: color5),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                  TextField(
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    autofocus: true,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: context.loc.email_text_field_placeholder,
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Row(
+                    children: [
+                      const Icon(Icons.lock),
+                      const SizedBox(width: 5),
+                      GenericText(text: 'Password', color: color5),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                  TextField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      hintText: context.loc.password_text_field_placeholder,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: GenericButton(
+                        primaryColor: color3,
+                        pressColor: color2,
+                        text: context.loc.register,
                         onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
@@ -104,24 +139,23 @@ class _RegisterViewState extends State<RegisterView> {
                                 ),
                               );
                         },
-                        child: Text(
-                          context.loc.register,
-                        ),
-                      ),
-                      TextButton(
+                        textColor: color2),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: GenericButton(
+                        primaryColor: color3,
+                        pressColor: color2,
+                        text: context.loc.forgot_password_view_back_to_login,
                         onPressed: () {
                           context.read<AuthBloc>().add(
                                 const AuthEventLogOut(),
                               );
                         },
-                        child: Text(
-                          context.loc.register_view_already_registered,
-                        ),
-                      ),
-                    ],
+                        textColor: color2),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

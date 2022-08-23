@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:location/location.dart';
 
 class DriverMap extends StatefulWidget {
   const DriverMap({Key? key}) : super(key: key);
@@ -14,21 +16,72 @@ class DriverMap extends StatefulWidget {
 }
 
 class DriverMapState extends State<DriverMap> {
+  final googleApiKey = 'AIzaSyAktuBhmVOtCZN12HIOe3mSkJMit0Oqs04';
   final CameraPosition _initialPosition =
       const CameraPosition(target: LatLng(26.8206, 30.8025));
   final Completer<GoogleMapController> _controller = Completer();
+  bool deliveryIsVisible = false;
+  late LatLng destination;
+  late LocationData myLocation;
+
+  @override
+  void initState() {
+    var location = Location();
+    location.getLocation().then((value) => myLocation = value);
+    super.initState();
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
   }
 
+  Future getMyCurrentLocation() async {
+    var location = Location();
+    location.getLocation().then((value) => myLocation = value);
+    var sourceLocation = LatLng(myLocation.latitude!, myLocation.longitude!);
+    GoogleMapController googleMapController = await _controller.future;
+
+    location.onLocationChanged.listen((newloc) {
+      myLocation = newloc;
+      googleMapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            zoom: _zoom,
+            target: LatLng(newloc.latitude!, newloc.longitude!),
+          ),
+        ),
+      );
+      setState(() {});
+    });
+
+    return Marker(
+      markerId: const MarkerId('Current position'),
+      position: sourceLocation,
+      infoWindow: const InfoWindow(title: 'Current location'),
+    );
+  }
+
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final double _zoom = 15;
-  final Set<Marker> _markers = Set();
+  final Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            var myMarker = await getMyCurrentLocation();
+            _markers.add(myMarker);
+            GoogleMapController controller = await _controller.future;
+            controller.animateCamera(CameraUpdate.newLatLngZoom(
+                LatLng(myMarker.position.latitude, myMarker.position.longitude),
+                _zoom));
+            setState(() {});
+          },
+          child: const Icon(
+            Icons.my_location_outlined,
+          )),
       appBar: AppBar(
         title: GenericText(text: "Orders", color: color2),
         centerTitle: true,
@@ -37,10 +90,49 @@ class DriverMapState extends State<DriverMap> {
       body: Stack(
         children: <Widget>[
           GoogleMap(
+            polylines: {
+              Polyline(
+                polylineId: const PolylineId('Delivery route'),
+                points: polyLineCoordinates,
+                color: color3,
+                width: 5,
+              ),
+            },
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
             markers: _markers,
             myLocationEnabled: true,
             onMapCreated: _onMapCreated,
             initialCameraPosition: _initialPosition,
+          ),
+          Visibility(
+            visible: deliveryIsVisible,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Expanded(child: SizedBox()),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 100, right: 100),
+                    child: GenericButton(
+                        primaryColor: color3,
+                        pressColor: color2,
+                        text: 'Start delivery',
+                        onPressed: () async {
+                          var myLocation = await Location().getLocation();
+                          LatLng sourceLocation = LatLng(
+                              myLocation.latitude!, myLocation.longitude!);
+                          getPolyPoints(
+                              origin: sourceLocation, destination: destination);
+                          deliveryIsVisible = false;
+                        },
+                        textColor: color2),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -59,12 +151,6 @@ class DriverMapState extends State<DriverMap> {
               backgroundColor: Colors.white,
               child: Text("xyz"),
             ),
-            otherAccountsPictures: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text("abc"),
-              )
-            ],
           ),
           const ListTile(
             title: Text("Deliveries"),
@@ -120,6 +206,31 @@ class DriverMapState extends State<DriverMap> {
     );
   }
 
+  List<LatLng> polyLineCoordinates = [];
+
+  void getPolyPoints({
+    required LatLng origin,
+    required LatLng destination,
+  }) async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey,
+      PointLatLng(origin.latitude, origin.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polyLineCoordinates.add(
+          LatLng(
+            point.latitude,
+            point.longitude,
+          ),
+        );
+      });
+      setState(() {});
+    }
+  }
+
   Future<void> _goToCustomer({
     required String name,
     required String item,
@@ -130,9 +241,15 @@ class DriverMapState extends State<DriverMap> {
     GoogleMapController controller = await _controller.future;
     controller
         .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, long), _zoom));
+
     setState(() {
       _markers.add(
         Marker(
+          onTap: () {
+            deliveryIsVisible = true;
+            destination = LatLng(lat, long);
+            setState(() {});
+          },
           markerId: MarkerId(name),
           position: LatLng(lat, long),
           infoWindow: InfoWindow(title: name, snippet: "Item: $item"),

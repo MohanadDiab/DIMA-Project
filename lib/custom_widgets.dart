@@ -52,6 +52,8 @@ class GenericText extends StatelessWidget {
         fontSize: 24,
         color: color,
       ),
+      maxLines: 2,
+      textAlign: TextAlign.center,
     );
   }
 }
@@ -276,4 +278,26 @@ class GenericText4 extends StatelessWidget {
 Future<void> call({required String number}) async {
   final Uri launchUri = Uri(scheme: 'tel', path: number);
   await launchUrl(launchUri);
+}
+
+class GenericText5 extends StatelessWidget {
+  const GenericText5({Key? key, required this.text, required this.color})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+          fontWeight: FontWeight.w300,
+          fontSize: 16,
+          color: color,
+          decoration: TextDecoration.underline),
+      maxLines: 5,
+      textAlign: TextAlign.center,
+    );
+  }
 }

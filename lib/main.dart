@@ -32,6 +32,9 @@ void main() {
         create: (context) => AuthBloc(FirebaseAuthProvider()),
         child: const HomePage(),
       ),
+      theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
+      ),
       routes: {
         driverUI: (context) => const DriverPageBuilder(),
         sellerUI: (context) => const SellerPageBuilder(),
