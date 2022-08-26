@@ -104,8 +104,9 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
                                               .data()['address']
                                               .split(',')[0];
                                           final bool isDelivered = snapshot
-                                              .data[index]
-                                              .data()['is_delivered'];
+                                                  .data[index]
+                                                  .data()['is_delivered'] ??
+                                              false;
 
                                           final int number = index + 1;
 
@@ -424,7 +425,7 @@ class _SellerRequestsListState extends State<SellerRequestsList> {
               case ConnectionState.waiting:
                 return const Center(child: CircularProgressIndicator());
               case ConnectionState.done:
-                if (snapshot.hasData) {
+                if (snapshot.hasData && true) {
                   return ListView.separated(
                     separatorBuilder: (context, index) {
                       return const Divider(

@@ -65,6 +65,7 @@ dependencies:
   flutter_google_places: ^0.3.0
   geocoding: ^2.0.4
   url_launcher: ^6.1.5
+  flutter_email_sender: ^5.1.0
 
 dev_dependencies:
   flutter_test:

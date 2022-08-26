@@ -4,6 +4,7 @@ class CloudService {
   // Instantiating
   final driverCollection = FirebaseFirestore.instance.collection('drivers');
   final sellerCollection = FirebaseFirestore.instance.collection('sellers');
+  final buyerCollection = FirebaseFirestore.instance.collection('buyers');
 
   // Create
 
@@ -23,8 +24,23 @@ class CloudService {
     );
   }
 
+  Future<void> createBuyerProfile({
+    required String name,
+    required String email,
+  }) async {
+    await buyerCollection.doc(email).set(
+      {
+        'name': name,
+        'email': email,
+        'is_buyer': true,
+        'is_delivered': false,
+      },
+    );
+  }
+
   Future<void> createUpdateRequest({
     required String userId,
+    required String email,
     required String name,
     required String item,
     required double price,
@@ -44,6 +60,7 @@ class CloudService {
         .doc(name)
         .set({
       'name': name,
+      'email': email,
       'number': number,
       'price': price,
       'item': item,
@@ -149,17 +166,10 @@ class CloudService {
           .collection('seller_requests')
           .doc(id)
           .set(
-        {'is_active': true},
+        {'is_active': true, 'is_delivered': false},
         SetOptions(merge: true),
       );
-      await sellerCollection
-          .doc(sellerId)
-          .collection('seller_requests')
-          .doc(id)
-          .set(
-        {'is_delivered': false},
-        SetOptions(merge: true),
-      );
+
       await driverCollection
           .doc(userId)
           .collection('driver_requests')
@@ -170,7 +180,7 @@ class CloudService {
           .collection('driver_requests')
           .doc(id)
           .set(
-        {'is_delivered': false},
+        {'seller_id': sellerId, 'is_delivered': false},
         SetOptions(merge: true),
       );
     }
@@ -180,9 +190,24 @@ class CloudService {
     required String userId,
     required String customer,
   }) async {
+    final doc = await driverCollection
+        .doc(userId)
+        .collection('driver_requests')
+        .doc(customer)
+        .get();
+    final sellerId = doc.data()!['seller_id'];
+
     await driverCollection
         .doc(userId)
         .collection('driver_requests')
+        .doc(customer)
+        .set(
+      {'is_delivered': true},
+      SetOptions(merge: true),
+    );
+    await sellerCollection
+        .doc(sellerId)
+        .collection('seller_requests')
         .doc(customer)
         .set(
       {'is_delivered': true},

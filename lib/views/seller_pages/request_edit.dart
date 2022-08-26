@@ -25,6 +25,7 @@ class _EditRequestsState extends State<EditRequests> {
   final CloudStorage storage = CloudStorage();
   late final TextEditingController _nameTextController;
   late final TextEditingController _itemTextController;
+  late final TextEditingController _emailTextController;
   late final TextEditingController _priceTextController;
   late final TextEditingController _notesTextController;
   late final TextEditingController _numberTextController;
@@ -39,6 +40,7 @@ class _EditRequestsState extends State<EditRequests> {
 
   @override
   void initState() {
+    _emailTextController = TextEditingController();
     _nameTextController = TextEditingController();
     _itemTextController = TextEditingController();
     _priceTextController = TextEditingController();
@@ -57,6 +59,7 @@ class _EditRequestsState extends State<EditRequests> {
     _nameTextController.dispose();
     _itemTextController.dispose();
     _priceTextController.dispose();
+    _emailTextController.dispose();
     _notesTextController.dispose();
     _numberTextController.dispose();
     _locationTextController.dispose();
@@ -91,6 +94,7 @@ class _EditRequestsState extends State<EditRequests> {
     required TextEditingController numberController,
     required TextEditingController locationController,
     required TextEditingController priceController,
+    required TextEditingController emailController,
     required double lat,
     required double long,
   }) async {
@@ -98,6 +102,7 @@ class _EditRequestsState extends State<EditRequests> {
       final pictureURL = await storage.getImageURL(imageName: storageName);
 
       await CloudService().createUpdateRequest(
+        email: emailController.text,
         price: double.parse(priceController.text),
         address: locationController.text,
         userId: userId,
@@ -212,6 +217,22 @@ class _EditRequestsState extends State<EditRequests> {
                               controller: _nameTextController,
                               decoration: const InputDecoration(
                                 hintText: 'Customer Name',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GenericText(text: 'Email', color: color5),
+                            TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailTextController,
+                              decoration: const InputDecoration(
+                                hintText: 'Customer email address',
                               ),
                             ),
                           ],
@@ -383,6 +404,7 @@ class _EditRequestsState extends State<EditRequests> {
                           CloudService()
                               .deleteSellerRequest(userId: userId, name: cname);
                           savingCustomerInfo(
+                            emailController: _emailTextController,
                             locationController: _locationTextController,
                             nameController: _nameTextController,
                             itemController: _itemTextController,

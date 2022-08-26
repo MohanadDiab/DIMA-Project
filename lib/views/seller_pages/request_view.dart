@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/services/auth/auth_service.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:http/http.dart';
+import 'package:testapp/services/misc/passsword_generator.dart';
 
 class Requests extends StatefulWidget {
   const Requests({Key? key}) : super(key: key);
@@ -23,6 +26,8 @@ class _RequestsState extends State<Requests> {
 
   late final TextEditingController _nameTextController;
   late final TextEditingController _itemTextController;
+  late final TextEditingController _emailTextController;
+
   late final TextEditingController _priceTextController;
   late final TextEditingController _notesTextController;
   late final TextEditingController _numberTextController;
@@ -45,6 +50,7 @@ class _RequestsState extends State<Requests> {
     _numberTextController = TextEditingController();
     _locationTextController = TextEditingController();
     _imageTextController = TextEditingController();
+    _emailTextController = TextEditingController();
     _locationTextController.addListener(() {
       onChange();
     });
@@ -57,7 +63,7 @@ class _RequestsState extends State<Requests> {
     _nameTextController.dispose();
     _itemTextController.dispose();
     _priceTextController.dispose();
-
+    _emailTextController.dispose();
     _notesTextController.dispose();
     _numberTextController.dispose();
     _locationTextController.dispose();
@@ -93,6 +99,7 @@ class _RequestsState extends State<Requests> {
     required TextEditingController numberController,
     required TextEditingController locationController,
     required TextEditingController priceController,
+    required TextEditingController emailController,
     required double lat,
     required double long,
   }) async {
@@ -100,6 +107,7 @@ class _RequestsState extends State<Requests> {
       final pictureURL = await storage.getImageURL(imageName: storageName);
 
       await CloudService().createUpdateRequest(
+        email: emailController.text,
         price: double.parse(priceController.text),
         address: locationController.text,
         userId: userId,
@@ -198,6 +206,22 @@ class _RequestsState extends State<Requests> {
                       controller: _nameTextController,
                       decoration: const InputDecoration(
                         hintText: 'Customer Name',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GenericText(text: 'Email', color: color5),
+                    TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'Customer email address',
                       ),
                     ),
                   ],
@@ -363,6 +387,7 @@ class _RequestsState extends State<Requests> {
                 text: 'Save order',
                 onPressed: () async {
                   savingCustomerInfo(
+                    emailController: _emailTextController,
                     priceController: _priceTextController,
                     locationController: _locationTextController,
                     nameController: _nameTextController,
@@ -371,6 +396,23 @@ class _RequestsState extends State<Requests> {
                     numberController: _numberTextController,
                     lat: lat,
                     long: long,
+                  );
+                  final buyerPassword = generatePassword();
+                  AuthService.firebase().createUser(
+                    email: _emailTextController.text,
+                    password: buyerPassword,
+                  );
+                  final Email email = Email(
+                    body:
+                        'Hello and welcome to Delever\n an account has been created with this account\n to check your order status kindly login to the account with this following random password\n Password: $buyerPassword',
+                    subject: 'Your order is in good hands with Delever',
+                    recipients: [_emailTextController.text],
+                    isHTML: false,
+                  );
+                  await FlutterEmailSender.send(email);
+                  await CloudService().createBuyerProfile(
+                    name: _nameTextController.text,
+                    email: _emailTextController.text,
                   );
                 },
                 textColor: color2,

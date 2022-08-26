@@ -16,7 +16,7 @@ class SellerRequests extends StatefulWidget {
 
 class _SellerRequestsState extends State<SellerRequests> {
   String userId = FirebaseAuth.instance.currentUser!.uid;
-
+  bool isActive = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,11 +29,14 @@ class _SellerRequestsState extends State<SellerRequests> {
           color: color2,
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(requests);
-              },
-              icon: const Icon(Icons.add)),
+          Visibility(
+            visible: !isActive,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(requests);
+                },
+                icon: const Icon(Icons.add)),
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -104,8 +107,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                           child: CircularProgressIndicator(),
                         );
                       case ConnectionState.done:
-                        final bool isActive =
-                            snapshot.data[0].data()['is_active'];
+                        isActive = snapshot.data[0].data()['is_active'];
                         return Column(
                           children: [
                             Visibility(
@@ -131,6 +133,9 @@ class _SellerRequestsState extends State<SellerRequests> {
                                 shrinkWrap: true,
                                 itemCount: snapshot.data.length,
                                 itemBuilder: (context, index) {
+                                  final isDelivered = snapshot.data[index]
+                                      .data()['is_delivered'];
+
                                   final price =
                                       snapshot.data[index].data()['price'];
                                   final name =
@@ -402,6 +407,15 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                     ),
                                                   ],
                                                 ),
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: isDelivered ?? false,
+                                              child: GenericButton2(
+                                                primaryColor: Colors.green,
+                                                pressColor: color2,
+                                                text: 'Delivered',
+                                                textColor: color2,
                                               ),
                                             ),
                                           ],
