@@ -20,152 +20,118 @@ class _SellerProfileState extends State<SellerProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: [
-            Container(
-              height: 150,
-              color: color3,
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.white,
+    return FutureBuilder(
+      future: CloudService().getSellerProfile(userId: userId),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case (ConnectionState.waiting):
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          case (ConnectionState.done):
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                shape: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey[200]!,
+                  ),
+                ),
+                title: BigText(
+                  text: 'Your account',
+                  color: color5,
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings),
+                    color: Colors.black,
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-        FutureBuilder(
-          future: CloudService().getSellerProfile(userId: userId),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case (ConnectionState.waiting):
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              case (ConnectionState.done):
-                return ListView(
+              body: Padding(
+                padding: const EdgeInsets.all(25),
+                child: Column(
                   children: [
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 90,
-                              child: Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GenericText(
-                                      text: snapshot.data['name'],
-                                      color: color2,
+                            CircleAvatar(
+                              radius: 60,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data['picture_url']),
+                            ),
+                            const SizedBox(width: 40),
+                            Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GenericText(
+                                    text: snapshot.data['name'],
+                                    color: color5,
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      primary: Colors.white,
+                                      onPrimary: color3,
+                                      padding: const EdgeInsets.all(10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(
+                                          color: Colors.grey[200]!,
+                                        ),
+                                      ),
                                     ),
-                                    GenericText(
-                                      text: 'Seller Account',
-                                      color: color2,
+                                    onPressed: () {},
+                                    child: GenericText2(
+                                      text: 'Edit profile',
+                                      color: color5,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Container(
-                              height: 120,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: color4,
-                                  width: 5,
-                                ),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      snapshot.data['picture_url']),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            GenericText(
-                              text: 'Settings',
-                              color: color4,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              height: 5,
-                              color: color4,
-                            ),
-                            const SizedBox(
-                              height: 20,
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(25),
-                          child: Column(
-                            children: [
-                              GenericButton(
-                                primaryColor: color4,
-                                pressColor: color3,
-                                textColor: color2,
-                                text: 'Edit info',
-                                onPressed: () {
-                                  CloudService().createDriverProfile(
-                                    userId: userId,
-                                    name: 'Mohanad Diab',
-                                    city: 'Amman',
-                                    number: 0790389008,
-                                  );
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GenericButton(
-                                primaryColor: color4,
-                                pressColor: color3,
-                                textColor: color2,
-                                text: 'Change language',
-                                onPressed: () {},
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GenericButton(
-                                primaryColor: color4,
-                                pressColor: color3,
-                                textColor: color2,
-                                text: 'Sign out',
-                                onPressed: () async {
-                                  final shouldLogout =
-                                      await showLogOutDialog(context);
-                                  if (shouldLogout) {
-                                    context.read<AuthBloc>().add(
-                                          const AuthEventLogOut(),
-                                        );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
+                        const SizedBox(height: 52),
+                        Container(
+                          height: 2.5,
+                          color: Colors.grey[400],
                         ),
                       ],
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GenericText(text: 'Name', color: color5),
+                          const TextField(
+                            keyboardType: TextInputType.streetAddress,
+                            // controller: _locationTextController,
+                            decoration: InputDecoration(
+                              hintText: 'Prefer first and lastname only',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                );
+                ),
+              ),
+            );
 
-              default:
-                return const CircularProgressIndicator();
-            }
-          },
-        ),
-      ],
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }

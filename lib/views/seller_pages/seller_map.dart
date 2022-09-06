@@ -29,10 +29,17 @@ class SellerMapState extends State<SellerMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: color3,
-        title: GenericText(text: 'Orders', color: color2),
-        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            iconSize: 30,
+            onPressed: () {},
+            icon: Icon(Icons.person_pin),
+          ),
+        ],
       ),
       drawer: _drawer(),
       body: Stack(

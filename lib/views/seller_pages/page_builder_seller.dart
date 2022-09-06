@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constants/colors.dart';
 import 'package:testapp/views/seller_pages/seller_map.dart';
 import 'package:testapp/views/seller_pages/seller_profile.dart';
 import 'package:testapp/views/seller_pages/seller_requests.dart';
@@ -29,29 +30,29 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _widgetList[_currentIndex],
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: Colors.blueGrey.shade100,
-            labelTextStyle: MaterialStateProperty.all(
-              const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+    return Scaffold(
+      body: _widgetList[_currentIndex],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          elevation: 50,
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.grey[200],
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           ),
-          child: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) => setState(
-              () {
-                _currentIndex = index;
-              },
-            ),
-            destinations: _navyItems,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) => setState(
+            () {
+              _currentIndex = index;
+            },
           ),
+          destinations: _navyItems,
         ),
       ),
     );
@@ -67,5 +68,5 @@ const _widgetList = <Widget>[
 const _navyItems = <NavigationDestination>[
   NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
   NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
-  NavigationDestination(icon: Icon(Icons.settings), label: 'settings'),
+  NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
 ];

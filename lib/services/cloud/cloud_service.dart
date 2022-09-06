@@ -205,7 +205,7 @@ class CloudService {
       {'is_delivered': true},
       SetOptions(merge: true),
     );
-    await sellerCollection
+    await sellerCollection 
         .doc(sellerId)
         .collection('seller_requests')
         .doc(customer)

@@ -21,21 +21,27 @@ class _SellerRequestsState extends State<SellerRequests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: color3,
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
-        title: GenericText(
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey[200]!,
+          ),
+        ),
+        title: BigText(
           text: 'My Requests',
-          color: color2,
+          color: color5,
         ),
         actions: [
           Visibility(
             visible: !isActive,
             child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(requests);
-                },
-                icon: const Icon(Icons.add)),
+              onPressed: () {
+                Navigator.of(context).pushNamed(requests);
+              },
+              icon: const Icon(Icons.add),
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -164,7 +170,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                                         GenericText4(
                                             text: 'order#$number',
                                             color: color5,
-                                            stringWeight: FontWeight.w600),
+                                            stringWeight: FontWeight.w300),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -175,12 +181,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Name: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: name,
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                               ],
                                             ),
@@ -190,12 +196,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Number: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: numberC.toString(),
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                               ],
                                             ),
@@ -205,12 +211,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Item: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: item,
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                               ],
                                             ),
@@ -220,12 +226,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'price: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: price.toString(),
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                                 const Icon(Icons.attach_money),
                                               ],
@@ -237,12 +243,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Address: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: address,
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                               ],
                                             ),
@@ -252,12 +258,12 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Notes: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                                 GenericText4(
                                                   text: notes,
                                                   color: color5,
-                                                  stringWeight: FontWeight.w400,
+                                                  stringWeight: FontWeight.w200,
                                                 ),
                                               ],
                                             ),
@@ -267,7 +273,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                 GenericText4(
                                                   text: 'Item image: ',
                                                   color: color5,
-                                                  stringWeight: FontWeight.w600,
+                                                  stringWeight: FontWeight.w300,
                                                 ),
                                               ],
                                             ),
@@ -353,7 +359,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                           text: 'Edit',
                                                           color: color5,
                                                           stringWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.w300,
                                                         ),
                                                       ),
                                                     ),
@@ -401,7 +407,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                                                           text: 'Delete',
                                                           color: color5,
                                                           stringWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.w300,
                                                         ),
                                                       ),
                                                     ),
@@ -411,11 +417,48 @@ class _SellerRequestsState extends State<SellerRequests> {
                                             ),
                                             Visibility(
                                               visible: isDelivered ?? false,
-                                              child: GenericButton2(
-                                                primaryColor: Colors.green,
-                                                pressColor: color2,
-                                                text: 'Delivered',
-                                                textColor: color2,
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(25),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color:
+                                                            Colors.grey[200]!,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              15),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          GenericText(
+                                                            text: 'Delivered',
+                                                            color: color5,
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 15),
+                                                          const Icon(
+                                                            Icons
+                                                                .task_alt_outlined,
+                                                            color: Colors.green,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ],

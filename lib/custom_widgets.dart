@@ -67,28 +67,6 @@ class GenericButton2 extends StatelessWidget {
   }
 }
 
-class GenericText extends StatelessWidget {
-  const GenericText({Key? key, required this.text, required this.color})
-      : super(key: key);
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w500,
-        fontSize: 24,
-        color: color,
-      ),
-      maxLines: 2,
-      textAlign: TextAlign.center,
-    );
-  }
-}
-
 class Box extends StatelessWidget {
   const Box({Key? key, required this.name, required this.numberOfOrders})
       : super(key: key);
@@ -234,6 +212,28 @@ class Box1 extends StatelessWidget {
   }
 }
 
+class GenericText extends StatelessWidget {
+  const GenericText({Key? key, required this.text, required this.color})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+        fontWeight: FontWeight.w300,
+        fontSize: 24,
+        color: color,
+      ),
+      maxLines: 2,
+      textAlign: TextAlign.center,
+    );
+  }
+}
+
 class GenericText2 extends StatelessWidget {
   const GenericText2({Key? key, required this.text, required this.color})
       : super(key: key);
@@ -246,7 +246,7 @@ class GenericText2 extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w200,
         fontSize: 16,
         color: color,
       ),
@@ -268,7 +268,7 @@ class GenericText3 extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 30,
         color: color,
       ),
@@ -306,11 +306,6 @@ class GenericText4 extends StatelessWidget {
   }
 }
 
-Future<void> call({required String number}) async {
-  final Uri launchUri = Uri(scheme: 'tel', path: number);
-  await launchUrl(launchUri);
-}
-
 class GenericText5 extends StatelessWidget {
   const GenericText5({Key? key, required this.text, required this.color})
       : super(key: key);
@@ -323,7 +318,7 @@ class GenericText5 extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.oswald(
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w200,
           fontSize: 16,
           color: color,
           decoration: TextDecoration.underline),
@@ -331,4 +326,29 @@ class GenericText5 extends StatelessWidget {
       textAlign: TextAlign.center,
     );
   }
+}
+
+class BigText extends StatelessWidget {
+  const BigText({Key? key, required this.text, required this.color})
+      : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.oswald(
+        fontWeight: FontWeight.w600,
+        fontSize: 24,
+        color: color,
+      ),
+    );
+  }
+}
+
+Future<void> call({required String number}) async {
+  final Uri launchUri = Uri(scheme: 'tel', path: number);
+  await launchUrl(launchUri);
 }

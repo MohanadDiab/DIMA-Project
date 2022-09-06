@@ -29,29 +29,27 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _widgetList[_currentIndex],
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: Colors.blueGrey.shade100,
-            labelTextStyle: MaterialStateProperty.all(
-              const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+    return Scaffold(
+      body: _widgetList[_currentIndex],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: Colors.blueGrey.shade100,
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           ),
-          child: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) => setState(
-              () {
-                _currentIndex = index;
-              },
-            ),
-            destinations: _navyItems,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) => setState(
+            () {
+              _currentIndex = index;
+            },
           ),
+          destinations: _navyItems,
         ),
       ),
     );
