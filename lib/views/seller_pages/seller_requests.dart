@@ -15,8 +15,6 @@ class SellerRequests extends StatefulWidget {
 }
 
 class _SellerRequestsState extends State<SellerRequests> {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  bool isActive = false;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -90,14 +88,89 @@ class _SellerRequestsState extends State<SellerRequests> {
         ),
         body: const TabBarView(
           children: [
-            SellerRequestsIsEmpty(),
-            Center(
-              child: Text('Page 2'),
-            ),
+            SellerActiveRequests(),
+            SellerArchivedRequests(),
           ],
         ),
       ),
     );
+  }
+}
+
+class SellerActiveRequests extends StatefulWidget {
+  const SellerActiveRequests({Key? key}) : super(key: key);
+
+  @override
+  State<SellerActiveRequests> createState() => _SellerActiveRequestsState();
+}
+
+class _SellerActiveRequestsState extends State<SellerActiveRequests> {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: CloudService().getSellerRequests(userId: userId),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+
+            case ConnectionState.done:
+              final isActive = snapshot.data[1].data()['is_active'] ?? false;
+              if (snapshot.data.isEmpty) {
+                return const SellerRequestsIsEmpty();
+              } else if (isActive) {
+                return SellerRequestsActive(snapshot: snapshot);
+              } else {
+                return SellerRequestNotActive(snapshot: snapshot);
+              }
+
+            default:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+          }
+        });
+  }
+}
+
+class SellerArchivedRequests extends StatefulWidget {
+  const SellerArchivedRequests({Key? key}) : super(key: key);
+
+  @override
+  State<SellerArchivedRequests> createState() => _SellerArchivedRequestsState();
+}
+
+class _SellerArchivedRequestsState extends State<SellerArchivedRequests> {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: CloudService().getSellerRequests(userId: userId),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+
+            case ConnectionState.done:
+              if (snapshot.data.isEmpty) {
+                return const SellerRequestsIsEmpty();
+              } else {
+                return SellerRequestsArchived(snapshot: snapshot);
+              }
+
+            default:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+          }
+        });
   }
 }
 
@@ -106,11 +179,12 @@ class SellerRequestsIsEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 25),
           GenericText(
               text: 'There are no requests at the moment!', color: color5),
           Lottie.asset('assets/no requests.json'),
@@ -123,399 +197,521 @@ class SellerRequestsIsEmpty extends StatelessWidget {
                 Navigator.of(context).pushNamed(requests);
               },
               textColor: color2),
+          const SizedBox(height: 25),
         ],
       ),
     );
   }
 }
 
-// SingleChildScrollView(
-//       child: Padding(
-//         padding: const EdgeInsets.all(25),
-//         child: ClipRect(
-//           child: Column(
-//             children: [
-//               GenericText(text: 'Current requests', color: color5),
-//               GenericText2(
-//                   text:
-//                       'Note: once a delivery man accepts your requests, you will no longer be able to make changes to the orders.',
-//                   color: color5),
-//               Padding(
-//                 padding: const EdgeInsets.all(15),
-//                 child: Container(
-//                   height: 2,
-//                   color: color3,
-//                 ),
-//               ),
-//               FutureBuilder(
-//                 future: CloudService().getSellerRequests(userId: userId),
-//                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-//                   switch (snapshot.connectionState) {
-//                     case ConnectionState.waiting:
-//                       return const Center(
-//                         child: CircularProgressIndicator(),
-//                       );
-//                     case ConnectionState.done:
-//                       isActive = snapshot.data[0].data()['is_active'];
-//                       return Column(
-//                         children: [
-//                           Visibility(
-//                             visible: isActive,
-//                             child: Row(
-//                               mainAxisAlignment: MainAxisAlignment.center,
-//                               children: [
-//                                 const Icon(Icons.circle_notifications),
-//                                 GenericText(
-//                                     text: 'Status: in delivery', color: color5),
-//                               ],
-//                             ),
-//                           ),
-//                           SizedBox(
-//                             child: ListView.separated(
-//                               separatorBuilder: (context, index) {
-//                                 return const Divider(
-//                                   height: 20,
-//                                 );
-//                               },
-//                               physics: const NeverScrollableScrollPhysics(),
-//                               shrinkWrap: true,
-//                               itemCount: snapshot.data.length,
-//                               itemBuilder: (context, index) {
-//                                 final isDelivered =
-//                                     snapshot.data[index].data()['is_delivered'];
+class SellerRequestsActive extends StatelessWidget {
+  const SellerRequestsActive({
+    Key? key,
+    required this.snapshot,
+  }) : super(key: key);
 
-//                                 final price =
-//                                     snapshot.data[index].data()['price'];
-//                                 final name =
-//                                     snapshot.data[index].data()['name'];
-//                                 final item =
-//                                     snapshot.data[index].data()['item'];
-//                                 final notes =
-//                                     snapshot.data[index].data()['notes'];
-//                                 final pic =
-//                                     snapshot.data[index].data()['picture_url'];
+  final dynamic snapshot;
 
-//                                 final numberC =
-//                                     snapshot.data[index].data()['number'];
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.circle_notifications_outlined,
+                    color: color3,
+                  ),
+                  const SizedBox(width: 5),
+                  GenericText(
+                    text: "Status: in Delivery",
+                    color: color5,
+                  ),
+                ],
+              ),
+            ),
+            GenericText2(
+              text:
+                  'Note: The delivery is in progress, you will be notified for each order deliverd',
+              color: color5,
+            ),
+            SizedBox(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final isDelivered =
+                      snapshot.data[index].data()['is_delivered'];
+                  final price = snapshot.data[index].data()['price'];
+                  final name = snapshot.data[index].data()['name'];
+                  final item = snapshot.data[index].data()['item'];
+                  final notes = snapshot.data[index].data()['notes'];
+                  final pic = snapshot.data[index].data()['picture_url'];
+                  final numberC = snapshot.data[index].data()['number'];
+                  final String address =
+                      snapshot.data[index].data()['address'].split(',')[0];
 
-//                                 final String address = snapshot.data[index]
-//                                     .data()['address']
-//                                     .split(',')[0];
+                  if (!isDelivered) {
+                    return Container(
+                      color: Colors.grey[100],
+                      child: ExpansionTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            GenericRequestRow(
+                              title: 'Name',
+                              name: name,
+                              icon: const Icon(Icons.person_outline),
+                            ),
+                            GenericRequestRow(
+                              title: 'Address',
+                              name: address,
+                              icon: const Icon(Icons.location_history_outlined),
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GenericRequestRow(
+                                title: 'Number',
+                                name: numberC.toString(),
+                                icon: const Icon(
+                                  Icons.call_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Item',
+                                name: item,
+                                icon: const Icon(
+                                  Icons.store_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Price',
+                                name: price.toString(),
+                                icon: const Icon(Icons.attach_money_outlined),
+                              ),
+                              GenericRequestRow(
+                                title: 'Notes',
+                                name: notes,
+                                icon: const Icon(Icons.textsms_outlined),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.image_outlined),
+                                  GenericText4(
+                                    text: 'Item image: ',
+                                    color: color5,
+                                    stringWeight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Material(
+                                        type: MaterialType.transparency,
+                                        child: Container(
+                                          height: 120,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(pic),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: color4,
+                                      width: 5,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(pic),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-//                                 final int number = index + 1;
+class SellerRequestsArchived extends StatelessWidget {
+  const SellerRequestsArchived({
+    Key? key,
+    required this.snapshot,
+  }) : super(key: key);
 
-//                                 return Expanded(
-//                                   child: Column(
-//                                     crossAxisAlignment:
-//                                         CrossAxisAlignment.start,
-//                                     children: [
-//                                       GenericText4(
-//                                           text: 'order#$number',
-//                                           color: color5,
-//                                           stringWeight: FontWeight.w300),
-//                                       Column(
-//                                         crossAxisAlignment:
-//                                             CrossAxisAlignment.start,
-//                                         children: [
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.person),
-//                                               GenericText4(
-//                                                 text: 'Name: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: name,
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.call),
-//                                               GenericText4(
-//                                                 text: 'Number: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: numberC.toString(),
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.store),
-//                                               GenericText4(
-//                                                 text: 'Item: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: item,
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.money),
-//                                               GenericText4(
-//                                                 text: 'price: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: price.toString(),
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                               const Icon(Icons.attach_money),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons
-//                                                   .location_history_outlined),
-//                                               GenericText4(
-//                                                 text: 'Address: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: address,
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.textsms),
-//                                               GenericText4(
-//                                                 text: 'Notes: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                               GenericText4(
-//                                                 text: notes,
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w200,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           Row(
-//                                             children: [
-//                                               const Icon(Icons.image),
-//                                               GenericText4(
-//                                                 text: 'Item image: ',
-//                                                 color: color5,
-//                                                 stringWeight: FontWeight.w300,
-//                                               ),
-//                                             ],
-//                                           ),
-//                                           GestureDetector(
-//                                             onTap: () {
-//                                               showDialog(
-//                                                 context: context,
-//                                                 builder: (context) {
-//                                                   return Material(
-//                                                     type: MaterialType
-//                                                         .transparency,
-//                                                     child: Container(
-//                                                       height: 120,
-//                                                       decoration: BoxDecoration(
-//                                                         image: DecorationImage(
-//                                                           image:
-//                                                               NetworkImage(pic),
-//                                                           fit: BoxFit.contain,
-//                                                         ),
-//                                                       ),
-//                                                     ),
-//                                                   );
-//                                                 },
-//                                               );
-//                                             },
-//                                             child: Container(
-//                                               height: 120,
-//                                               decoration: BoxDecoration(
-//                                                 border: Border.all(
-//                                                   color: color4,
-//                                                   width: 5,
-//                                                 ),
-//                                                 shape: BoxShape.circle,
-//                                                 image: DecorationImage(
-//                                                   image: NetworkImage(pic),
-//                                                   fit: BoxFit.contain,
-//                                                 ),
-//                                               ),
-//                                             ),
-//                                           ),
-//                                           Visibility(
-//                                             visible: !isActive,
-//                                             child: Padding(
-//                                               padding: const EdgeInsets.all(25),
-//                                               child: Row(
-//                                                 children: [
-//                                                   Expanded(
-//                                                     child: ElevatedButton(
-//                                                       style: ElevatedButton
-//                                                           .styleFrom(
-//                                                         onPrimary: color3,
-//                                                         primary: color2,
-//                                                         fixedSize: Size(
-//                                                             MediaQuery.of(
-//                                                                         context)
-//                                                                     .size
-//                                                                     .width *
-//                                                                 .8,
-//                                                             60),
-//                                                         shape:
-//                                                             RoundedRectangleBorder(
-//                                                           borderRadius:
-//                                                               BorderRadius
-//                                                                   .circular(20),
-//                                                         ),
-//                                                       ),
-//                                                       onPressed: () {
-//                                                         Navigator.of(context)
-//                                                             .push(
-//                                                           MaterialPageRoute(
-//                                                             builder: (context) =>
-//                                                                 EditRequests(
-//                                                                     cname:
-//                                                                         name),
-//                                                           ),
-//                                                         );
-//                                                       },
-//                                                       child: GenericText4(
-//                                                         text: 'Edit',
-//                                                         color: color5,
-//                                                         stringWeight:
-//                                                             FontWeight.w300,
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                   const SizedBox(width: 15),
-//                                                   Expanded(
-//                                                     child: ElevatedButton(
-//                                                       style: ElevatedButton
-//                                                           .styleFrom(
-//                                                         onPrimary: color3,
-//                                                         primary: color2,
-//                                                         fixedSize: Size(
-//                                                             MediaQuery.of(
-//                                                                         context)
-//                                                                     .size
-//                                                                     .width *
-//                                                                 .8,
-//                                                             60),
-//                                                         shape:
-//                                                             RoundedRectangleBorder(
-//                                                           borderRadius:
-//                                                               BorderRadius
-//                                                                   .circular(20),
-//                                                         ),
-//                                                       ),
-//                                                       onPressed: () {
-//                                                         ScaffoldMessenger.of(
-//                                                                 context)
-//                                                             .showSnackBar(
-//                                                           const SnackBar(
-//                                                             content: Text(
-//                                                                 'Long press to delete entry'),
-//                                                           ),
-//                                                         );
-//                                                       },
-//                                                       onLongPress: () async {
-//                                                         await CloudService()
-//                                                             .deleteSellerRequest(
-//                                                                 userId: userId,
-//                                                                 name: name);
-//                                                         setState(() {});
-//                                                       },
-//                                                       child: GenericText4(
-//                                                         text: 'Delete',
-//                                                         color: color5,
-//                                                         stringWeight:
-//                                                             FontWeight.w300,
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                           ),
-//                                           Visibility(
-//                                             visible: isDelivered ?? false,
-//                                             child: Center(
-//                                               child: Padding(
-//                                                 padding:
-//                                                     const EdgeInsets.all(25),
-//                                                 child: Container(
-//                                                   decoration: BoxDecoration(
-//                                                     border: Border.all(
-//                                                       color: Colors.grey[200]!,
-//                                                     ),
-//                                                     borderRadius:
-//                                                         BorderRadius.circular(
-//                                                             50),
-//                                                   ),
-//                                                   child: Padding(
-//                                                     padding:
-//                                                         const EdgeInsets.all(
-//                                                             15),
-//                                                     child: Row(
-//                                                       crossAxisAlignment:
-//                                                           CrossAxisAlignment
-//                                                               .center,
-//                                                       mainAxisAlignment:
-//                                                           MainAxisAlignment
-//                                                               .center,
-//                                                       children: [
-//                                                         GenericText(
-//                                                           text: 'Delivered',
-//                                                           color: color5,
-//                                                         ),
-//                                                         const SizedBox(
-//                                                             width: 15),
-//                                                         const Icon(
-//                                                           Icons
-//                                                               .task_alt_outlined,
-//                                                           color: Colors.green,
-//                                                         )
-//                                                       ],
-//                                                     ),
-//                                                   ),
-//                                                 ),
-//                                               ),
-//                                             ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 );
-//                               },
-//                             ),
-//                           ),
-//                         ],
-//                       );
+  final dynamic snapshot;
 
-//                     default:
-//                       return const Center(
-//                         child: CircularProgressIndicator(),
-//                       );
-//                   }
-//                 },
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.circle_notifications_outlined,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 5),
+                  GenericText(
+                    text: "Status: Delivered",
+                    color: color5,
+                  ),
+                ],
+              ),
+            ),
+            GenericText2(
+              text: 'Note: The deliveries shown here are already finished',
+              color: color5,
+            ),
+            SizedBox(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final isDelivered =
+                      snapshot.data[index].data()['is_delivered'];
+                  final price = snapshot.data[index].data()['price'];
+                  final name = snapshot.data[index].data()['name'];
+                  final item = snapshot.data[index].data()['item'];
+                  final notes = snapshot.data[index].data()['notes'];
+                  final pic = snapshot.data[index].data()['picture_url'];
+                  final numberC = snapshot.data[index].data()['number'];
+                  final String address =
+                      snapshot.data[index].data()['address'].split(',')[0];
+
+                  if (!isDelivered) {
+                    return const SizedBox();
+                  } else {
+                    return Container(
+                      color: Colors.grey[100],
+                      child: ExpansionTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            GenericRequestRow(
+                              title: 'Name',
+                              name: name,
+                              icon: const Icon(Icons.person_outline),
+                            ),
+                            GenericRequestRow(
+                              title: 'Address',
+                              name: address,
+                              icon: const Icon(Icons.location_history_outlined),
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GenericRequestRow(
+                                title: 'Number',
+                                name: numberC.toString(),
+                                icon: const Icon(
+                                  Icons.call_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Item',
+                                name: item,
+                                icon: const Icon(
+                                  Icons.store_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Price',
+                                name: price.toString(),
+                                icon: const Icon(Icons.attach_money_outlined),
+                              ),
+                              GenericRequestRow(
+                                title: 'Notes',
+                                name: notes,
+                                icon: const Icon(Icons.textsms_outlined),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.image_outlined),
+                                  GenericText4(
+                                    text: 'Item image: ',
+                                    color: color5,
+                                    stringWeight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Material(
+                                        type: MaterialType.transparency,
+                                        child: Container(
+                                          height: 120,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(pic),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: color4,
+                                      width: 5,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(pic),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SellerRequestNotActive extends StatelessWidget {
+  const SellerRequestNotActive({
+    Key? key,
+    this.snapshot,
+  }) : super(key: key);
+
+  final dynamic snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.circle_notifications_outlined,
+                    color: color3,
+                  ),
+                  const SizedBox(width: 5),
+                  GenericText(
+                    text: "Status: Waiting for Driver",
+                    color: color5,
+                  ),
+                ],
+              ),
+            ),
+            GenericText2(
+              text:
+                  'Note: once a Driver accepts the requests, you can no longer edit the orders',
+              color: color5,
+            ),
+            SizedBox(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final isDelivered =
+                      snapshot.data[index].data()['is_delivered'];
+                  final price = snapshot.data[index].data()['price'];
+                  final name = snapshot.data[index].data()['name'];
+                  final item = snapshot.data[index].data()['item'];
+                  final notes = snapshot.data[index].data()['notes'];
+                  final pic = snapshot.data[index].data()['picture_url'];
+                  final numberC = snapshot.data[index].data()['number'];
+                  final String address =
+                      snapshot.data[index].data()['address'].split(',')[0];
+
+                  if (!isDelivered) {
+                    return const SizedBox();
+                  } else {
+                    return Container(
+                      color: Colors.grey[100],
+                      child: ExpansionTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            GenericRequestRow(
+                              title: 'Name',
+                              name: name,
+                              icon: const Icon(Icons.person_outline),
+                            ),
+                            GenericRequestRow(
+                              title: 'Address',
+                              name: address,
+                              icon: const Icon(Icons.location_history_outlined),
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GenericRequestRow(
+                                title: 'Number',
+                                name: numberC.toString(),
+                                icon: const Icon(
+                                  Icons.call_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Item',
+                                name: item,
+                                icon: const Icon(
+                                  Icons.store_outlined,
+                                ),
+                              ),
+                              GenericRequestRow(
+                                title: 'Price',
+                                name: price.toString(),
+                                icon: const Icon(Icons.attach_money_outlined),
+                              ),
+                              GenericRequestRow(
+                                title: 'Notes',
+                                name: notes,
+                                icon: const Icon(Icons.textsms_outlined),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.image_outlined),
+                                  GenericText4(
+                                    text: 'Item image: ',
+                                    color: color5,
+                                    stringWeight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Material(
+                                        type: MaterialType.transparency,
+                                        child: Container(
+                                          height: 120,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(pic),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: color4,
+                                      width: 5,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(pic),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

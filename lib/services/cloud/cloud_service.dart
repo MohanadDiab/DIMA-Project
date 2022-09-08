@@ -104,6 +104,7 @@ class CloudService {
       'location': GeoPoint(lat, long),
       'address': address,
       'is_active': false,
+      'is_delivered': false,
     });
   }
 
@@ -237,7 +238,10 @@ class CloudService {
         .collection('driver_requests')
         .doc(customer)
         .set(
-      {'is_delivered': true},
+      {
+        'is_delivered': true,
+        'is_active': false,
+      },
       SetOptions(merge: true),
     );
     await sellerCollection
@@ -245,7 +249,10 @@ class CloudService {
         .collection('seller_requests')
         .doc(customer)
         .set(
-      {'is_delivered': true},
+      {
+        'is_delivered': true,
+        'is_active': false,
+      },
       SetOptions(merge: true),
     );
   }

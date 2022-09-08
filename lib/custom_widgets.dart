@@ -352,3 +352,34 @@ Future<void> call({required String number}) async {
   final Uri launchUri = Uri(scheme: 'tel', path: number);
   await launchUrl(launchUri);
 }
+
+class GenericRequestRow extends StatelessWidget {
+  const GenericRequestRow({
+    Key? key,
+    required this.title,
+    required this.name,
+    required this.icon,
+  }) : super(key: key);
+  final String title;
+  final String name;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        icon,
+        GenericText4(
+          text: '$title: ',
+          color: color5,
+          stringWeight: FontWeight.w400,
+        ),
+        GenericText4(
+          text: name,
+          color: color5,
+          stringWeight: FontWeight.w200,
+        ),
+      ],
+    );
+  }
+}
