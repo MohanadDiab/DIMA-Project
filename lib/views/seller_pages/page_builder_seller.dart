@@ -12,7 +12,7 @@ class SellerPageBuilder extends StatefulWidget {
 }
 
 class _SellerPageBuilderState extends State<SellerPageBuilder> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   late PageController _pageController;
 

@@ -8,6 +8,41 @@ class CloudService {
 
   // Create
 
+  Future<void> createSellerSupportRequest({
+    required String userId,
+    required String email,
+    required String subject,
+  }) async {
+    await sellerCollection.doc(userId).set(
+      {'support_email': email, 'support_body': subject},
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> uploadSellerImage({
+    required String userId,
+    required String pictureUrl,
+  }) async {
+    await sellerCollection.doc(userId).set(
+      {
+        'picture_url': pictureUrl,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> updateSellerProfile({
+    required String userId,
+    required String name,
+    required String number,
+    required String city,
+  }) async {
+    await sellerCollection.doc(userId).set(
+      {'name': name, 'number': number, 'city': city},
+      SetOptions(merge: true),
+    );
+  }
+
   Future<void> createDriverProfile({
     required String userId,
     required String name,
@@ -205,7 +240,7 @@ class CloudService {
       {'is_delivered': true},
       SetOptions(merge: true),
     );
-    await sellerCollection 
+    await sellerCollection
         .doc(sellerId)
         .collection('seller_requests')
         .doc(customer)

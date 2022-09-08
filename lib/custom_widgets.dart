@@ -225,7 +225,7 @@ class GenericText extends StatelessWidget {
       text,
       style: GoogleFonts.oswald(
         fontWeight: FontWeight.w300,
-        fontSize: 24,
+        fontSize: 22,
         color: color,
       ),
       maxLines: 2,
@@ -247,7 +247,7 @@ class GenericText2 extends StatelessWidget {
       text,
       style: GoogleFonts.oswald(
         fontWeight: FontWeight.w200,
-        fontSize: 16,
+        fontSize: 14,
         color: color,
       ),
       maxLines: 5,
@@ -269,7 +269,7 @@ class GenericText3 extends StatelessWidget {
       text,
       style: GoogleFonts.oswald(
         fontWeight: FontWeight.w300,
-        fontSize: 30,
+        fontSize: 28,
         color: color,
       ),
       maxLines: 5,
@@ -296,7 +296,7 @@ class GenericText4 extends StatelessWidget {
       text,
       style: GoogleFonts.oswald(
         fontWeight: stringWeight,
-        fontSize: 20,
+        fontSize: 18,
         color: color,
       ),
       maxLines: 5,
@@ -319,7 +319,7 @@ class GenericText5 extends StatelessWidget {
       text,
       style: GoogleFonts.oswald(
           fontWeight: FontWeight.w200,
-          fontSize: 16,
+          fontSize: 14,
           color: color,
           decoration: TextDecoration.underline),
       maxLines: 5,
