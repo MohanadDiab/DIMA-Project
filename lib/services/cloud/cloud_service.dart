@@ -159,13 +159,12 @@ class CloudService {
     return driverRequestsDocs;
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getSellerRequests(
-      {required String userId}) async {
-    final sellerRequests =
-        await sellerCollection.doc(userId).collection('seller_requests').get();
-
-    final sellerRequestsDocs = sellerRequests.docs;
-    return sellerRequestsDocs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequests(
+      {required String userId}) {
+    return sellerCollection
+        .doc(userId)
+        .collection('seller_requests')
+        .snapshots();
   }
 
   Future<bool> isRequestActive({required userId}) async {

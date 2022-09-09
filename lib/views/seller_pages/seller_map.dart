@@ -80,8 +80,8 @@ class SellerMapState extends State<SellerMap> {
             leading: Icon(Icons.delivery_dining),
           ),
           const Divider(),
-          FutureBuilder(
-            future: CloudService().getSellerRequests(userId: userId),
+          StreamBuilder(
+            stream: CloudService().getSellerRequests(userId: userId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
