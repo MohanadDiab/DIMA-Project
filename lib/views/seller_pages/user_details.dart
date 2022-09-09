@@ -80,7 +80,10 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                     padding: const EdgeInsets.all(15),
                     child: Column(
                       children: [
-                        Lottie.asset('assets/profile.json'),
+                        SizedBox(
+                          height: 300,
+                          child: Lottie.asset('assets/profile.json'),
+                        ),
                         GenericText(text: 'Update your account', color: color5),
                         GenericText2(
                             text:

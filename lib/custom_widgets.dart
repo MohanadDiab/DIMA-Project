@@ -36,6 +36,57 @@ class GenericButton extends StatelessWidget {
   }
 }
 
+class GenericButton3 extends StatelessWidget {
+  const GenericButton3({
+    Key? key,
+    required this.text,
+    required this.icon,
+    required this.onPressed,
+    required this.color,
+  }) : super(key: key);
+
+  final String text;
+  final Color color;
+  final Widget icon;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: color2,
+            primary: color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(width: 5),
+                GenericText4(
+                  text: text,
+                  color: color2,
+                  stringWeight: FontWeight.w300,
+                ),
+                const SizedBox(width: 5),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class GenericButton2 extends StatelessWidget {
   const GenericButton2({
     Key? key,

@@ -119,7 +119,6 @@ class _RequestsState extends State<Requests> {
         long: long,
         pictureUrl: pictureURL!,
       );
-      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Request created successfully'),
@@ -397,23 +396,25 @@ class _RequestsState extends State<Requests> {
                     lat: lat,
                     long: long,
                   );
-                  final buyerPassword = generatePassword();
-                  AuthService.firebase().createUser(
-                    email: _emailTextController.text,
-                    password: buyerPassword,
-                  );
-                  final Email email = Email(
-                    body:
-                        'Hello and welcome to Delever\n an account has been created with this account\n to check your order status kindly login to the account with this following random password\n Password: $buyerPassword',
-                    subject: 'Your order is in good hands with Delever',
-                    recipients: [_emailTextController.text],
-                    isHTML: false,
-                  );
-                  await FlutterEmailSender.send(email);
-                  await CloudService().createBuyerProfile(
-                    name: _nameTextController.text,
-                    email: _emailTextController.text,
-                  );
+                  Navigator.of(context).pop();
+
+                  // final buyerPassword = generatePassword();
+                  // AuthService.firebase().createUser(
+                  //   email: _emailTextController.text,
+                  //   password: buyerPassword,
+                  // );
+                  // final Email email = Email(
+                  //   body:
+                  //       'Hello and welcome to Delever\n an account has been created with this account\n to check your order status kindly login to the account with this following random password\n Password: $buyerPassword',
+                  //   subject: 'Your order is in good hands with Delever',
+                  //   recipients: [_emailTextController.text],
+                  //   isHTML: false,
+                  // );
+                  // await FlutterEmailSender.send(email);
+                  // await CloudService().createBuyerProfile(
+                  //   name: _nameTextController.text,
+                  //   email: _emailTextController.text,
+                  // );
                 },
                 textColor: color2,
               ),

@@ -114,7 +114,6 @@ class _EditRequestsState extends State<EditRequests> {
         long: long,
         pictureUrl: pictureURL!,
       );
-      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Request created successfully'),
@@ -414,6 +413,7 @@ class _EditRequestsState extends State<EditRequests> {
                             long: long,
                             priceController: _priceTextController,
                           );
+                          Navigator.of(context).pop();
                         },
                         textColor: color2,
                       ),

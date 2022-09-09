@@ -129,6 +129,16 @@ class CloudService {
     }
   }
 
+  Future<bool> sellerIsPublished({required String userId}) async {
+    final seller = await sellerCollection.doc(userId).get();
+    final isPublished = seller.data()!['is_published'];
+    if (isPublished) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>?> getDriverProfile(
       {required String userId}) async {
     final driver = await driverCollection.doc(userId).get();
