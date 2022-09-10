@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/main.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
@@ -11,7 +12,7 @@ import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 import 'package:testapp/views/common_pages/Help_and_support.dart';
 import 'package:testapp/views/login_view.dart';
-import 'package:testapp/views/seller_pages/user_details.dart';
+import 'package:testapp/views/seller_pages/seller_user_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SellerProfile extends StatefulWidget {
@@ -207,9 +208,13 @@ class _SellerProfileState extends State<SellerProfile> {
                         function: () async {
                           final shouldLogout = await showLogOutDialog(context);
                           if (shouldLogout) {
-                            context.read<AuthBloc>().add(
-                                  const AuthEventLogOut(),
-                                );
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const HomePage(),
+                                ),
+                                (route) => false);
                           }
                         },
                       ),

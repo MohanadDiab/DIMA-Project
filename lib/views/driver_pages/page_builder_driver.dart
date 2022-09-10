@@ -11,7 +11,7 @@ class DriverPageBuilder extends StatefulWidget {
 }
 
 class _DriverPageBuilderState extends State<DriverPageBuilder> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   late PageController _pageController;
 
@@ -33,7 +33,9 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
       body: _widgetList[_currentIndex],
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.blueGrey.shade100,
+          elevation: 50,
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.grey[200],
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(
               fontSize: 14,
