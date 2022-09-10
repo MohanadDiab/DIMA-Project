@@ -171,10 +171,11 @@ class _SellerArchivedRequestsState extends State<SellerArchivedRequests> {
               );
 
             case ConnectionState.active:
-              if (snapshot.data.isEmpty) {
+              if (!snapshot.hasData) {
                 return const SellerRequestsIsEmpty();
               } else {
-                return SellerRequestsArchived(snapshot: snapshot);
+                final docs = snapshot.data!.docs;
+                return SellerRequestsArchived(snapshot: docs);
               }
 
             default:

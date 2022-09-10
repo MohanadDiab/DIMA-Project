@@ -47,18 +47,17 @@ class SellerRequestsArchived extends StatelessWidget {
                 },
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.length,
                 itemBuilder: (context, index) {
-                  final isDelivered =
-                      snapshot.data[index].data()['is_delivered'];
-                  final price = snapshot.data[index].data()['price'];
-                  final name = snapshot.data[index].data()['name'];
-                  final item = snapshot.data[index].data()['item'];
-                  final notes = snapshot.data[index].data()['notes'];
-                  final pic = snapshot.data[index].data()['picture_url'];
-                  final numberC = snapshot.data[index].data()['number'];
+                  final isDelivered = snapshot[index].data()['is_delivered'];
+                  final price = snapshot[index].data()['price'];
+                  final name = snapshot[index].data()['name'];
+                  final item = snapshot[index].data()['item'];
+                  final notes = snapshot[index].data()['notes'];
+                  final pic = snapshot[index].data()['picture_url'];
+                  final numberC = snapshot[index].data()['number'];
                   final String address =
-                      snapshot.data[index].data()['address'].split(',')[0];
+                      snapshot[index].data()['address'].split(',')[0];
 
                   if (!isDelivered) {
                     return const SizedBox();
