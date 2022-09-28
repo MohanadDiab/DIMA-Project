@@ -17,23 +17,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -62,103 +45,189 @@ class _RegisterViewState extends State<RegisterView> {
           }
         }
       },
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(50),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 250,
-                    width: 250,
-                    decoration: const BoxDecoration(
-                      image:
-                          DecorationImage(image: AssetImage('assets/logo.png')),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: Column(
+            children: [
+              TabBar(
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.task,
+                          color: color3,
+                        ),
+                        const SizedBox(width: 5),
+                        GenericText(
+                          text: 'Active',
+                          color: color5,
+                        ),
+                      ],
                     ),
                   ),
-                  GenericText(text: 'Register with your email', color: color3),
-                  const SizedBox(height: 25),
-                  Container(
-                    height: 2,
-                    color: color3,
-                  ),
-                  const SizedBox(height: 25),
-                  Row(
-                    children: [
-                      const Icon(Icons.email),
-                      const SizedBox(width: 5),
-                      GenericText(text: 'Email address', color: color5),
-                      const Expanded(child: SizedBox()),
-                    ],
-                  ),
-                  TextField(
-                    controller: _email,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    autofocus: true,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: context.loc.email_text_field_placeholder,
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.archive,
+                          color: color3,
+                        ),
+                        const SizedBox(width: 5),
+                        GenericText(
+                          text: 'Archive',
+                          color: color5,
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  Row(
-                    children: [
-                      const Icon(Icons.lock),
-                      const SizedBox(width: 5),
-                      GenericText(text: 'Password', color: color5),
-                      const Expanded(child: SizedBox()),
-                    ],
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      hintText: context.loc.password_text_field_placeholder,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: GenericButton(
-                        primaryColor: color3,
-                        pressColor: color2,
-                        text: context.loc.register,
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          context.read<AuthBloc>().add(
-                                AuthEventRegister(
-                                  email,
-                                  password,
-                                ),
-                              );
-                        },
-                        textColor: color2),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: GenericButton(
-                        primaryColor: color3,
-                        pressColor: color2,
-                        text: context.loc.forgot_password_view_back_to_login,
-                        onPressed: () {
-                          context.read<AuthBloc>().add(
-                                const AuthEventLogOut(),
-                              );
-                        },
-                        textColor: color2),
                   ),
                 ],
               ),
-            ),
+              const TabBarView(
+                children: [
+                  RegisterTab(),
+                  RegisterTab(),
+                ],
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class RegisterTab extends StatefulWidget {
+  const RegisterTab({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterTab> createState() => _RegisterTabState();
+}
+
+class _RegisterTabState extends State<RegisterTab> {
+  late final TextEditingController _email;
+
+  late final TextEditingController _password;
+
+  late final TextEditingController _name;
+
+  late final TextEditingController _city;
+
+  late final TextEditingController _number;
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    _password = TextEditingController();
+    _name = TextEditingController();
+    _number = TextEditingController();
+    _city = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    _name.dispose();
+    _city.dispose();
+    _number.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(50),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 250,
+            width: 250,
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: AssetImage('assets/logo.png')),
+            ),
+          ),
+          GenericText(text: 'Register with your email', color: color3),
+          const SizedBox(height: 25),
+          Container(
+            height: 2,
+            color: color3,
+          ),
+          const SizedBox(height: 25),
+          Row(
+            children: [
+              const Icon(Icons.email_outlined),
+              const SizedBox(width: 5),
+              GenericText(text: 'Email address', color: color5),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+          TextField(
+            controller: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            autofocus: true,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: context.loc.email_text_field_placeholder,
+            ),
+          ),
+          const SizedBox(height: 25),
+          Row(
+            children: [
+              const Icon(Icons.lock_outlined),
+              const SizedBox(width: 5),
+              GenericText(text: 'Password', color: color5),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: InputDecoration(
+              hintText: context.loc.password_text_field_placeholder,
+            ),
+          ),
+          const SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: GenericButton(
+                primaryColor: color3,
+                pressColor: color2,
+                text: context.loc.register,
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
+                  context.read<AuthBloc>().add(
+                        AuthEventRegister(
+                          email,
+                          password,
+                        ),
+                      );
+                },
+                textColor: color2),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: GenericButton(
+                primaryColor: color3,
+                pressColor: color2,
+                text: context.loc.forgot_password_view_back_to_login,
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                        const AuthEventLogOut(),
+                      );
+                },
+                textColor: color2),
+          ),
+        ],
       ),
     );
   }

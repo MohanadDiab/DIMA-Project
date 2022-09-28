@@ -150,18 +150,11 @@ class SellerRequestNotActive extends StatelessWidget {
                                         },
                                       );
                                     },
-                                    child: Container(
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: color4,
-                                          width: 5,
-                                        ),
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(pic),
-                                          fit: BoxFit.contain,
-                                        ),
+                                    child: Center(
+                                      child: CircularAvatarImage(
+                                        networkImage: pic,
+                                        placeholderIcon:
+                                            Icons.catching_pokemon_outlined,
                                       ),
                                     ),
                                   ),

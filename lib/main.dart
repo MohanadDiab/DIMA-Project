@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/routes.dart';
@@ -14,6 +16,7 @@ import 'package:testapp/views/seller_pages/page_builder_seller.dart';
 import 'package:testapp/views/splash.dart';
 import 'package:testapp/views/verify_email_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'services/cloud/cloud_service.dart';
 import 'views/seller_pages/request_view.dart';
 
 void main() {
@@ -40,8 +43,25 @@ void main() {
   );
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isDriver = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // initializeAppUI();
+  }
+
+  // void initializeAppUI() async {
+  //   _isDriver = await CloudService().isDriver(userId: userId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +79,11 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const Splash();
+          if (_isDriver) {
+            return const DriverPageBuilder();
+          } else {
+            return const SellerPageBuilder();
+          }
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {

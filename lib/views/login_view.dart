@@ -24,6 +24,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+
     super.initState();
   }
 
@@ -31,6 +32,7 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+
     super.dispose();
   }
 
@@ -57,10 +59,10 @@ class _LoginViewState extends State<LoginView> {
           }
         }
       },
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(50),
               child: Column(
@@ -83,7 +85,7 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 25),
                   Row(
                     children: [
-                      const Icon(Icons.email),
+                      const Icon(Icons.email_outlined),
                       const SizedBox(width: 5),
                       GenericText(text: 'Email address', color: color5),
                       const Expanded(child: SizedBox()),
@@ -101,7 +103,7 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 25),
                   Row(
                     children: [
-                      const Icon(Icons.lock),
+                      const Icon(Icons.lock_outlined),
                       const SizedBox(width: 5),
                       GenericText(text: 'Password', color: color5),
                       const Expanded(child: SizedBox()),

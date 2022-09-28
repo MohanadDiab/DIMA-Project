@@ -85,14 +85,9 @@ class _DriverProfileState extends State<DriverProfile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 70,
-                          backgroundImage: NetworkImage(
-                            snapshot.data['picture_url'],
-                          ),
-                        ),
+                      CircularAvatarImage(
+                        networkImage: snapshot.data['picture_url'],
+                        placeholderIcon: Icons.person,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(

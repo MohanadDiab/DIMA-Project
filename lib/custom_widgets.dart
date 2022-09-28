@@ -434,3 +434,35 @@ class GenericRequestRow extends StatelessWidget {
     );
   }
 }
+
+class CircularAvatarImage extends StatelessWidget {
+  const CircularAvatarImage(
+      {Key? key, required this.networkImage, required this.placeholderIcon})
+      : super(key: key);
+
+  final String networkImage;
+  final IconData placeholderIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 70,
+        foregroundImage: NetworkImage(networkImage),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(placeholderIcon),
+              const SizedBox(height: 15),
+              const CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

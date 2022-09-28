@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/routes.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
-import 'package:testapp/views/seller_pages/request_edit.dart';
-
 import 'seller_requests_states/request_inactive.dart';
 import 'seller_requests_states/requests_active.dart';
 import 'seller_requests_states/requests_archived.dart';
