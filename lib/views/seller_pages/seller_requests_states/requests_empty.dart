@@ -36,3 +36,34 @@ class SellerRequestsIsEmpty extends StatelessWidget {
     );
   }
 }
+
+class SellerRequestsArchivedIsEmpty extends StatelessWidget {
+  const SellerRequestsArchivedIsEmpty({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 25),
+          GenericText(text: 'No deliveries have been made!', color: color5),
+          SizedBox(
+            height: 400,
+            child: Lottie.asset('assets/no requests.json'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25),
+            child: GenericText4(
+              text:
+                  'Note: when a delivery is made by a deliveryman, it will appear here alongside its respective info',
+              color: color3,
+              stringWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

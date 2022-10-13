@@ -28,7 +28,7 @@ class SellerRequestsActive extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   GenericText(
-                    text: "Status: in Delivery",
+                    text: "Status: Assigning a driver",
                     color: color5,
                   ),
                 ],
@@ -36,7 +36,7 @@ class SellerRequestsActive extends StatelessWidget {
             ),
             GenericText2(
               text:
-                  'Note: The delivery is in progress, you will be notified for each order deliverd',
+                  'Note: your order is published, you will be notified once a driver is assigned',
               color: color5,
             ),
             SizedBox(

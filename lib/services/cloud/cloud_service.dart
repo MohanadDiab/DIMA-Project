@@ -139,6 +139,26 @@ class CloudService {
     }
   }
 
+  Future<Map<String, dynamic>> sellerAssignedDriver(
+      {required String userId}) async {
+    final seller = await sellerCollection.doc(userId).get();
+    final driverName = seller.data()!['assigned_driver'];
+    final driverInfo =
+        await driverCollection.where('name', isEqualTo: driverName).get();
+
+    return driverInfo.docs[0].data();
+  }
+
+  Future<bool> sellerIsAssigned({required String userId}) async {
+    final seller = await sellerCollection.doc(userId).get();
+    final isAssigned = seller.data()!['is_assigned'];
+    if (isAssigned) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>?> getDriverProfile(
       {required String userId}) async {
     final driver = await driverCollection.doc(userId).get();
@@ -151,12 +171,12 @@ class CloudService {
     return seller.data();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getDriverRequests(
-      {required String userId}) async {
-    final driverRequests =
-        await driverCollection.doc(userId).collection('driver_requests').get();
-    final driverRequestsDocs = driverRequests.docs;
-    return driverRequestsDocs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> getDriverRequests(
+      {required String userId}) {
+    return driverCollection
+        .doc(userId)
+        .collection('driver_requests')
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequests(
@@ -164,6 +184,14 @@ class CloudService {
     return sellerCollection
         .doc(userId)
         .collection('seller_requests')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequestsArchived(
+      {required String userId}) {
+    return sellerCollection
+        .doc(userId)
+        .collection('seller_requests_archived')
         .snapshots();
   }
 
@@ -191,6 +219,13 @@ class CloudService {
   }
 
   //update
+
+  Future<void> publishSeller({required userId}) async {
+    return sellerCollection.doc(userId).set(
+      {'is_published': true},
+      SetOptions(merge: true),
+    );
+  }
 
   Future<void> assignToDriver({
     required String userId,

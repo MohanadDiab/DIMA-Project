@@ -2,16 +2,13 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
-import 'package:testapp/services/auth/auth_service.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:http/http.dart';
-import 'package:testapp/services/misc/passsword_generator.dart';
 
 class Requests extends StatefulWidget {
   const Requests({Key? key}) : super(key: key);

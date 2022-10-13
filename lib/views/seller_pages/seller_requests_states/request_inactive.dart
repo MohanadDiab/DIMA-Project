@@ -301,7 +301,9 @@ class SellerRequestNotActive extends StatelessWidget {
                       Icons.publish_outlined,
                       color: color2,
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      CloudService().publishSeller(userId: userId);
+                    },
                   ),
                 ],
               ),

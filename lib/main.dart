@@ -51,7 +51,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isDriver = false;
+  bool _isDriver = true;
 
   @override
   void initState() {

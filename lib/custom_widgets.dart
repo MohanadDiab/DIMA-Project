@@ -466,3 +466,149 @@ class CircularAvatarImage extends StatelessWidget {
     );
   }
 }
+
+class CircularAvatarImageSmall extends StatelessWidget {
+  const CircularAvatarImageSmall(
+      {Key? key, required this.networkImage, required this.placeholderIcon})
+      : super(key: key);
+
+  final String networkImage;
+  final IconData placeholderIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 50,
+        foregroundImage: NetworkImage(networkImage),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(placeholderIcon),
+              const SizedBox(height: 15),
+              const CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GenericExpandableList extends StatelessWidget {
+  const GenericExpandableList({
+    Key? key,
+    required this.name,
+    required this.address,
+    required this.numberC,
+    required this.item,
+    required this.price,
+    required this.notes,
+    required this.pic,
+  }) : super(key: key);
+  final String name;
+  final String address;
+  final int numberC;
+  final String item;
+  final double price;
+  final String notes;
+  final String pic;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[100],
+      child: ExpansionTile(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            GenericRequestRow(
+              title: 'Name',
+              name: name,
+              icon: const Icon(Icons.person_outline),
+            ),
+            GenericRequestRow(
+              title: 'Address',
+              name: address,
+              icon: const Icon(Icons.location_history_outlined),
+            ),
+          ],
+        ),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericRequestRow(
+                title: 'Number',
+                name: numberC.toString(),
+                icon: const Icon(
+                  Icons.call_outlined,
+                ),
+              ),
+              GenericRequestRow(
+                title: 'Item',
+                name: item,
+                icon: const Icon(
+                  Icons.store_outlined,
+                ),
+              ),
+              GenericRequestRow(
+                title: 'Price',
+                name: price.toString(),
+                icon: const Icon(Icons.attach_money_outlined),
+              ),
+              GenericRequestRow(
+                title: 'Notes',
+                name: notes,
+                icon: const Icon(Icons.textsms_outlined),
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.image_outlined),
+                  GenericText4(
+                    text: 'Item image: ',
+                    color: color5,
+                    stringWeight: FontWeight.w400,
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Material(
+                        type: MaterialType.transparency,
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(pic),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Center(
+                  child: CircularAvatarImage(
+                    networkImage: pic,
+                    placeholderIcon: Icons.catching_pokemon_outlined,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 25),
+        ],
+      ),
+    );
+  }
+}

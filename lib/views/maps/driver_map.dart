@@ -158,12 +158,13 @@ class DriverMapState extends State<DriverMap> {
             leading: Icon(Icons.delivery_dining),
           ),
           const Divider(),
-          FutureBuilder(
-            future: CloudService().getDriverRequests(userId: userId),
+          StreamBuilder(
+            stream: CloudService().getDriverRequests(userId: userId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                case ConnectionState.done:
+                case ConnectionState.active:
+                  final docs = snapshot.data.docs!;
                   if (snapshot.hasData) {
                     return ListView.separated(
                       separatorBuilder: (context, index) {
@@ -172,24 +173,20 @@ class DriverMapState extends State<DriverMap> {
                         );
                       },
                       shrinkWrap: true,
-                      itemCount: snapshot.data.length,
+                      itemCount: docs.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           onTap: () {
                             _goToCustomer(
-                              name: snapshot.data[index].data()['name'],
-                              item: snapshot.data[index].data()['item'],
-                              notes: snapshot.data[index].data()['notes'],
-                              lat: snapshot.data[index]
-                                  .data()['location']
-                                  .latitude,
-                              long: snapshot.data[index]
-                                  .data()['location']
-                                  .longitude,
+                              name: docs[index].data()['name'],
+                              item: docs[index].data()['item'],
+                              notes: docs[index].data()['notes'],
+                              lat: docs[index].data()['location'].latitude,
+                              long: docs[index].data()['location'].longitude,
                             );
                             Navigator.of(context).pop();
                           },
-                          title: Text(snapshot.data[index].data()['name']),
+                          title: Text(docs[index].data()['name']),
                           trailing: const Icon(Icons.my_location_outlined),
                         );
                       },
