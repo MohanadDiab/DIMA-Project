@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/routes.dart';
@@ -51,17 +50,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isDriver = true;
-
-  @override
-  void initState() {
-    super.initState();
-    // initializeAppUI();
-  }
-
-  // void initializeAppUI() async {
-  //   _isDriver = await CloudService().isDriver(userId: userId);
-  // }
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  late bool _isDriver;
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +69,28 @@ class _HomePageState extends State<HomePage> {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          if (_isDriver) {
-            return const DriverPageBuilder();
-          } else {
-            return const SellerPageBuilder();
-          }
+          return FutureBuilder(
+            future: CloudService().isDriver(userId: userId),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: Splash(),
+                  );
+                case ConnectionState.done:
+                  _isDriver = snapshot.data();
+                  if (_isDriver) {
+                    return const DriverPageBuilder();
+                  } else {
+                    return const SellerPageBuilder();
+                  }
+                default:
+                  return const Center(
+                    child: Splash(),
+                  );
+              }
+            },
+          );
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
@@ -94,7 +101,9 @@ class _HomePageState extends State<HomePage> {
           return const RegisterView();
         } else {
           return const Scaffold(
-            body: CircularProgressIndicator(),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
       },
