@@ -50,9 +50,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  late bool _isDriver;
-
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
@@ -69,28 +66,7 @@ class _HomePageState extends State<HomePage> {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return FutureBuilder(
-            future: CloudService().isDriver(userId: userId),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return const Center(
-                    child: Splash(),
-                  );
-                case ConnectionState.done:
-                  _isDriver = snapshot.data();
-                  if (_isDriver) {
-                    return const DriverPageBuilder();
-                  } else {
-                    return const SellerPageBuilder();
-                  }
-                default:
-                  return const Center(
-                    child: Splash(),
-                  );
-              }
-            },
-          );
+          return const SellerPageBuilder();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {

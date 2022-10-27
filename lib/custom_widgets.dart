@@ -436,9 +436,11 @@ class GenericRequestRow extends StatelessWidget {
 }
 
 class CircularAvatarImage extends StatelessWidget {
-  const CircularAvatarImage(
-      {Key? key, required this.networkImage, required this.placeholderIcon})
-      : super(key: key);
+  const CircularAvatarImage({
+    Key? key,
+    required this.networkImage,
+    required this.placeholderIcon,
+  }) : super(key: key);
 
   final String networkImage;
   final IconData placeholderIcon;
@@ -462,6 +464,7 @@ class CircularAvatarImage extends StatelessWidget {
             ],
           ),
         ),
+        onForegroundImageError: (e, stackTrace) {},
       ),
     );
   }

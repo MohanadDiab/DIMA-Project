@@ -36,7 +36,7 @@ class SellerRequestsAssigned extends StatelessWidget {
                       right: 15,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                   onPressed: () {

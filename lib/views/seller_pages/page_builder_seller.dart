@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/views/seller_pages/seller_map.dart';
+import 'package:testapp/views/maps/seller_map.dart';
 import 'package:testapp/views/seller_pages/seller_profile.dart';
 import 'package:testapp/views/seller_pages/seller_requests.dart';
 
