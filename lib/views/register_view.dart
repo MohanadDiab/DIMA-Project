@@ -49,7 +49,13 @@ class _RegisterViewState extends State<RegisterView> {
         length: 2,
         child: Scaffold(
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 50),
+              GenericText3(
+                text: "Please choose your sign up option",
+                color: color3,
+              ),
               TabBar(
                 tabs: [
                   Tab(

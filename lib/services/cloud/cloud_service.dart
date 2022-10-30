@@ -122,6 +122,7 @@ class CloudService {
 
   Future<bool> isDriver({required String userId}) async {
     final driver = await driverCollection.doc(userId).get();
+    await Future.delayed(const Duration(seconds: 3));
     if (driver.exists) {
       return true;
     } else {

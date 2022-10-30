@@ -122,10 +122,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               isLoading: false,
             ),
           );
-          emit(AuthStateLoggedIn(
-            user: user,
-            isLoading: false,
-          ));
+          emit(
+            AuthStateLoggedIn(
+              user: user,
+              isLoading: false,
+            ),
+          );
         }
       } on Exception catch (e) {
         emit(

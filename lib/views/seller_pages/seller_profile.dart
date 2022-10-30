@@ -205,13 +205,9 @@ class _SellerProfileState extends State<SellerProfile> {
                         function: () async {
                           final shouldLogout = await showLogOutDialog(context);
                           if (shouldLogout) {
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const HomePage(),
-                                ),
-                                (route) => false);
+                            context.read<AuthBloc>().add(
+                                  const AuthEventLogOut(),
+                                );
                           }
                         },
                       ),

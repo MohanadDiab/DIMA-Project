@@ -1,9 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/main.dart';
+import 'package:testapp/services/auth/bloc/auth_bloc.dart';
+import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
@@ -200,13 +203,9 @@ class _DriverProfileState extends State<DriverProfile> {
                         function: () async {
                           final shouldLogout = await showLogOutDialog(context);
                           if (shouldLogout) {
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const HomePage(),
-                                ),
-                                (route) => false);
+                            context.read<AuthBloc>().add(
+                                  const AuthEventLogOut(),
+                                );
                           }
                         },
                       ),

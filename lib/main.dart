@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/routes.dart';
 import 'package:testapp/helpers/loading/loading_screen.dart';
+import 'package:testapp/router.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/auth/bloc/auth_state.dart';
@@ -12,10 +12,8 @@ import 'package:testapp/views/login_view.dart';
 import 'package:testapp/views/driver_pages/page_builder_driver.dart';
 import 'package:testapp/views/register_view.dart';
 import 'package:testapp/views/seller_pages/page_builder_seller.dart';
-import 'package:testapp/views/splash.dart';
 import 'package:testapp/views/verify_email_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'services/cloud/cloud_service.dart';
 import 'views/seller_pages/request_view.dart';
 
 void main() {
@@ -66,7 +64,7 @@ class _HomePageState extends State<HomePage> {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const SellerPageBuilder();
+          return const PageRouter();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
