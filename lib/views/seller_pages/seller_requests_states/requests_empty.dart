@@ -55,7 +55,7 @@ class SellerRequestsArchivedIsEmpty extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(25),
-            child: GenericText4(
+            child: genericText4(
               text:
                   'Note: when a delivery is made by a deliveryman, it will appear here alongside its respective info',
               color: color3,

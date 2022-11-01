@@ -156,7 +156,7 @@ class _LoginViewState extends State<LoginView> {
                           const AuthEventForgotPassword(),
                         );
                   },
-                  child: GenericText5(
+                  child: genericText5(
                     text: context.loc.login_view_forgot_password,
                     color: color5,
                   ),

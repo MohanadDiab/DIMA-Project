@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/constants/routes.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/request_assigned.dart';
@@ -123,7 +122,7 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case (ConnectionState.waiting):
-            return const Center(child: CircularProgressIndicator());
+            return Container();
           case (ConnectionState.done):
             isPublished = snapshot.data[0];
             isAssigned = snapshot.data[1];

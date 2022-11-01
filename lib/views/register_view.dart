@@ -52,7 +52,7 @@ class _RegisterViewState extends State<RegisterView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              GenericText3(
+              genericText3(
                 text: "Please choose your sign up option",
                 color: color3,
               ),

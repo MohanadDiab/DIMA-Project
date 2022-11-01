@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:testapp/constants/routes.dart';
 import 'package:testapp/helpers/loading/loading_screen.dart';
 import 'package:testapp/router.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'views/seller_pages/request_view.dart';
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(

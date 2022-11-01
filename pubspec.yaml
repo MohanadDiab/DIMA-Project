@@ -66,6 +66,7 @@ dependencies:
   geocoding: ^2.0.4
   url_launcher: ^6.1.5
   flutter_email_sender: ^5.1.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,7 @@ flutter:
   uses-material-design: true
   assets:
   - assets/
+  - assets/google_fonts/static/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

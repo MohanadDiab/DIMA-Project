@@ -123,7 +123,7 @@ class SellerRequestNotActive extends StatelessWidget {
                                   Row(
                                     children: [
                                       const Icon(Icons.image_outlined),
-                                      GenericText4(
+                                      genericText4(
                                         text: 'Item image: ',
                                         color: color5,
                                         stringWeight: FontWeight.w400,
@@ -191,7 +191,7 @@ class SellerRequestNotActive extends StatelessWidget {
                                                     color: color3,
                                                   ),
                                                   const SizedBox(width: 10),
-                                                  GenericText4(
+                                                  genericText4(
                                                     text: 'Edit',
                                                     color: color5,
                                                     stringWeight:
@@ -246,7 +246,7 @@ class SellerRequestNotActive extends StatelessWidget {
                                                   color: color3,
                                                 ),
                                                 const SizedBox(width: 10),
-                                                GenericText4(
+                                                genericText4(
                                                   text: 'Delete',
                                                   color: color5,
                                                   stringWeight: FontWeight.w300,

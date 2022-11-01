@@ -33,7 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               const SizedBox(height: 125),
               Lottie.asset('assets/animation.json'),
               const SizedBox(height: 75),
-              GenericText3(text: 'Welcome to Delever', color: color5),
+              genericText3(text: 'Welcome to Delever', color: color5),
               const SizedBox(height: 25),
               Container(
                 height: 2.5,

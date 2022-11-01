@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/skeleton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GenericButton extends StatelessWidget {
@@ -72,7 +74,7 @@ class GenericButton3 extends StatelessWidget {
               children: [
                 icon,
                 const SizedBox(width: 5),
-                GenericText4(
+                genericText4(
                   text: text,
                   color: color2,
                   stringWeight: FontWeight.w300,
@@ -307,76 +309,48 @@ class GenericText2 extends StatelessWidget {
   }
 }
 
-class GenericText3 extends StatelessWidget {
-  const GenericText3({Key? key, required this.text, required this.color})
-      : super(key: key);
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w300,
-        fontSize: 28,
-        color: color,
-      ),
-      maxLines: 5,
-      textAlign: TextAlign.center,
-    );
-  }
+Widget genericText3({required String text, required Color color}) {
+  return Text(
+    text,
+    style: GoogleFonts.oswald(
+      fontWeight: FontWeight.w300,
+      fontSize: 28,
+      color: color,
+    ),
+    maxLines: 5,
+    textAlign: TextAlign.center,
+  );
 }
 
-class GenericText4 extends StatelessWidget {
-  const GenericText4(
-      {Key? key,
-      required this.text,
-      required this.color,
-      required this.stringWeight})
-      : super(key: key);
-
-  final String text;
-  final Color color;
-  final FontWeight stringWeight;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.oswald(
-        fontWeight: stringWeight,
-        fontSize: 18,
-        color: color,
-      ),
-      maxLines: 5,
-      textAlign: TextAlign.center,
-      softWrap: true,
-    );
-  }
+Widget genericText4({
+  required String text,
+  required Color color,
+  required FontWeight stringWeight,
+}) {
+  return Text(
+    text,
+    style: GoogleFonts.oswald(
+      fontWeight: stringWeight,
+      fontSize: 18,
+      color: color,
+    ),
+    maxLines: 5,
+    textAlign: TextAlign.center,
+    softWrap: true,
+  );
 }
 
-class GenericText5 extends StatelessWidget {
-  const GenericText5({Key? key, required this.text, required this.color})
-      : super(key: key);
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.oswald(
-          fontWeight: FontWeight.w200,
-          fontSize: 14,
-          color: color,
-          decoration: TextDecoration.underline),
-      maxLines: 5,
-      textAlign: TextAlign.center,
-    );
-  }
+Widget genericText5({required String text, required Color color}) {
+  return Text(
+    text,
+    style: GoogleFonts.oswald(
+        fontWeight: FontWeight.w200,
+        fontSize: 14,
+        color: color,
+        decoration: TextDecoration.underline),
+    maxLines: 5,
+    textAlign: TextAlign.center,
+  );
 }
 
 class BigText extends StatelessWidget {
@@ -420,12 +394,12 @@ class GenericRequestRow extends StatelessWidget {
     return Row(
       children: [
         icon,
-        GenericText4(
+        genericText4(
           text: '$title: ',
           color: color5,
           stringWeight: FontWeight.w400,
         ),
-        GenericText4(
+        genericText4(
           text: name,
           color: color5,
           stringWeight: FontWeight.w200,
@@ -573,7 +547,7 @@ class GenericExpandableList extends StatelessWidget {
               Row(
                 children: [
                   const Icon(Icons.image_outlined),
-                  GenericText4(
+                  genericText4(
                     text: 'Item image: ',
                     color: color5,
                     stringWeight: FontWeight.w400,
@@ -614,4 +588,108 @@ class GenericExpandableList extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget requestsPageShimmer(BuildContext context) {
+  return SafeArea(
+    child: Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Shimmer.fromColors(
+            baseColor: baseColor,
+            highlightColor: shimmerColor,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    CircleSkeleton(size: 50),
+                    Expanded(child: SizedBox()),
+                    Skeleton(
+                      height: 40,
+                      width: 200,
+                    ),
+                    Expanded(child: SizedBox()),
+                    CircleSkeleton(size: 50),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Skeleton(
+                      height: 40,
+                      width: 150,
+                    ),
+                    Skeleton(
+                      height: 40,
+                      width: 150,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const CircleSkeleton(size: 100),
+                    const SizedBox(width: 10),
+                    Column(
+                      children: [
+                        Skeleton(
+                          height: 25,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                        const SizedBox(height: 10),
+                        Skeleton(
+                          height: 25,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                      ],
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const CircleSkeleton(size: 50),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                Column(
+                  children: [
+                    Skeleton(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                    ),
+                    const SizedBox(height: 10),
+                    Skeleton(
+                      height: 35,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  child: ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Skeleton(
+                          height: 75,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                        );
+                      },
+                      separatorBuilder: ((context, index) {
+                        return const SizedBox(height: 15);
+                      }),
+                      itemCount: 7),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

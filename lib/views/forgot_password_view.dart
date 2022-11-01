@@ -71,7 +71,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   color: color3,
                 ),
                 const SizedBox(height: 15),
-                GenericText4(
+                genericText4(
                     text: context.loc.forgot_password_view_prompt,
                     color: color5,
                     stringWeight: FontWeight.w300),

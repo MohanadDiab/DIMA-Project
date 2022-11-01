@@ -111,7 +111,7 @@ class SellerRequestsActive extends StatelessWidget {
                               Row(
                                 children: [
                                   const Icon(Icons.image_outlined),
-                                  GenericText4(
+                                  genericText4(
                                     text: 'Item image: ',
                                     color: color5,
                                     stringWeight: FontWeight.w400,

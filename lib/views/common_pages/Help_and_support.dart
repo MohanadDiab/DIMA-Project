@@ -65,34 +65,34 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                         color: color5,
                       ),
                       const SizedBox(height: 15),
-                      GenericText4(
+                      genericText4(
                         text: q1,
                         color: color5,
                         stringWeight: FontWeight.w300,
                       ),
-                      GenericText4(
+                      genericText4(
                         text: a1,
                         color: color5,
                         stringWeight: FontWeight.w200,
                       ),
                       const SizedBox(height: 15),
-                      GenericText4(
+                      genericText4(
                         text: q2,
                         color: color5,
                         stringWeight: FontWeight.w300,
                       ),
-                      GenericText4(
+                      genericText4(
                         text: a2,
                         color: color5,
                         stringWeight: FontWeight.w200,
                       ),
                       const SizedBox(height: 15),
-                      GenericText4(
+                      genericText4(
                         text: q3,
                         color: color5,
                         stringWeight: FontWeight.w300,
                       ),
-                      GenericText4(
+                      genericText4(
                         text: a3,
                         color: color5,
                         stringWeight: FontWeight.w200,

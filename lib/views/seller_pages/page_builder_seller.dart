@@ -36,14 +36,14 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
         data: NavigationBarThemeData(
           elevation: 50,
           backgroundColor: Colors.white,
-          indicatorColor: Colors.grey[200],
+          indicatorColor: color2,
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,

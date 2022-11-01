@@ -5,3 +5,8 @@ Color color2 = const Color(0xFFFCF6ED);
 Color color3 = const Color(0xFFE55934);
 Color color4 = const Color(0xFF305252);
 Color color5 = const Color(0xFF373E40);
+
+Color baseColor = color3;
+Color shimmerColor = color2;
+
+const double defaultPadding = 16.0;
