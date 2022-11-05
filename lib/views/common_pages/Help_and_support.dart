@@ -44,7 +44,7 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
         foregroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
-        title: BigText(text: 'Help & Support', color: color5),
+        title: bigText(text: 'Help & Support', color: color5),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -60,7 +60,7 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GenericText(
+                      genericText(
                         text: 'Frequently asked questions:',
                         color: color5,
                       ),
@@ -109,13 +109,13 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GenericText(text: 'Contact us:', color: color5),
+                      genericText(text: 'Contact us:', color: color5),
                       const SizedBox(height: 10),
                       Row(
                         children: [
                           const Icon(Icons.email),
                           const SizedBox(width: 10),
-                          GenericText(text: 'Email', color: color5),
+                          genericText(text: 'Email', color: color5),
                         ],
                       ),
                       TextField(
@@ -130,7 +130,7 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                         children: [
                           const Icon(Icons.text_fields_rounded),
                           const SizedBox(width: 10),
-                          GenericText(text: 'Subject', color: color5),
+                          genericText(text: 'Subject', color: color5),
                         ],
                       ),
                       TextField(
@@ -145,7 +145,8 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15),
-                        child: GenericButton(
+                        child: genericButton(
+                          context: context,
                           primaryColor: color3,
                           pressColor: color2,
                           text: 'Send',

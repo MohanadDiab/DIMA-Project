@@ -15,14 +15,15 @@ class SellerRequestsIsEmpty extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 25),
-          GenericText(
+          genericText(
               text: 'There are no requests at the moment!', color: color5),
           SizedBox(
             height: 450,
             child: Lottie.asset('assets/no requests.json'),
           ),
           const SizedBox(height: 50),
-          GenericButton(
+          genericButton(
+              context: context,
               primaryColor: color3,
               pressColor: color2,
               text: 'Add a request',
@@ -48,7 +49,7 @@ class SellerRequestsArchivedIsEmpty extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 25),
-          GenericText(text: 'No deliveries have been made!', color: color5),
+          genericText(text: 'No deliveries have been made!', color: color5),
           SizedBox(
             height: 400,
             child: Lottie.asset('assets/no requests.json'),

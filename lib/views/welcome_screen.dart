@@ -46,9 +46,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case (ConnectionState.waiting):
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     case (ConnectionState.done):
-                      return GenericButton(
+                      return genericButton(
+                        context: context,
                         primaryColor: color3,
                         pressColor: color3,
                         text: 'Continue to app',
@@ -73,7 +74,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
               ),
               const SizedBox(height: 25),
-              GenericButton(
+              genericButton(
+                context: context,
                 primaryColor: color3,
                 pressColor: color3,
                 textColor: color2,
@@ -88,8 +90,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
               ),
               const Expanded(child: SizedBox()),
-              GenericText2(text: 'Version number:1.00', color: color4),
-              GenericText2(text: 'Build number:1.00', color: color4),
+              genericText2(text: 'Version number:1.00', color: color4),
+              genericText2(text: 'Build number:1.00', color: color4),
               const SizedBox(height: 25),
             ],
           ),

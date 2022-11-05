@@ -26,14 +26,14 @@ class DriverRequestsInactive extends StatelessWidget {
                     color: color3,
                   ),
                   const SizedBox(width: 5),
-                  GenericText(
+                  genericText(
                     text: "Status: Assigning a driver",
                     color: color5,
                   ),
                 ],
               ),
             ),
-            GenericText2(
+            genericText2(
               text:
                   'Note: your order is published, you will be notified once a driver is assigned',
               color: color5,
@@ -58,7 +58,8 @@ class DriverRequestsInactive extends StatelessWidget {
                   final String address =
                       snapshot[index].data()['address'].split(',')[0];
 
-                  return GenericExpandableList(
+                  return genericExpandableList(
+                    context: context,
                     name: name,
                     address: address,
                     numberC: numberC,

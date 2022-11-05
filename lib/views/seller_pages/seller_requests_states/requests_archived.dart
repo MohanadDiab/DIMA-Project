@@ -27,14 +27,14 @@ class SellerRequestsArchived extends StatelessWidget {
                     color: Colors.green,
                   ),
                   const SizedBox(width: 5),
-                  GenericText(
+                  genericText(
                     text: "Status: Delivered",
                     color: color5,
                   ),
                 ],
               ),
             ),
-            GenericText2(
+            genericText2(
               text: 'Note: The deliveries shown here are already finished',
               color: color5,
             ),
@@ -62,96 +62,15 @@ class SellerRequestsArchived extends StatelessWidget {
                   if (!isDelivered) {
                     return const SizedBox();
                   } else {
-                    return Container(
-                      color: Colors.grey[100],
-                      child: ExpansionTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 5),
-                            GenericRequestRow(
-                              title: 'Name',
-                              name: name,
-                              icon: const Icon(Icons.person_outline),
-                            ),
-                            GenericRequestRow(
-                              title: 'Address',
-                              name: address,
-                              icon: const Icon(Icons.location_history_outlined),
-                            ),
-                          ],
-                        ),
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GenericRequestRow(
-                                title: 'Number',
-                                name: numberC.toString(),
-                                icon: const Icon(
-                                  Icons.call_outlined,
-                                ),
-                              ),
-                              GenericRequestRow(
-                                title: 'Item',
-                                name: item,
-                                icon: const Icon(
-                                  Icons.store_outlined,
-                                ),
-                              ),
-                              GenericRequestRow(
-                                title: 'Price',
-                                name: price.toString(),
-                                icon: const Icon(Icons.attach_money_outlined),
-                              ),
-                              GenericRequestRow(
-                                title: 'Notes',
-                                name: notes,
-                                icon: const Icon(Icons.textsms_outlined),
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(Icons.image_outlined),
-                                  genericText4(
-                                    text: 'Item image: ',
-                                    color: color5,
-                                    stringWeight: FontWeight.w400,
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return Material(
-                                        type: MaterialType.transparency,
-                                        child: Container(
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(pic),
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Center(
-                                  child: CircularAvatarImage(
-                                    networkImage: pic,
-                                    placeholderIcon:
-                                        Icons.catching_pokemon_outlined,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 25),
-                        ],
-                      ),
+                    return genericExpandableList(
+                      name: name,
+                      address: address,
+                      numberC: numberC,
+                      item: item,
+                      price: price,
+                      notes: notes,
+                      pic: pic,
+                      context: context,
                     );
                   }
                 },

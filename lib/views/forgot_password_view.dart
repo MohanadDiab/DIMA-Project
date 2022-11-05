@@ -64,7 +64,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         DecorationImage(image: AssetImage('assets/logo.png')),
                   ),
                 ),
-                GenericText(text: 'Reset your password', color: color3),
+                genericText(text: 'Reset your password', color: color3),
                 const SizedBox(height: 25),
                 Container(
                   height: 2,
@@ -78,16 +78,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 const SizedBox(height: 25),
                 Row(
                   children: [
-                    const Icon(Icons.email),
+                    const Icon(Icons.email_outlined),
                     const SizedBox(width: 5),
-                    GenericText(text: 'Email address', color: color5),
+                    genericText(text: 'Email address', color: color5),
                     const Expanded(child: SizedBox()),
                   ],
                 ),
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
-                  autofocus: true,
                   controller: _controller,
                   decoration: InputDecoration(
                     hintText: context.loc.email_text_field_placeholder,
@@ -96,7 +95,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 const SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.all(15),
-                  child: GenericButton(
+                  child: genericButton(
+                      context: context,
                       primaryColor: color3,
                       pressColor: color2,
                       text: 'Send link',
@@ -108,18 +108,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       },
                       textColor: color2),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: GenericButton(
-                      primaryColor: color3,
-                      pressColor: color2,
-                      text: context.loc.forgot_password_view_back_to_login,
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventLogOut(),
-                            );
-                      },
-                      textColor: color2),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogOut(),
+                        );
+                  },
+                  child: genericText5(
+                    text: context.loc.forgot_password_view_back_to_login,
+                    color: color5,
+                  ),
                 ),
               ],
             ),

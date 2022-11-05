@@ -69,7 +69,7 @@ class DriverMapState extends State<DriverMap> {
             Icons.my_location_outlined,
           )),
       appBar: AppBar(
-        title: GenericText(text: "Orders", color: color2),
+        title: genericText(text: "Orders", color: color2),
         centerTitle: true,
       ),
       drawer: _drawer(),
@@ -101,7 +101,8 @@ class DriverMapState extends State<DriverMap> {
                   const Expanded(child: SizedBox()),
                   Padding(
                     padding: const EdgeInsets.only(left: 100, right: 100),
-                    child: GenericButton(
+                    child: genericButton(
+                        context: context,
                         primaryColor: color3,
                         pressColor: color2,
                         text: 'Start delivery',

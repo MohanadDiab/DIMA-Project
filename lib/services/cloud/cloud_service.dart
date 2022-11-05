@@ -43,6 +43,22 @@ class CloudService {
     );
   }
 
+  Future<void> createSellerProfile({
+    required String userId,
+    required String name,
+    required String city,
+    required int number,
+  }) async {
+    await sellerCollection.doc(userId).set(
+      {
+        'name': name,
+        'city': city,
+        'number': number,
+        'user_id': userId,
+      },
+    );
+  }
+
   Future<void> createDriverProfile({
     required String userId,
     required String name,
@@ -55,20 +71,6 @@ class CloudService {
         'city': city,
         'number': number,
         'user_id': userId,
-      },
-    );
-  }
-
-  Future<void> createBuyerProfile({
-    required String name,
-    required String email,
-  }) async {
-    await buyerCollection.doc(email).set(
-      {
-        'name': name,
-        'email': email,
-        'is_buyer': true,
-        'is_delivered': false,
       },
     );
   }

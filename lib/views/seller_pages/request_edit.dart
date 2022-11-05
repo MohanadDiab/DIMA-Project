@@ -158,7 +158,7 @@ class _EditRequestsState extends State<EditRequests> {
           backgroundColor: color3,
           elevation: 0,
           centerTitle: true,
-          title: GenericText(
+          title: genericText(
             text: 'Edit Request',
             color: color2,
           ),
@@ -184,7 +184,7 @@ class _EditRequestsState extends State<EditRequests> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 25),
-                      GenericText(
+                      genericText(
                         text: 'Enter the customer details below',
                         color: color3,
                       ),
@@ -196,7 +196,7 @@ class _EditRequestsState extends State<EditRequests> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(25),
-                        child: GenericText2(
+                        child: genericText2(
                             text:
                                 'Note: in order to provide the user with the best experience, it is mandatory to fill all the fields below.',
                             color: color3),
@@ -211,7 +211,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Name', color: color5),
+                            genericText(text: 'Name', color: color5),
                             TextField(
                               controller: _nameTextController,
                               decoration: const InputDecoration(
@@ -226,7 +226,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Email', color: color5),
+                            genericText(text: 'Email', color: color5),
                             TextField(
                               keyboardType: TextInputType.emailAddress,
                               controller: _emailTextController,
@@ -242,7 +242,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Item name', color: color5),
+                            genericText(text: 'Item name', color: color5),
                             TextField(
                               controller: _itemTextController,
                               decoration: const InputDecoration(
@@ -257,7 +257,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Item price', color: color5),
+                            genericText(text: 'Item price', color: color5),
                             TextField(
                               keyboardType: TextInputType.number,
                               controller: _priceTextController,
@@ -270,7 +270,7 @@ class _EditRequestsState extends State<EditRequests> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: GenericText2(
+                        child: genericText2(
                             text:
                                 'Note: a delivery price will be added later, enter the original price of the item.',
                             color: color3),
@@ -280,7 +280,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Deilivery notes', color: color5),
+                            genericText(text: 'Deilivery notes', color: color5),
                             TextField(
                               controller: _notesTextController,
                               decoration: const InputDecoration(
@@ -295,7 +295,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(
+                            genericText(
                                 text: 'Delivery address', color: color5),
                             TextField(
                               keyboardType: TextInputType.streetAddress,
@@ -337,7 +337,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(text: 'Customer number', color: color5),
+                            genericText(text: 'Customer number', color: color5),
                             TextField(
                               keyboardType: TextInputType.phone,
                               controller: _numberTextController,
@@ -353,7 +353,7 @@ class _EditRequestsState extends State<EditRequests> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericText(
+                            genericText(
                                 text: 'Upload an image of the item',
                                 color: color5),
                             const SizedBox(height: 15),
@@ -374,7 +374,7 @@ class _EditRequestsState extends State<EditRequests> {
                                   _imageTextController.text =
                                       imageName ?? 'no image chosen';
                                 },
-                                child: GenericText2(
+                                child: genericText2(
                                     text: 'Choose from files', color: color5),
                               ),
                               const SizedBox(width: 25),
@@ -395,7 +395,8 @@ class _EditRequestsState extends State<EditRequests> {
                         ),
                       ),
                       const SizedBox(height: 25),
-                      GenericButton(
+                      genericButton(
+                        context: context,
                         primaryColor: color3,
                         pressColor: color2,
                         text: 'Save order',
@@ -419,7 +420,7 @@ class _EditRequestsState extends State<EditRequests> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15),
-                        child: GenericText2(
+                        child: genericText2(
                             text:
                                 "When editing, even if the picture is the same, you have to re-choose it",
                             color: color3),

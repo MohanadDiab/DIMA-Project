@@ -43,7 +43,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                       color: color3,
                     ),
                     const SizedBox(width: 5),
-                    GenericText(
+                    genericText(
                       text: 'Active',
                       color: color5,
                     ),
@@ -59,7 +59,7 @@ class _SellerRequestsState extends State<SellerRequests> {
                       color: color3,
                     ),
                     const SizedBox(width: 5),
-                    GenericText(
+                    genericText(
                       text: 'Archive',
                       color: color5,
                     ),
@@ -68,7 +68,7 @@ class _SellerRequestsState extends State<SellerRequests> {
               ),
             ],
           ),
-          title: BigText(
+          title: bigText(
             text: 'My Requests',
             color: color5,
           ),

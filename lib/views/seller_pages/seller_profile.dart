@@ -68,6 +68,9 @@ class _SellerProfileState extends State<SellerProfile> {
               child: CircularProgressIndicator(),
             );
           case (ConnectionState.done):
+            var pic = snapshot.data['picture_url'];
+            pic ??=
+                "https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fspiderman.webp?alt=media&token=e8a81d6f-ed85-4a59-a47a-5b5e14d0eca8";
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -78,7 +81,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     color: Colors.grey[200]!,
                   ),
                 ),
-                title: BigText(
+                title: bigText(
                   text: 'Your account',
                   color: color5,
                 ),
@@ -90,8 +93,8 @@ class _SellerProfileState extends State<SellerProfile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CircularAvatarImage(
-                        networkImage: snapshot.data['picture_url'],
+                      circularAvatarImage(
+                        networkImage: pic,
                         placeholderIcon: Icons.person,
                       ),
                       ElevatedButton(
@@ -115,7 +118,7 @@ class _SellerProfileState extends State<SellerProfile> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: GenericText2(
+                          child: genericText2(
                             text: 'Change picture',
                             color: color5,
                           ),
@@ -127,7 +130,7 @@ class _SellerProfileState extends State<SellerProfile> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GenericText(
+                            genericText(
                               text: snapshot.data['name'],
                               color: color5,
                             ),
@@ -137,7 +140,7 @@ class _SellerProfileState extends State<SellerProfile> {
                               children: [
                                 const Icon(Icons.location_on_outlined),
                                 const SizedBox(width: 5),
-                                GenericText2(
+                                genericText2(
                                   text: snapshot.data['city'],
                                   color: color5,
                                 ),
@@ -251,7 +254,7 @@ class _SellerProfileState extends State<SellerProfile> {
                 child: icon,
               ),
               const SizedBox(width: 15),
-              GenericText(
+              genericText(
                 text: field,
                 color: color5,
               ),

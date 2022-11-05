@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
-import 'package:testapp/main.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
@@ -12,7 +11,6 @@ import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 import 'package:testapp/views/common_pages/Help_and_support.dart';
 import 'package:testapp/views/driver_pages/driver_user_details.dart';
-import 'package:testapp/views/seller_pages/seller_user_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DriverProfile extends StatefulWidget {
@@ -66,6 +64,9 @@ class _DriverProfileState extends State<DriverProfile> {
               child: CircularProgressIndicator(),
             );
           case (ConnectionState.done):
+            var pic = snapshot.data['picture_url'];
+            pic ??=
+                "https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fspiderman.webp?alt=media&token=e8a81d6f-ed85-4a59-a47a-5b5e14d0eca8";
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -76,7 +77,7 @@ class _DriverProfileState extends State<DriverProfile> {
                     color: Colors.grey[200]!,
                   ),
                 ),
-                title: BigText(
+                title: bigText(
                   text: 'Your account',
                   color: color5,
                 ),
@@ -88,8 +89,8 @@ class _DriverProfileState extends State<DriverProfile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CircularAvatarImage(
-                        networkImage: snapshot.data['picture_url'],
+                      circularAvatarImage(
+                        networkImage: pic,
                         placeholderIcon: Icons.person,
                       ),
                       ElevatedButton(
@@ -113,7 +114,7 @@ class _DriverProfileState extends State<DriverProfile> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: GenericText2(
+                          child: genericText2(
                             text: 'Change picture',
                             color: color5,
                           ),
@@ -125,7 +126,7 @@ class _DriverProfileState extends State<DriverProfile> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GenericText(
+                            genericText(
                               text: snapshot.data['name'],
                               color: color5,
                             ),
@@ -135,7 +136,7 @@ class _DriverProfileState extends State<DriverProfile> {
                               children: [
                                 const Icon(Icons.location_on_outlined),
                                 const SizedBox(width: 5),
-                                GenericText2(
+                                genericText2(
                                   text: snapshot.data['city'],
                                   color: color5,
                                 ),
@@ -249,7 +250,7 @@ class _DriverProfileState extends State<DriverProfile> {
                 child: icon,
               ),
               const SizedBox(width: 15),
-              GenericText(
+              genericText(
                 text: field,
                 color: color5,
               ),

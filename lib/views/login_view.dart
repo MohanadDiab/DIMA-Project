@@ -65,9 +65,9 @@ class _LoginViewState extends State<LoginView> {
           child: Padding(
             padding: const EdgeInsets.all(50),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 25),
                 Container(
                   height: 250,
                   width: 250,
@@ -76,7 +76,8 @@ class _LoginViewState extends State<LoginView> {
                         DecorationImage(image: AssetImage('assets/logo.png')),
                   ),
                 ),
-                GenericText(text: 'Login to your account!', color: color3),
+                genericText(
+                    text: 'We are happy to see you again!', color: color3),
                 const SizedBox(height: 25),
                 Container(
                   height: 2,
@@ -87,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     const Icon(Icons.email_outlined),
                     const SizedBox(width: 5),
-                    GenericText(text: 'Email address', color: color5),
+                    genericText(text: 'Email address', color: color5),
                     const Expanded(child: SizedBox()),
                   ],
                 ),
@@ -105,7 +106,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     const Icon(Icons.lock_outlined),
                     const SizedBox(width: 5),
-                    GenericText(text: 'Password', color: color5),
+                    genericText(text: 'Password', color: color5),
                     const Expanded(child: SizedBox()),
                   ],
                 ),
@@ -121,7 +122,8 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.all(15),
-                  child: GenericButton(
+                  child: genericButton(
+                      context: context,
                       primaryColor: color3,
                       pressColor: color2,
                       text: context.loc.login,
@@ -137,18 +139,16 @@ class _LoginViewState extends State<LoginView> {
                       },
                       textColor: color2),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: GenericButton(
-                      primaryColor: color3,
-                      pressColor: color2,
-                      text: 'Register here!',
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventShouldRegister(),
-                            );
-                      },
-                      textColor: color2),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventShouldRegister(),
+                        );
+                  },
+                  child: genericText5(
+                    text: "Don't have an account?",
+                    color: color5,
+                  ),
                 ),
                 TextButton(
                   onPressed: () {

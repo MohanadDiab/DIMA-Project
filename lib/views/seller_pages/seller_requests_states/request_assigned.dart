@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
-import 'package:testapp/views/seller_pages/seller_requests_states/requests_active.dart';
 
 class SellerRequestsAssigned extends StatelessWidget {
   const SellerRequestsAssigned({
@@ -22,7 +21,7 @@ class SellerRequestsAssigned extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                GenericText(
+                genericText(
                     text: 'Hi, I will be delivering your orders! ',
                     color: color5),
                 const SizedBox(height: 15),
@@ -44,7 +43,7 @@ class SellerRequestsAssigned extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      CircularAvatarImageSmall(
+                      circularAvatarImageSmall(
                         networkImage: driver['picture_url'],
                         placeholderIcon: Icons.person,
                       ),
@@ -57,7 +56,7 @@ class SellerRequestsAssigned extends StatelessWidget {
                             children: [
                               const Icon(Icons.person_outline),
                               const SizedBox(width: 5),
-                              GenericText2(
+                              genericText2(
                                 text: driver['name'],
                                 color: color5,
                               ),
@@ -69,7 +68,7 @@ class SellerRequestsAssigned extends StatelessWidget {
                             children: [
                               const Icon(Icons.location_on_outlined),
                               const SizedBox(width: 5),
-                              GenericText2(
+                              genericText2(
                                 text: driver['city'],
                                 color: color5,
                               ),
@@ -95,7 +94,70 @@ class SellerRequestsAssigned extends StatelessWidget {
               ],
             ),
           ),
-          SellerRequestsActive(snapshot: snapshot),
+          Column(
+            children: [
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.circle_notifications_outlined,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 5),
+                    genericText(
+                      text: "Status: Driver assigned",
+                      color: color5,
+                    ),
+                  ],
+                ),
+              ),
+              genericText2(
+                text:
+                    'Note: your driver is assigned, you will be notified for each delivery',
+                color: color5,
+              ),
+              SizedBox(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      height: 20,
+                    );
+                  },
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: snapshot.length,
+                  itemBuilder: (context, index) {
+                    final isDelivered = snapshot[index].data()['is_delivered'];
+                    final price = snapshot[index].data()['price'];
+                    final name = snapshot[index].data()['name'];
+                    final item = snapshot[index].data()['item'];
+                    final notes = snapshot[index].data()['notes'];
+                    final pic = snapshot[index].data()['picture_url'];
+                    final numberC = snapshot[index].data()['number'];
+                    final String address =
+                        snapshot[index].data()['address'].split(',')[0];
+
+                    if (!isDelivered) {
+                      return genericExpandableList(
+                        name: name,
+                        address: address,
+                        numberC: numberC,
+                        item: item,
+                        price: price,
+                        notes: notes,
+                        pic: pic,
+                        context: context,
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -19,7 +19,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GenericText(
+        genericText(
           text: 'Check available requests',
           color: color5,
         ),
@@ -64,7 +64,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  GenericText(
+                                  genericText(
                                     text: snapshot.data[index].data()['name'],
                                     color: color4,
                                   ),
@@ -91,7 +91,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  GenericText(
+                                  genericText(
                                     text: '5 Customers',
                                     color: color4,
                                   ),
@@ -100,7 +100,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  GenericText(
+                                  genericText(
                                     text: 'Milan',
                                     color: color4,
                                   ),
@@ -108,7 +108,8 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10),
-                                child: GenericButton(
+                                child: genericButton(
+                                    context: context,
                                     primaryColor: color4,
                                     pressColor: color2,
                                     text: 'Take request',

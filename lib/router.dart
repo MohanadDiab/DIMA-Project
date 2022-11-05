@@ -26,7 +26,7 @@ class _PageRouterState extends State<PageRouter> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return requestsPageShimmer(context);
+              return requestsPageShimmer(context: context);
             case ConnectionState.done:
               if (snapshot.data) {
                 return const DriverPageBuilder();

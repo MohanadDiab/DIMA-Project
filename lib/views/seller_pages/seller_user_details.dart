@@ -59,7 +59,7 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
           foregroundColor: Colors.black,
           elevation: 0,
           centerTitle: true,
-          title: BigText(text: 'User Details', color: color5),
+          title: bigText(text: 'User Details', color: color5),
         ),
         body: FutureBuilder(
           future: CloudService().getSellerProfile(userId: userId),
@@ -84,8 +84,8 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                           height: 300,
                           child: Lottie.asset('assets/profile.json'),
                         ),
-                        GenericText(text: 'Update your account', color: color5),
-                        GenericText2(
+                        genericText(text: 'Update your account', color: color5),
+                        genericText2(
                             text:
                                 'Note: updating your city may affect the driver traffic.',
                             color: color5),
@@ -105,7 +105,7 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                                 children: [
                                   const Icon(Icons.person),
                                   const SizedBox(width: 10),
-                                  GenericText(text: 'Name', color: color5),
+                                  genericText(text: 'Name', color: color5),
                                 ],
                               ),
                               TextField(
@@ -126,7 +126,7 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                                 children: [
                                   const Icon(Icons.numbers),
                                   const SizedBox(width: 10),
-                                  GenericText(text: 'Number', color: color5),
+                                  genericText(text: 'Number', color: color5),
                                 ],
                               ),
                               TextField(
@@ -147,7 +147,7 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                                 children: [
                                   const Icon(Icons.location_city),
                                   const SizedBox(width: 10),
-                                  GenericText(
+                                  genericText(
                                       text: 'City of residence', color: color5),
                                 ],
                               ),
@@ -162,7 +162,8 @@ class _EditUserDetailsSellerState extends State<EditUserDetailsSeller> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15),
-                          child: GenericButton(
+                          child: genericButton(
+                            context: context,
                             primaryColor: color3,
                             pressColor: color2,
                             text: 'Save',

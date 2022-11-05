@@ -28,7 +28,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
             color: Colors.grey[200]!,
           ),
         ),
-        title: BigText(
+        title: bigText(
           text: 'My Requests',
           color: color5,
         ),
