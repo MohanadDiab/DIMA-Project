@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:testapp/views/seller_pages/seller_requests_info.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/request_assigned.dart';
 import 'seller_requests_states/request_inactive.dart';
 import 'seller_requests_states/requests_active.dart';
@@ -20,76 +21,75 @@ class SellerRequests extends StatefulWidget {
 class _SellerRequestsState extends State<SellerRequests> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey[200]!,
-            ),
-          ),
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.task,
-                      color: color3,
-                    ),
-                    const SizedBox(width: 5),
-                    genericText(
-                      text: 'Active',
-                      color: color5,
-                    ),
-                  ],
-                ),
+    return SafeArea(
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            shape: Border(
+              bottom: BorderSide(
+                color: Colors.grey[200]!,
               ),
-              Tab(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.archive,
-                      color: color3,
-                    ),
-                    const SizedBox(width: 5),
-                    genericText(
-                      text: 'Archive',
-                      color: color5,
-                    ),
-                  ],
+            ),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.task,
+                        color: color3,
+                      ),
+                      const SizedBox(width: 5),
+                      genericText(
+                        text: 'Active',
+                        color: color5,
+                      ),
+                    ],
+                  ),
                 ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.archive,
+                        color: color3,
+                      ),
+                      const SizedBox(width: 5),
+                      genericText(
+                        text: 'Archive',
+                        color: color5,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            title: bigText(
+              text: 'My Requests',
+              color: color5,
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_active_outlined),
+                color: color5,
               ),
             ],
           ),
-          title: bigText(
-            text: 'My Requests',
-            color: color5,
+          drawer: const SellerRequestsInfoDrawer(),
+          body: const TabBarView(
+            children: [
+              SellerActiveRequests(),
+              SellerArchivedRequests(),
+            ],
           ),
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.info_outline_rounded),
-            color: color5,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_active_outlined),
-              color: color5,
-            ),
-          ],
-        ),
-        body: const TabBarView(
-          children: [
-            SellerActiveRequests(),
-            SellerArchivedRequests(),
-          ],
         ),
       ),
     );

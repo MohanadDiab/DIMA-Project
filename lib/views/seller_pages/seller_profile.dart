@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/url.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/main.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
@@ -69,8 +70,7 @@ class _SellerProfileState extends State<SellerProfile> {
             );
           case (ConnectionState.done):
             var pic = snapshot.data['picture_url'];
-            pic ??=
-                "https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fspiderman.webp?alt=media&token=e8a81d6f-ed85-4a59-a47a-5b5e14d0eca8";
+            pic ??= profilePlaceholderImage;
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(

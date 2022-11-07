@@ -230,7 +230,7 @@ Widget genericText({required text, required color}) {
       fontSize: 22,
       color: color,
     ),
-    maxLines: 2,
+    maxLines: 100,
     textAlign: TextAlign.center,
   );
 }
