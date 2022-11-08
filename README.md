@@ -1,16 +1,13 @@
-# testapp
+# Delevery
 
-A new Flutter project.
+This project has been designed using Flutter framework, with Firebase for cloud backend, MapBox and Google Maps for positioning services, bloc for state management.
 
-## Getting Started
+## Some screenshots from the app
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/1.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/2.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/3.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/4.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/5.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/6.jpg)
+![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/7.jpg)
