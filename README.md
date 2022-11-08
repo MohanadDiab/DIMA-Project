@@ -4,7 +4,6 @@ This project has been designed using Flutter framework, with Firebase for cloud 
 
 ## Some screenshots from the app
 
-  <img src="[url](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/1.jpg)" width="50%" height="50%">
 ![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/1.jpg)
 ![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/2.jpg)
 ![](https://github.com/MohanadDiab/DIMA-Project/blob/43ef318f86b2ca8a25fd561dee4e152806da6ce3/assets/screenshots/3.jpg)
