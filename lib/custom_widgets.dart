@@ -486,150 +486,171 @@ Widget genericExpandableList({
 Widget requestsPageShimmer({required BuildContext context}) {
   return SafeArea(
     child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Shimmer.fromColors(
-                baseColor: baseColor,
-                highlightColor: shimmerColor,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        CircleSkeleton(size: 50),
-                        Expanded(child: SizedBox()),
-                        Skeleton(
-                          height: 40,
-                          width: 200,
-                        ),
-                        Expanded(child: SizedBox()),
-                        CircleSkeleton(size: 50),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Skeleton(
-                          height: 40,
-                          width: 150,
-                        ),
-                        Skeleton(
-                          height: 40,
-                          width: 150,
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const CircleSkeleton(size: 100),
-                        const SizedBox(width: 10),
-                        Column(
-                          children: [
-                            Skeleton(
-                              height: 25,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                            ),
-                            const SizedBox(height: 10),
-                            Skeleton(
-                              height: 25,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                            ),
-                          ],
-                        ),
-                        const Expanded(child: SizedBox()),
-                        const CircleSkeleton(size: 50),
-                      ],
-                    ),
-                    const SizedBox(height: 25),
-                    Column(
-                      children: [
-                        Skeleton(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.6,
-                        ),
-                        const SizedBox(height: 10),
-                        Skeleton(
-                          height: 35,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      child: ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Skeleton(
-                              height: 75,
-                              width: MediaQuery.of(context).size.width * 0.8,
-                            );
-                          },
-                          separatorBuilder: ((context, index) {
-                            return const SizedBox(height: 15);
-                          }),
-                          itemCount: 4),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      appBar: AppBar(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey[200]!,
           ),
-          Shimmer.fromColors(
+        ),
+        title: bigText(
+          text: 'My Requests',
+          color: color5,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_active_outlined),
+            color: color5,
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size(25, 50),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.task,
+                    color: color3,
+                  ),
+                  const SizedBox(width: 5),
+                  genericText(
+                    text: 'Active',
+                    color: color5,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.archive,
+                    color: color3,
+                  ),
+                  const SizedBox(width: 5),
+                  genericText(
+                    text: 'Archive',
+                    color: color5,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      drawer: Container(),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Shimmer.fromColors(
             baseColor: baseColor,
             highlightColor: shimmerColor,
             child: Column(
               children: [
-                const Expanded(child: SizedBox()),
-                Stack(
+                const SizedBox(height: 10),
+                Skeleton(
+                  height: 35,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const CircleSkeleton(size: 100),
+                    const SizedBox(width: 10),
+                    Column(
+                      children: [
+                        Skeleton(
+                          height: 25,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                        const SizedBox(height: 10),
+                        Skeleton(
+                          height: 25,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                      ],
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const CircleSkeleton(size: 50),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                Column(
                   children: [
                     Skeleton(
-                      width: MediaQuery.of(context).size.width,
-                      height: 75,
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.6,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 20),
-                          CircleSkeleton(
-                            size: 50,
-                          ),
-                          Expanded(child: SizedBox()),
-                          CircleSkeleton(
-                            size: 50,
-                          ),
-                          Expanded(child: SizedBox()),
-                          CircleSkeleton(
-                            size: 50,
-                          ),
-                          SizedBox(width: 20),
-                        ],
-                      ),
+                    const SizedBox(height: 10),
+                    Skeleton(
+                      height: 35,
+                      width: MediaQuery.of(context).size.width * 0.8,
                     ),
                   ],
                 ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  child: ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Skeleton(
+                          height: 75,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                        );
+                      },
+                      separatorBuilder: ((context, index) {
+                        return const SizedBox(height: 15);
+                      }),
+                      itemCount: 4),
+                ),
               ],
             ),
-          )
-        ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          elevation: 50,
+          backgroundColor: Colors.white,
+          indicatorColor: color2,
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) {
+            _currentIndex = index;
+          },
+          destinations: _navyItems,
+        ),
       ),
     ),
   );
 }
+
+int _currentIndex = 1;
+
+const _navyItems = <NavigationDestination>[
+  NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
+  NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
+  NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+];
 
 Widget textFieldwithIcon({
   required hintText,
