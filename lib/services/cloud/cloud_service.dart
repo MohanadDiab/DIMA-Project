@@ -53,6 +53,8 @@ class CloudService {
       {
         'name': name,
         'city': city,
+        'is_assigned': false,
+        'is_published': false,
         'number': number,
         'user_id': userId,
       },

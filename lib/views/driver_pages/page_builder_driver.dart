@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:testapp/constants/colors.dart';
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
@@ -64,8 +65,23 @@ const _widgetList = <Widget>[
   DriverProfile(),
 ];
 
-const _navyItems = <NavigationDestination>[
-  NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
-  NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
-  NavigationDestination(icon: Icon(Icons.settings), label: 'Profile'),
+final _navyItems = <NavigationDestination>[
+  NavigationDestination(
+      icon: Icon(
+        Icons.map_outlined,
+        color: color3,
+      ),
+      label: 'orders'),
+  NavigationDestination(
+      icon: Icon(
+        Icons.shop_outlined,
+        color: color3,
+      ),
+      label: 'Requests'),
+  NavigationDestination(
+      icon: Icon(
+        Icons.person_outlined,
+        color: color3,
+      ),
+      label: 'Profile'),
 ];

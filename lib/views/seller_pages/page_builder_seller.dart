@@ -65,8 +65,23 @@ const _widgetList = <Widget>[
   SellerProfile(),
 ];
 
-const _navyItems = <NavigationDestination>[
-  NavigationDestination(icon: Icon(Icons.map), label: 'orders'),
-  NavigationDestination(icon: Icon(Icons.shop), label: 'Requests'),
-  NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+final _navyItems = <NavigationDestination>[
+  NavigationDestination(
+      icon: Icon(
+        Icons.map_outlined,
+        color: color3,
+      ),
+      label: 'orders'),
+  NavigationDestination(
+      icon: Icon(
+        Icons.shop_outlined,
+        color: color3,
+      ),
+      label: 'Requests'),
+  NavigationDestination(
+      icon: Icon(
+        Icons.person_outlined,
+        color: color3,
+      ),
+      label: 'Profile'),
 ];
