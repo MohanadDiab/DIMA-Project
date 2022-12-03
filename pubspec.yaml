@@ -67,6 +67,7 @@ dependencies:
   url_launcher: ^6.1.5
   flutter_email_sender: ^5.1.0
   shimmer: ^2.0.0
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
