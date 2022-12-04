@@ -1,15 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/constants/url.dart';
 import 'package:testapp/custom_widgets.dart';
-import 'package:testapp/services/cloud/cloud_service.dart';
-import 'package:testapp/views/seller_pages/seller_requests_states/request_assigned.dart';
-import 'seller_requests_states/request_inactive.dart';
-import 'seller_requests_states/requests_active.dart';
-import 'seller_requests_states/requests_archived.dart';
-import 'seller_requests_states/requests_empty.dart';
 
 class SellerRequestsInfoDrawer extends StatelessWidget {
   const SellerRequestsInfoDrawer({Key? key}) : super(key: key);
@@ -17,7 +10,7 @@ class SellerRequestsInfoDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.9,
+      width: getWidth(context: context) * 0.9,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),

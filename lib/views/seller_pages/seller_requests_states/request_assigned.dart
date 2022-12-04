@@ -131,8 +131,6 @@ class SellerRequestsAssigned extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: snapshot.length,
                     itemBuilder: (context, index) {
-                      final isDelivered =
-                          snapshot[index].data()['is_delivered'];
                       final price = snapshot[index].data()['price'];
                       final name = snapshot[index].data()['name'];
                       final item = snapshot[index].data()['item'];
@@ -142,20 +140,16 @@ class SellerRequestsAssigned extends StatelessWidget {
                       final String address =
                           snapshot[index].data()['address'].split(',')[0];
 
-                      if (!isDelivered) {
-                        return genericExpandableList(
-                          name: name,
-                          address: address,
-                          numberC: numberC,
-                          item: item,
-                          price: price,
-                          notes: notes,
-                          pic: pic,
-                          context: context,
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
+                      return genericExpandableList(
+                        name: name,
+                        address: address,
+                        numberC: numberC,
+                        item: item,
+                        price: price,
+                        notes: notes,
+                        pic: pic,
+                        context: context,
+                      );
                     },
                   ),
                 ),

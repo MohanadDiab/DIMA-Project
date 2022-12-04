@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:testapp/views/driver_pages/driver_requests_state/driver_requests_inactive.dart';
 import 'package:testapp/views/driver_pages/driver_requests_state/driver_requests_active.dart';
-import 'package:testapp/views/driver_pages/driver_requests_state/driver_requests_inctive.dart';
 
 class DriverRequestsView extends StatefulWidget {
   const DriverRequestsView({Key? key}) : super(key: key);
@@ -51,20 +51,16 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return requestsPageShimmer(context: context);
               case ConnectionState.active:
                 if (!snapshot.data!.docs.isEmpty) {
                   final docs = snapshot.data!.docs;
-                  return DriverRequestsInactive(snapshot: docs);
+                  return DriverRequestsActive(snapshot: docs);
                 } else {
                   return const DriverRequestsList();
                 }
               default:
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return requestsPageShimmer(context: context);
             }
           },
         ),

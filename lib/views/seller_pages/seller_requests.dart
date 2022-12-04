@@ -152,14 +152,12 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
                           snapshot: docs, userId: userId);
                     }
                   default:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return requestsPageShimmer(context: context);
                 }
               },
             );
           default:
-            return const CircularProgressIndicator();
+            return requestsPageShimmer(context: context);
         }
       },
     );

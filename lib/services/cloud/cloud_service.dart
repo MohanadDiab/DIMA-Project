@@ -107,8 +107,6 @@ class CloudService {
       'picture_url': pictureUrl,
       'location': GeoPoint(lat, long),
       'address': address,
-      'is_active': false,
-      'is_delivered': false,
     });
   }
 
@@ -147,9 +145,9 @@ class CloudService {
   Future<Map<String, dynamic>> sellerAssignedDriver(
       {required String userId}) async {
     final seller = await sellerCollection.doc(userId).get();
-    final driverName = seller.data()!['assigned_driver'];
+    final driverId = seller.data()!['assigned_driver'];
     final driverInfo =
-        await driverCollection.where('name', isEqualTo: driverName).get();
+        await driverCollection.where('user_id', isEqualTo: driverId).get();
 
     return driverInfo.docs[0].data();
   }
@@ -205,12 +203,11 @@ class CloudService {
     return doc.data()!['request_active'];
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      getAllRequests() async {
-    final sellerRequests = await sellerCollection.get();
-
-    final sellerRequestsDocs = sellerRequests.docs;
-    return sellerRequestsDocs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllActiveRequests() {
+    return sellerCollection
+        .where('is_assigned', isEqualTo: false)
+        .where('is_published', isEqualTo: true)
+        .snapshots();
   }
 
   Future<Map<String, dynamic>?> getSellerRequestInfo(
@@ -236,9 +233,23 @@ class CloudService {
     required String userId,
     required String sellerName,
   }) async {
+    // get seller ID, driver ID
     final request =
         await sellerCollection.where('name', isEqualTo: sellerName).get();
     final sellerId = request.docs[0].id;
+    final driver = await driverCollection.doc(userId).get();
+    final driverID = driver.data()!['user_id'];
+
+    // Set seller to is_assigned and the assigned_driver is set ot the driver's name
+    sellerCollection.doc(sellerId).set(
+      {
+        'is_assigned': true,
+        'assigned_driver': driverID,
+      },
+      SetOptions(merge: true),
+    );
+
+    // gets the seller requests and adds them to the driver
     final sellerRequest = await sellerCollection
         .doc(sellerId)
         .collection('seller_requests')
@@ -246,64 +257,12 @@ class CloudService {
     final addedRequest = sellerRequest.docs;
     for (var element in addedRequest) {
       var id = element.id;
-      await sellerCollection
-          .doc(sellerId)
-          .collection('seller_requests')
-          .doc(id)
-          .set(
-        {'is_active': true, 'is_delivered': false},
-        SetOptions(merge: true),
-      );
-
       await driverCollection
           .doc(userId)
           .collection('driver_requests')
           .doc(id)
           .set(element.data());
-      await driverCollection
-          .doc(userId)
-          .collection('driver_requests')
-          .doc(id)
-          .set(
-        {'seller_id': sellerId, 'is_delivered': false},
-        SetOptions(merge: true),
-      );
     }
-  }
-
-  Future<void> itemDelivered({
-    required String userId,
-    required String customer,
-  }) async {
-    final doc = await driverCollection
-        .doc(userId)
-        .collection('driver_requests')
-        .doc(customer)
-        .get();
-    final sellerId = doc.data()!['seller_id'];
-
-    await driverCollection
-        .doc(userId)
-        .collection('driver_requests')
-        .doc(customer)
-        .set(
-      {
-        'is_delivered': true,
-        'is_active': false,
-      },
-      SetOptions(merge: true),
-    );
-    await sellerCollection
-        .doc(sellerId)
-        .collection('seller_requests')
-        .doc(customer)
-        .set(
-      {
-        'is_delivered': true,
-        'is_active': false,
-      },
-      SetOptions(merge: true),
-    );
   }
 
   // Delete

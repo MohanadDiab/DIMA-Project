@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
@@ -191,7 +192,7 @@ class _EditRequestsState extends State<EditRequests> {
                       Lottie.asset('assets/package.json'),
                       Container(
                         height: 2.5,
-                        width: MediaQuery.of(context).size.width * .75,
+                        width: getWidth(context: context) * .75,
                         color: color3,
                       ),
                       Padding(
@@ -203,7 +204,7 @@ class _EditRequestsState extends State<EditRequests> {
                       ),
                       Container(
                         height: 2.5,
-                        width: MediaQuery.of(context).size.width * .75,
+                        width: getWidth(context: context) * .75,
                         color: color3,
                       ),
                       Padding(

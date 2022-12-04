@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 
@@ -53,7 +54,7 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width,
+                width: getWidth(context: context),
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(15),

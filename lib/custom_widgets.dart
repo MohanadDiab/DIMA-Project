@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/constants/skeleton.dart';
+import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:testapp/views/seller_pages/request_edit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Widget genericButton({
@@ -17,7 +20,7 @@ Widget genericButton({
     style: ElevatedButton.styleFrom(
       onPrimary: pressColor,
       primary: primaryColor,
-      fixedSize: Size(MediaQuery.of(context).size.width * .8, 60),
+      fixedSize: Size(getWidth(context: context) * .8, 60),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -78,7 +81,7 @@ Widget genericButton2({
     style: ElevatedButton.styleFrom(
       onPrimary: pressColor,
       primary: primaryColor,
-      fixedSize: Size(MediaQuery.of(context).size.width * .8, 60),
+      fixedSize: Size(getWidth(context: context) * .8, 60),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -411,73 +414,267 @@ Widget genericExpandableList({
         ],
       ),
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            genericRequestRow(
-              title: 'Number',
-              name: numberC.toString(),
-              icon: const Icon(
-                Icons.call_outlined,
-              ),
-            ),
-            genericRequestRow(
-              title: 'Item',
-              name: item,
-              icon: const Icon(
-                Icons.store_outlined,
-              ),
-            ),
-            genericRequestRow(
-              title: 'Price',
-              name: price.toString(),
-              icon: const Icon(Icons.attach_money_outlined),
-            ),
-            genericRequestRow(
-              title: 'Notes',
-              name: notes,
-              icon: const Icon(Icons.textsms_outlined),
-            ),
-            Row(
-              children: [
-                const Icon(Icons.image_outlined),
-                genericText4(
-                  text: 'Item image: ',
-                  color: color5,
-                  stringWeight: FontWeight.w400,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              genericRequestRow(
+                title: 'Number',
+                name: numberC.toString(),
+                icon: const Icon(
+                  Icons.call_outlined,
                 ),
-              ],
-            ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(pic),
-                            fit: BoxFit.contain,
+              ),
+              genericRequestRow(
+                title: 'Item',
+                name: item,
+                icon: const Icon(
+                  Icons.store_outlined,
+                ),
+              ),
+              genericRequestRow(
+                title: 'Price',
+                name: price.toString(),
+                icon: const Icon(Icons.attach_money_outlined),
+              ),
+              genericRequestRow(
+                title: 'Notes',
+                name: notes,
+                icon: const Icon(Icons.textsms_outlined),
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.image_outlined),
+                  genericText4(
+                    text: 'Item image: ',
+                    color: color5,
+                    stringWeight: FontWeight.w400,
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Material(
+                        type: MaterialType.transparency,
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(pic),
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
+                      );
+                    },
+                  );
+                },
+                child: Center(
+                  child: circularAvatarImage(
+                    networkImage: pic,
+                    placeholderIcon: Icons.catching_pokemon_outlined,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 25),
+      ],
+    ),
+  );
+}
+
+Widget genericExpandableList2({
+  required userId,
+  required name,
+  required address,
+  required numberC,
+  required item,
+  required price,
+  required notes,
+  required pic,
+  required BuildContext context,
+}) {
+  return Container(
+    color: Colors.grey[100],
+    child: ExpansionTile(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 5),
+          genericRequestRow(
+            title: 'Name',
+            name: name,
+            icon: const Icon(Icons.person_outline),
+          ),
+          genericRequestRow(
+            title: 'Address',
+            name: address,
+            icon: const Icon(Icons.location_history_outlined),
+          ),
+        ],
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              genericRequestRow(
+                title: 'Number',
+                name: numberC.toString(),
+                icon: const Icon(
+                  Icons.call_outlined,
+                ),
+              ),
+              genericRequestRow(
+                title: 'Item',
+                name: item,
+                icon: const Icon(
+                  Icons.store_outlined,
+                ),
+              ),
+              genericRequestRow(
+                title: 'Price',
+                name: price.toString(),
+                icon: const Icon(Icons.attach_money_outlined),
+              ),
+              genericRequestRow(
+                title: 'Notes',
+                name: notes,
+                icon: const Icon(Icons.textsms_outlined),
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.image_outlined),
+                  genericText4(
+                    text: 'Item image: ',
+                    color: color5,
+                    stringWeight: FontWeight.w400,
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Material(
+                        type: MaterialType.transparency,
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(pic),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Center(
+                  child: circularAvatarImage(
+                    networkImage: pic,
+                    placeholderIcon: Icons.catching_pokemon_outlined,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(25),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    onPrimary: color3,
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditRequests(cname: name),
                       ),
                     );
                   },
-                );
-              },
-              child: Center(
-                child: circularAvatarImage(
-                  networkImage: pic,
-                  placeholderIcon: Icons.catching_pokemon_outlined,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      children: [
+                        const Expanded(child: SizedBox()),
+                        Icon(
+                          Icons.edit_outlined,
+                          color: color3,
+                        ),
+                        const SizedBox(width: 10),
+                        genericText4(
+                          text: 'Edit',
+                          color: color5,
+                          stringWeight: FontWeight.w300,
+                        ),
+                        const SizedBox(width: 10),
+                        const Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 15),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    onPrimary: color3,
+                    primary: Colors.white,
+                    fixedSize: Size(getWidth(context: context) * .8, 60),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Long press to delete entry'),
+                      ),
+                    );
+                  },
+                  onLongPress: () async {
+                    await CloudService()
+                        .deleteSellerRequest(userId: userId, name: name);
+                  },
+                  child: Row(
+                    children: [
+                      const Expanded(child: SizedBox()),
+                      Icon(
+                        Icons.delete_outline,
+                        color: color3,
+                      ),
+                      const SizedBox(width: 10),
+                      genericText4(
+                        text: 'Delete',
+                        color: color5,
+                        stringWeight: FontWeight.w300,
+                      ),
+                      const SizedBox(width: 10),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 25),
       ],
     ),
   );
@@ -558,7 +755,7 @@ Widget requestsPageShimmer({required BuildContext context}) {
                 const SizedBox(height: 10),
                 Skeleton(
                   height: 35,
-                  width: MediaQuery.of(context).size.width * 0.8,
+                  width: getWidth(context: context) * 0.8,
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -571,12 +768,12 @@ Widget requestsPageShimmer({required BuildContext context}) {
                       children: [
                         Skeleton(
                           height: 25,
-                          width: MediaQuery.of(context).size.width * 0.3,
+                          width: getWidth(context: context) * 0.3,
                         ),
                         const SizedBox(height: 10),
                         Skeleton(
                           height: 25,
-                          width: MediaQuery.of(context).size.width * 0.3,
+                          width: getWidth(context: context) * 0.3,
                         ),
                       ],
                     ),
@@ -589,12 +786,12 @@ Widget requestsPageShimmer({required BuildContext context}) {
                   children: [
                     Skeleton(
                       height: 50,
-                      width: MediaQuery.of(context).size.width * 0.6,
+                      width: getWidth(context: context) * 0.6,
                     ),
                     const SizedBox(height: 10),
                     Skeleton(
                       height: 35,
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: getWidth(context: context) * 0.8,
                     ),
                   ],
                 ),
@@ -606,7 +803,7 @@ Widget requestsPageShimmer({required BuildContext context}) {
                       itemBuilder: (context, index) {
                         return Skeleton(
                           height: 75,
-                          width: MediaQuery.of(context).size.width * 0.8,
+                          width: getWidth(context: context) * 0.8,
                         );
                       },
                       separatorBuilder: ((context, index) {
@@ -721,5 +918,14 @@ Widget textFieldwithIconObscured({
         ),
       ),
     ],
+  );
+}
+
+Widget sellerCard({required name, required context}) {
+  return Container(
+    height: 50,
+    width: getWidth(context: context) * 0.8,
+    color: Colors.grey[100],
+    child: Text(name),
   );
 }
