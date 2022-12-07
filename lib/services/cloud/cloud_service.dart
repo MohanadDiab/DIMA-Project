@@ -111,7 +111,22 @@ class CloudService {
   }
 
   // Read
-  Future<Object> sellerRequestsIsEmpty({required String userId}) async {
+
+  Future<String> getDriverIDFromName({required String name}) async {
+    final driverInfo =
+        await driverCollection.where('name', isEqualTo: name).get();
+    final driverId = driverInfo.docs[0].data()['user_id'];
+    return driverId;
+  }
+
+  Future<String> getSellerIDFromName({required String name}) async {
+    final sellerInfo =
+        await sellerCollection.where('name', isEqualTo: name).get();
+    final sellerId = sellerInfo.docs[0].data()['user_id'];
+    return sellerId;
+  }
+
+  Future<bool> sellerRequestsIsEmpty({required String userId}) async {
     final sellerRequestsCollection =
         await sellerCollection.doc(userId).collection('seller_requests').get();
     final isEmpty = sellerRequestsCollection.docs;
@@ -193,6 +208,14 @@ class CloudService {
   Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequestsArchived(
       {required String userId}) {
     return sellerCollection
+        .doc(userId)
+        .collection('seller_requests_archived')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getDriverRequestsArchived(
+      {required String userId}) {
+    return driverCollection
         .doc(userId)
         .collection('seller_requests_archived')
         .snapshots();

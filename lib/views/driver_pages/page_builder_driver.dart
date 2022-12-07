@@ -43,7 +43,7 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
@@ -61,26 +61,26 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
 
 const _widgetList = <Widget>[
   DriverMap(),
-  DriverRequestsView(),
+  DriverRequests(),
   DriverProfile(),
 ];
 
 final _navyItems = <NavigationDestination>[
   NavigationDestination(
       icon: Icon(
-        Icons.map_outlined,
+        Icons.map,
         color: color3,
       ),
       label: 'orders'),
   NavigationDestination(
       icon: Icon(
-        Icons.shop_outlined,
+        Icons.shop,
         color: color3,
       ),
       label: 'Requests'),
   NavigationDestination(
       icon: Icon(
-        Icons.person_outlined,
+        Icons.person,
         color: color3,
       ),
       label: 'Profile'),

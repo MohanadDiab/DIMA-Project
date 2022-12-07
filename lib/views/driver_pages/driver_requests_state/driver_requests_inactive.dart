@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/customPageRouter.dart';
 import 'package:testapp/constants/url.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:testapp/views/driver_pages/driver_requests_state/seller_requests_info_page.dart';
 
 class DriverRequestsList extends StatefulWidget {
   const DriverRequestsList({Key? key}) : super(key: key);
@@ -29,28 +31,80 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 15),
-                    Center(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.circle_notifications_outlined,
-                            color: color3,
-                          ),
-                          const SizedBox(width: 5),
-                          genericText(
-                            text: "Status: Assigning a driver",
-                            color: color5,
-                          ),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.list_sharp,
+                              color: color3,
+                            ),
+                            const SizedBox(width: 5),
+                            genericText(
+                              text: "Sort requests based on:",
+                              color: color5,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    genericText2(
-                      text:
-                          'Note: your order is published, you will be notified once a driver is assigned',
-                      color: color5,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        filterBox(
+                          context: context,
+                          function: () {},
+                          icon: Icons.location_pin,
+                          text: "distance",
+                        ),
+                        filterBox(
+                          context: context,
+                          function: () {},
+                          icon: Icons.location_city_outlined,
+                          text: "My city",
+                        ),
+                        filterBox(
+                          context: context,
+                          function: () {},
+                          icon: Icons.wysiwyg_outlined,
+                          text: "Show all",
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                      child: Divider(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.list_alt_outlined,
+                              color: color3,
+                            ),
+                            const SizedBox(width: 5),
+                            genericText(
+                              text: "Available requests",
+                              color: color5,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: genericText2(
+                        text:
+                            'Note: The shown requests are affected by the filter you choose above',
+                        color: color5,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(15),
@@ -58,7 +112,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                         child: ListView.separated(
                           separatorBuilder: (context, index) {
                             return const SizedBox(
-                              height: 15,
+                              height: 20,
                             );
                           },
                           physics: const NeverScrollableScrollPhysics(),
@@ -71,7 +125,92 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                             final number = docs[index].data()['number'];
                             final String city =
                                 docs[index].data()['city'].split(',')[0];
-                            return sellerCard(name: name, context: context);
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 1,
+                                primary: Colors.grey[100],
+                                onPrimary: color3,
+                                padding: const EdgeInsets.only(
+                                  left: 15,
+                                  right: 15,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MyRoute(
+                                    builder: (BuildContext context) =>
+                                        SellerRequestsInfoPage(
+                                      number: number,
+                                      name: name,
+                                      picture: pic,
+                                      city: city,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Hero(
+                                    tag: 'sellerIcon$index',
+                                    child: circularAvatarImageSmall(
+                                      networkImage: pic,
+                                      placeholderIcon: Icons.person,
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          genericText4(
+                                            text: name,
+                                            color: color5,
+                                            stringWeight: FontWeight.w300,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                              Icons.location_on_outlined),
+                                          const SizedBox(width: 5),
+                                          genericText2(
+                                            text: city,
+                                            color: color5,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const Expanded(child: SizedBox()),
+                                  Column(
+                                    children: [
+                                      CircleAvatar(
+                                          child: IconButton(
+                                        onPressed: () {
+                                          call(number: number);
+                                        },
+                                        icon: Icon(
+                                          Icons.call_outlined,
+                                          color: color2,
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 20),
+                                ],
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -80,12 +219,46 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                 ),
               );
             } else {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
           default:
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+
+  Padding filterBox(
+      {required BuildContext context,
+      required function,
+      required String text,
+      required icon}) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onPrimary: color3,
+          primary: Colors.grey[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        onPressed: () {
+          setState(() {});
+          function;
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, color: color5),
+              genericText(text: text, color: color5),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
