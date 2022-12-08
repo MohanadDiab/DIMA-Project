@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
-import 'package:testapp/views/seller_pages/seller_requests_states/requests_active.dart';
+import 'package:testapp/views/maps/requests_map.dart';
 
 class SellerRequestsInfoPage extends StatefulWidget {
   final String name;
@@ -23,6 +24,8 @@ class SellerRequestsInfoPage extends StatefulWidget {
 }
 
 class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,102 +77,210 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
             ),
           ];
         },
-        body: SizedBox(
-          child: FutureBuilder(
-            future: CloudService().getSellerIDFromName(name: widget.name),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case (ConnectionState.waiting):
-                  return const Center(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                case (ConnectionState.done):
-                  final sellerId = snapshot.data;
-                  return StreamBuilder(
-                    stream: CloudService().getSellerRequests(userId: sellerId),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        case ConnectionState.active:
-                          return StreamBuilder(
-                            stream: CloudService()
-                                .getSellerRequests(userId: sellerId),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.waiting:
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                case ConnectionState.active:
-                                  final docs = snapshot.data!.docs;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: SizedBox(
-                                      child: ListView.separated(
-                                        separatorBuilder: (context, index) {
-                                          return const SizedBox(
-                                            height: 15,
-                                          );
-                                        },
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: docs.length,
-                                        itemBuilder: (context, index) {
-                                          final price =
-                                              docs[index].data()['price'];
-                                          final name =
-                                              docs[index].data()['name'];
-                                          final item =
-                                              docs[index].data()['item'];
-                                          final notes =
-                                              docs[index].data()['notes'];
-                                          final pic =
-                                              docs[index].data()['picture_url'];
-                                          final numberC =
-                                              docs[index].data()['number'];
-                                          final String address = docs[index]
-                                              .data()['address']
-                                              .split(',')[0];
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        genericText(
+                            text: 'Requests locations visualized',
+                            color: color5),
+                        genericText4(
+                          text:
+                              'You might need to adjust the zoom level to see everything',
+                          color: color5,
+                          stringWeight: FontWeight.w200,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Container(
+                  width: getWidth(context: context),
+                  height: 250,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: RequestsMap(userId: widget.name, address: widget.city),
+                ),
+              ),
+              SizedBox(
+                child: FutureBuilder(
+                  future: CloudService().getSellerIDFromName(name: widget.name),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    switch (snapshot.connectionState) {
+                      case (ConnectionState.waiting):
+                        return const Center(
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      case (ConnectionState.done):
+                        final sellerId = snapshot.data;
+                        return StreamBuilder(
+                          stream: CloudService()
+                              .getSellerRequests(userId: sellerId),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              case ConnectionState.active:
+                                return StreamBuilder(
+                                  stream: CloudService()
+                                      .getSellerRequests(userId: sellerId),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.waiting:
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      case ConnectionState.active:
+                                        final docs = snapshot.data!.docs;
+                                        final numOfOrders = docs.length;
+                                        final compensation =
+                                            (docs.length * 4).toString();
+                                        final numOfOrdersString =
+                                            docs.length.toString();
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      15, 0, 15, 0),
+                                              child: Container(
+                                                color: Colors.grey[100],
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        genericText(
+                                                            text:
+                                                                'Orders and their details:',
+                                                            color: color5),
+                                                        genericText4(
+                                                            text:
+                                                                'Total number of orders: $numOfOrdersString',
+                                                            color: color5,
+                                                            stringWeight:
+                                                                FontWeight
+                                                                    .w300),
+                                                        genericText4(
+                                                            text:
+                                                                'Your total revenue will sum up to: $compensation euros',
+                                                            color: color5,
+                                                            stringWeight:
+                                                                FontWeight
+                                                                    .w300),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      15, 0, 15, 0),
+                                              child: SizedBox(
+                                                child: ListView.separated(
+                                                  separatorBuilder:
+                                                      (context, index) {
+                                                    return const SizedBox(
+                                                      height: 15,
+                                                    );
+                                                  },
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount: docs.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final price = docs[index]
+                                                        .data()['price'];
+                                                    final name = docs[index]
+                                                        .data()['name'];
+                                                    final item = docs[index]
+                                                        .data()['item'];
+                                                    final notes = docs[index]
+                                                        .data()['notes'];
+                                                    final pic = docs[index]
+                                                        .data()['picture_url'];
+                                                    final numberC = docs[index]
+                                                        .data()['number'];
+                                                    final String address =
+                                                        docs[index]
+                                                            .data()['address']
+                                                            .split(',')[0];
 
-                                          return genericExpandableList(
-                                            name: name,
-                                            address: address,
-                                            numberC: numberC,
-                                            item: item,
-                                            price: price,
-                                            notes: notes,
-                                            pic: pic,
-                                            context: context,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  );
+                                                    return genericExpandableList(
+                                                      name: name,
+                                                      address: address,
+                                                      numberC: numberC,
+                                                      item: item,
+                                                      price: price,
+                                                      notes: notes,
+                                                      pic: pic,
+                                                      context: context,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(25),
+                                              child: genericButton(
+                                                primaryColor: color3,
+                                                pressColor: color2,
+                                                text: "Handle delivery",
+                                                onPressed: () {
+                                                  CloudService().assignToDriver(
+                                                      userId: userId,
+                                                      sellerName: widget.name);
+                                                  Navigator.of(context).pop();
+                                                  setState(() {});
+                                                },
+                                                textColor: color2,
+                                                context: context,
+                                              ),
+                                            ),
+                                          ],
+                                        );
 
-                                default:
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                              }
-                            },
-                          );
-                        default:
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                      }
-                    },
-                  );
+                                      default:
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                    }
+                                  },
+                                );
+                              default:
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                            }
+                          },
+                        );
 
-                default:
-                  return const Center(child: CircularProgressIndicator());
-              }
-            },
+                      default:
+                        return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

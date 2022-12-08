@@ -205,6 +205,13 @@ class CloudService {
         .snapshots();
   }
 
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getSellerRequestsFuture({required String userId}) async {
+    final requests =
+        await sellerCollection.doc(userId).collection('seller_requests').get();
+    return requests.docs;
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequestsArchived(
       {required String userId}) {
     return sellerCollection

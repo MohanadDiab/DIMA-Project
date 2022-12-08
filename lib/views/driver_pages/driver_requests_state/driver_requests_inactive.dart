@@ -31,25 +31,28 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                      child: Center(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.list_sharp,
-                              color: color3,
-                            ),
-                            const SizedBox(width: 5),
-                            genericText(
-                              text: "Sort requests based on:",
-                              color: color5,
-                            ),
-                          ],
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              bigText(text: 'Welcome back', color: color5),
+                              genericText4(
+                                text: "Sort requests based on:",
+                                color: color5,
+                                stringWeight: FontWeight.w200,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 5),
+                        Image.asset(
+                          'assets/emoji/waving_hand.png',
+                          height: 35,
+                        ),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -58,7 +61,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           context: context,
                           function: () {},
                           icon: Icons.location_pin,
-                          text: "distance",
+                          text: "Distance",
                         ),
                         filterBox(
                           context: context,
@@ -75,7 +78,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                       ],
                     ),
                     const Padding(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
                       child: Divider(),
                     ),
                     Padding(
@@ -85,11 +88,6 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.list_alt_outlined,
-                              color: color3,
-                            ),
-                            const SizedBox(width: 5),
                             genericText(
                               text: "Available requests",
                               color: color5,
@@ -254,7 +252,11 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(icon, color: color5),
-              genericText(text: text, color: color5),
+              genericText4(
+                text: text,
+                color: color5,
+                stringWeight: FontWeight.w300,
+              ),
             ],
           ),
         ),

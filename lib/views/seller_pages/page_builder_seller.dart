@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/customPageRouter.dart';
 import 'package:testapp/views/maps/seller_map.dart';
 import 'package:testapp/views/seller_pages/seller_profile.dart';
 import 'package:testapp/views/seller_pages/seller_requests.dart';
@@ -43,7 +44,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
@@ -52,7 +53,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
               _currentIndex = index;
             },
           ),
-          destinations: _navyItems,
+          destinations: navyItems,
         ),
       ),
     );
@@ -63,25 +64,4 @@ const _widgetList = <Widget>[
   SellerMap(),
   SellerRequests(),
   SellerProfile(),
-];
-
-final _navyItems = <NavigationDestination>[
-  NavigationDestination(
-      icon: Icon(
-        Icons.map_outlined,
-        color: color3,
-      ),
-      label: 'orders'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.shop_outlined,
-        color: color3,
-      ),
-      label: 'Requests'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.person_outlined,
-        color: color3,
-      ),
-      label: 'Profile'),
 ];

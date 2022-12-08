@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/customPageRouter.dart';
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
@@ -52,7 +53,7 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
               _currentIndex = index;
             },
           ),
-          destinations: _navyItems,
+          destinations: navyItems,
         ),
       ),
     );
@@ -63,25 +64,4 @@ const _widgetList = <Widget>[
   DriverMap(),
   DriverRequests(),
   DriverProfile(),
-];
-
-final _navyItems = <NavigationDestination>[
-  NavigationDestination(
-      icon: Icon(
-        Icons.map,
-        color: color3,
-      ),
-      label: 'orders'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.shop,
-        color: color3,
-      ),
-      label: 'Requests'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.person,
-        color: color3,
-      ),
-      label: 'Profile'),
 ];

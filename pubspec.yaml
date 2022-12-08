@@ -93,6 +93,7 @@ flutter:
   uses-material-design: true
   assets:
   - assets/
+  - assets/emoji/waving_hand.png
   - assets/google_fonts/static/
 
   # To add assets to your application, add an assets section, like this:

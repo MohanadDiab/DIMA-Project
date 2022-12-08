@@ -8,6 +8,8 @@ import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/request_edit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'constants/customPageRouter.dart';
+
 Widget genericButton({
   required primaryColor,
   required pressColor,
@@ -20,7 +22,7 @@ Widget genericButton({
     style: ElevatedButton.styleFrom(
       onPrimary: pressColor,
       primary: primaryColor,
-      fixedSize: Size(getWidth(context: context) * .8, 60),
+      fixedSize: Size(getWidth(context: context) * .6, 60),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -681,6 +683,7 @@ Widget genericExpandableList2({
 }
 
 Widget requestsPageShimmer({required BuildContext context}) {
+  int currentIndex = 1;
   return Scaffold(
     appBar: AppBar(
       foregroundColor: Colors.black,
@@ -826,41 +829,18 @@ Widget requestsPageShimmer({required BuildContext context}) {
             fontWeight: FontWeight.w500,
           ),
         ),
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       ),
       child: NavigationBar(
-        selectedIndex: _currentIndex,
+        selectedIndex: currentIndex,
         onDestinationSelected: (index) {
-          _currentIndex = index;
+          currentIndex = index;
         },
-        destinations: _navyItems,
+        destinations: navyItems,
       ),
     ),
   );
 }
-
-int _currentIndex = 1;
-
-final _navyItems = <NavigationDestination>[
-  NavigationDestination(
-      icon: Icon(
-        Icons.map_outlined,
-        color: color3,
-      ),
-      label: 'orders'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.shop_outlined,
-        color: color3,
-      ),
-      label: 'Requests'),
-  NavigationDestination(
-      icon: Icon(
-        Icons.person_outlined,
-        color: color3,
-      ),
-      label: 'Profile'),
-];
 
 Widget textFieldwithIcon({
   required hintText,
