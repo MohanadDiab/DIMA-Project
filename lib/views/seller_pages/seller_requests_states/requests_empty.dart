@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/routes.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 
 class SellerRequestsIsEmpty extends StatelessWidget {
   const SellerRequestsIsEmpty({Key? key}) : super(key: key);

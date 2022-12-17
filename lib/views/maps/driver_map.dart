@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:location/location.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/constants/url.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 
 class SellerRequestsInfoDrawer extends StatelessWidget {
   const SellerRequestsInfoDrawer({Key? key}) : super(key: key);

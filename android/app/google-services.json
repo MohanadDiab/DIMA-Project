@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "679179179219-2qch4hrcck3kjes2nk098nbi945bj2ad.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dima.testapp",
+            "certificate_hash": "eeea4e2c46e969abb9d103ef7ef1ed7d384e5f3a"
+          }
+        },
+        {
           "client_id": "679179179219-0126m8a2ts60ue18ktssivogfpivsv0q.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "679179179219-0126m8a2ts60ue18ktssivogfpivsv0q.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "679179179219-iisc7usv9hebjp51pj7lcg4v8aab512c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dima.testapp"
+              }
             }
           ]
         }

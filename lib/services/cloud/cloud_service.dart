@@ -183,6 +183,14 @@ class CloudService {
     return driver.data();
   }
 
+  Future<Map<String, dynamic>?> getDriverSeller(
+      {required String userId}) async {
+    final driver = await driverCollection.doc(userId).get();
+    final sellerId = driver.data()!['assigned_seller'];
+    final seller = await sellerCollection.doc(sellerId).get();
+    return seller.data();
+  }
+
   Future<Map<String, dynamic>?> getSellerProfile(
       {required String userId}) async {
     final seller = await sellerCollection.doc(userId).get();
@@ -240,6 +248,15 @@ class CloudService {
         .snapshots();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getClosestRequests(
+      {required String city}) {
+    return sellerCollection
+        .where('is_assigned', isEqualTo: false)
+        .where('is_published', isEqualTo: true)
+        .where('city', isEqualTo: city)
+        .snapshots();
+  }
+
   Future<Map<String, dynamic>?> getSellerRequestInfo(
       {required String userId, required String name}) async {
     final request = await sellerCollection
@@ -275,6 +292,12 @@ class CloudService {
       {
         'is_assigned': true,
         'assigned_driver': driverID,
+      },
+      SetOptions(merge: true),
+    );
+    driverCollection.doc(userId).set(
+      {
+        'assigned_seller': sellerId,
       },
       SetOptions(merge: true),
     );

@@ -15,3 +15,17 @@ Future<bool> showLogOutDialog(BuildContext context) {
     (value) => value ?? false,
   );
 }
+
+Future<bool> showConfirmRequestsDialog(BuildContext context) {
+  return showGenericDialog<bool>(
+    context: context,
+    title: 'Handle Delivery',
+    content: 'Confirm handling of the delivery?',
+    optionsBuilder: () => {
+      context.loc.cancel: false,
+      "Confirm": true,
+    },
+  ).then(
+    (value) => value ?? false,
+  );
+}

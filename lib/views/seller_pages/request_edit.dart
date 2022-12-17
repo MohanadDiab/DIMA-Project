@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/dimensions.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:http/http.dart';

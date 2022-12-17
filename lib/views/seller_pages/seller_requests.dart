@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/seller_requests_info.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/request_assigned.dart';

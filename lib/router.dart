@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/driver_pages/page_builder_driver.dart';
 import 'package:testapp/views/seller_pages/page_builder_seller.dart';
@@ -20,26 +20,24 @@ class _PageRouterState extends State<PageRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: CloudService().isDriver(userId: userId),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return requestsPageShimmer(context: context);
-            case ConnectionState.done:
-              if (snapshot.data) {
-                return const DriverPageBuilder();
-              } else {
-                return const SellerPageBuilder();
-              }
-            default:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-          }
-        },
-      ),
+    return FutureBuilder(
+      future: CloudService().isDriver(userId: userId),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return requestsPageShimmer(context: context);
+          case ConnectionState.done:
+            if (snapshot.data) {
+              return const DriverPageBuilder();
+            } else {
+              return const SellerPageBuilder();
+            }
+          default:
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+      },
     );
   }
 }

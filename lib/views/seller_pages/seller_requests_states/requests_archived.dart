@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 
 class SellerRequestsArchived extends StatelessWidget {
   const SellerRequestsArchived({

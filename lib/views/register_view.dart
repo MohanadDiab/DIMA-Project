@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_exceptions.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
@@ -370,7 +370,7 @@ Widget registerFields({
         icon: Icons.lock_outlined,
       ),
       const SizedBox(height: 25),
-      textFieldwithIcon(
+      numberFieldwithIcon(
         hintText: "Enter your number here",
         controller: numberController,
         title: 'Number',

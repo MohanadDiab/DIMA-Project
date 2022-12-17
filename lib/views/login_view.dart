@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/constants/customPageRouter.dart';
+import 'package:testapp/views/phone_login.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_exceptions.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
@@ -72,15 +74,19 @@ class _LoginViewState extends State<LoginView> {
                   height: 250,
                   width: 250,
                   decoration: const BoxDecoration(
-                    image:
-                        DecorationImage(image: AssetImage('assets/logo.png')),
+                    image: DecorationImage(
+                      image: AssetImage('assets/icon/icon.png'),
+                    ),
                   ),
                 ),
-                genericText(
-                    text: 'We are happy to see you again!', color: color3),
-                const SizedBox(height: 25),
+                bigText(
+                  text: 'Delevery',
+                  color: color3,
+                ),
+                genericText(text: "Welcome back!", color: color5),
+                const SizedBox(height: 10),
                 Container(
-                  height: 2,
+                  height: 1,
                   color: color3,
                 ),
                 const SizedBox(height: 25),
@@ -138,6 +144,64 @@ class _LoginViewState extends State<LoginView> {
                             );
                       },
                       textColor: color2),
+                ),
+                genericText(text: 'OR', color: color5),
+                genericText4(
+                  text: "Sign in with",
+                  color: color5,
+                  stringWeight: FontWeight.w300,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: color3,
+                        radius: 35,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MyRoute(
+                                builder: (BuildContext context) =>
+                                    const PhoneScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.phone),
+                          iconSize: 35,
+                          color: color2,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: color3,
+                        radius: 35,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.facebook),
+                          iconSize: 35,
+                          color: color2,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: color3,
+                        radius: 35,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.mail),
+                          iconSize: 35,
+                          color: color2,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 TextButton(
                   onPressed: () {

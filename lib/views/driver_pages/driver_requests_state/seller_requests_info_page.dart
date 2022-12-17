@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/dimensions.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
+import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 import 'package:testapp/views/maps/requests_map.dart';
 
 class SellerRequestsInfoPage extends StatefulWidget {
@@ -245,12 +246,18 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
                                                 primaryColor: color3,
                                                 pressColor: color2,
                                                 text: "Handle delivery",
-                                                onPressed: () {
-                                                  CloudService().assignToDriver(
-                                                      userId: userId,
-                                                      sellerName: widget.name);
-                                                  Navigator.of(context).pop();
-                                                  setState(() {});
+                                                onPressed: () async {
+                                                  final shouldConfirm =
+                                                      await showConfirmRequestsDialog(
+                                                          context);
+                                                  if (shouldConfirm) {
+                                                    CloudService()
+                                                        .assignToDriver(
+                                                            userId: userId,
+                                                            sellerName:
+                                                                widget.name);
+                                                    Navigator.of(context).pop();
+                                                  }
                                                 },
                                                 textColor: color2,
                                                 context: context,

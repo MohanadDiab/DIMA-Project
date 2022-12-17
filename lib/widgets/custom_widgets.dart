@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/customPageRouter.dart';
 import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/constants/skeleton.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/request_edit.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'constants/customPageRouter.dart';
 
 Widget genericButton({
   required primaryColor,
@@ -859,6 +858,35 @@ Widget textFieldwithIcon({
         ],
       ),
       TextField(
+        controller: controller,
+        enableSuggestions: false,
+        autocorrect: false,
+        decoration: InputDecoration(
+          hintText: hintText,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget numberFieldwithIcon({
+  required hintText,
+  required controller,
+  required title,
+  required icon,
+}) {
+  return Column(
+    children: [
+      Row(
+        children: [
+          Icon(icon),
+          const SizedBox(width: 5),
+          genericText(text: title, color: color5),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+      TextField(
+        keyboardType: TextInputType.number,
         controller: controller,
         enableSuggestions: false,
         autocorrect: false,

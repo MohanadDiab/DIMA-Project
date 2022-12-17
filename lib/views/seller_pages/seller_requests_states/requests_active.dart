@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 
 class SellerRequestsActive extends StatelessWidget {
   const SellerRequestsActive({
@@ -16,6 +16,33 @@ class SellerRequestsActive extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 15),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    bigText(text: 'Welcome back', color: color5),
+                    genericText4(
+                      text: "Searching for a driver...",
+                      color: color5,
+                      stringWeight: FontWeight.w300,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 5),
+              Image.asset(
+                'assets/emoji/waving_hand.png',
+                height: 35,
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(),
+          ),
           Center(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

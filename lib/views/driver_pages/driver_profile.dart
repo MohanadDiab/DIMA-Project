@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/url.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';

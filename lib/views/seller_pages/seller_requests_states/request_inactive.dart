@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/routes.dart';
-import 'package:testapp/custom_widgets.dart';
+import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/request_edit.dart';
 
