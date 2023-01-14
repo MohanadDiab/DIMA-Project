@@ -1,55 +1,247 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
+import '../../main.dart';
 
 class DriverMap extends StatefulWidget {
   const DriverMap({Key? key}) : super(key: key);
-
   @override
   State<DriverMap> createState() => DriverMapState();
 }
 
 class DriverMapState extends State<DriverMap> {
-  final googleApiKey = 'AIzaSyAktuBhmVOtCZN12HIOe3mSkJMit0Oqs04';
-  final CameraPosition _initialPosition =
-      const CameraPosition(target: LatLng(26.8206, 30.8025));
-  final Completer<GoogleMapController> _controller = Completer();
-  bool deliveryIsVisible = false;
+  MapboxMapController? mapController;
+  GeoPoint? sellerLocation;
+  bool collectedIsVisible = false;
   late LatLng destination;
-  late LocationData myLocation;
-
-  @override
-  void initState() {
-    var location = Location();
-    location.getLocation().then((value) => myLocation = value);
-    super.initState();
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-  }
-
-  Future getMyCurrentLocation() async {
-    var location = Location();
-    myLocation = await location.getLocation();
-    var sourceLocation = LatLng(myLocation.latitude!, myLocation.longitude!);
-
-    return Marker(
-      markerId: const MarkerId('Current position'),
-      position: sourceLocation,
-      infoWindow: const InfoWindow(title: 'Current location'),
+  LocationData? currentLocation;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  StreamSubscription<LocationData>? locationSubscription;
+  var location = Location();
+  SymbolOptions _getSymbolOptions(LatLng geometry, String text, String image) {
+    return SymbolOptions(
+      geometry: geometry,
+      textField: text,
+      textOffset: Offset(0, 0.8),
+      iconImage: image,
     );
   }
 
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  final double _zoom = 15;
-  final Set<Marker> _markers = {};
+  Future<void> removeAll(MapboxMapController _mapController) async {
+    try {
+      _mapController.symbols.forEach((symbol) {
+        _mapController.removeSymbol(symbol);
+      });
+    } catch (exception) {
+      print('no symbol');
+    }
+    try {
+      _mapController.lines.forEach((line) {
+        _mapController.removeLine(line);
+      });
+    } catch (exception) {
+      print('no line');
+    }
+  }
+
+  Future<LineOptions> getMultipleOptimalRoute(
+      LatLng departure, List<LatLng> destinations) async {
+    String urlPart = '';
+    for (LatLng destination in destinations) {
+      urlPart += '${destination.longitude},${destination.latitude};';
+    }
+    urlPart = urlPart.substring(0, urlPart.length - 1);
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://api.mapbox.com/optimized-trips/v1/mapbox/cycling/${departure.longitude},${departure.latitude};$urlPart?access_token=pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A&geometries=geojson'));
+
+    print(Uri.parse(
+        'https://api.mapbox.com/optimized-trips/v1/mapbox/cycling/${departure.longitude},${departure.latitude};$urlPart?access_token=pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A&geometries=geojson'));
+    http.StreamedResponse response = await request.send();
+    var _temp = <LatLng>[];
+    var _tempGeoPoints = <GeoPoint>[];
+    if (response.statusCode == 200) {
+      final result = convert.jsonDecode(await response.stream.bytesToString());
+      for (var i in result['trips'][0]['geometry']['coordinates']) {
+        _temp.add(LatLng(i[1], i[0]));
+        _tempGeoPoints.add(GeoPoint(i[0], i[1]));
+      }
+      await CloudService().setRoute(userId: userId, route: _tempGeoPoints);
+      return LineOptions(
+          geometry: _temp,
+          lineColor: "#ff0000",
+          lineWidth: 3.0,
+          lineOpacity: 0.5,
+          draggable: false);
+    } else {
+      print(response.reasonPhrase);
+      return LineOptions();
+    }
+  }
+
+  Future<LineOptions> getOptimalRoute(
+      LatLng departure, LatLng destination) async {
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://api.mapbox.com/directions/v5/mapbox/cycling/${departure.longitude},${departure.latitude};${destination.longitude},${destination.latitude}?access_token=pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A&geometries=geojson'));
+    http.StreamedResponse response = await request.send();
+    var _temp = <LatLng>[];
+    var _tempGeoPoints = <GeoPoint>[];
+    if (response.statusCode == 200) {
+      final result = convert.jsonDecode(await response.stream.bytesToString());
+      for (var i in result['routes'][0]['geometry']['coordinates']) {
+        _temp.add(LatLng(i[1], i[0]));
+        _tempGeoPoints.add(GeoPoint(i[0], i[1]));
+      }
+      await CloudService().setRoute(userId: userId, route: _tempGeoPoints);
+      return LineOptions(
+          geometry: _temp,
+          lineColor: "#ff0000",
+          lineWidth: 3.0,
+          lineOpacity: 0.5,
+          draggable: false);
+    } else {
+      print(response.reasonPhrase);
+      return LineOptions();
+    }
+  }
+
+  Future<void> refreshMap() async {
+    await removeAll(mapController!);
+    locationSubscription?.cancel();
+    location.changeSettings(
+        accuracy: LocationAccuracy.high, interval: 5000, distanceFilter: 5);
+    CloudService().getDriverRequests(userId: userId).listen((event) async {
+      if (event.size > 0) {
+        if (await CloudService().getIfDriverCollected(userId: userId)) {
+          //to costumers
+          collectedIsVisible = false;
+          List<LatLng> destinations = [];
+          mapController!.symbols.forEach((symbol) {
+            if (symbol.options.iconImage == 'mountain-15') {
+              mapController!.removeSymbol(symbol);
+            }
+          });
+          for (QueryDocumentSnapshot<Map<String, dynamic>> deliveringItem
+              in event.docs) {
+            GeoPoint _location = deliveringItem.data()['location'];
+            destinations.add(LatLng(_location.latitude, _location.longitude));
+            mapController?.addSymbol(_getSymbolOptions(
+                LatLng(_location.latitude, _location.longitude),
+                '',
+                'mountain-15'));
+          }
+          locationSubscription = location.onLocationChanged
+              .listen((LocationData _currentLocation) {
+            currentLocation = _currentLocation;
+            LatLng _LatLngCurrentLocation =
+                LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+            mapController!.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(target: _LatLngCurrentLocation, zoom: 12),
+            ));
+            mapController!.symbols.forEach((symbol) {
+              if (symbol.options.iconImage == 'bicycle-15') {
+                mapController!.removeSymbol(symbol);
+              }
+            });
+            mapController?.addSymbol(
+                _getSymbolOptions(_LatLngCurrentLocation, '', 'bicycle-15'));
+
+            getMultipleOptimalRoute(
+                    LatLng(_LatLngCurrentLocation.latitude,
+                        _LatLngCurrentLocation.longitude),
+                    destinations)
+                .then((computedLine) {
+              mapController!.lines.forEach((line) {
+                mapController!.removeLine(line);
+              });
+              mapController!.addLine(computedLine);
+            });
+          });
+        } else {
+          //to sellers
+          collectedIsVisible = true;
+          CloudService()
+              .getAssignedSeller(userId: userId)
+              .listen((event) async {
+            final assignedSeller = event.data()!['assigned_seller'];
+            CloudService()
+                .getSellerLocation(userId: assignedSeller)
+                .listen((event) async {
+              final sellerLocation = event.data()!['location'];
+              locationSubscription = location.onLocationChanged
+                  .listen((LocationData currentLocation) {
+                LatLng _currentLocation = LatLng(
+                    currentLocation.latitude!, currentLocation.longitude!);
+                mapController!.symbols.forEach((symbol) {
+                  if (symbol.options.iconImage == 'bicycle-15') {
+                    mapController!.removeSymbol(symbol);
+                  }
+                });
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(target: _currentLocation, zoom: 12),
+                ));
+                mapController?.addSymbol(
+                    _getSymbolOptions(_currentLocation, '', 'bicycle-15'));
+
+                getOptimalRoute(
+                        LatLng(currentLocation.latitude!,
+                            currentLocation.longitude!),
+                        LatLng(sellerLocation!.latitude,
+                            sellerLocation!.longitude))
+                    .then((computedLine) {
+                  mapController!.lines.forEach((line) {
+                    mapController!.removeLine(line);
+                  });
+                  mapController!.addLine(computedLine);
+                  setState(() {});
+                });
+              });
+              mapController!.addSymbol(_getSymbolOptions(
+                  LatLng(sellerLocation!.latitude, sellerLocation!.longitude),
+                  'seller',
+                  'restaurant-15'));
+            });
+          });
+        }
+      }
+    });
+  }
+
+  _onMapCreated(MapboxMapController controller) {
+    mapController = controller;
+    refreshMap();
+    setState(() {});
+  }
+
+  _onStyleLoadedCallback() {
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //   content: Text("Style loaded :)"),
+    //   backgroundColor: Theme.of(context).primaryColor,
+    //   duration: Duration(seconds: 1),
+    // ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future getMyCurrentLocation() async {
+    mapController!.symbols.forEach((s) => print(s.options.iconImage));
+    final myLocation = await Location().getLocation();
+    return LatLng(myLocation.latitude!, myLocation.longitude!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +249,10 @@ class DriverMapState extends State<DriverMap> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            var myMarker = await getMyCurrentLocation();
-            _markers.add(myMarker);
-            GoogleMapController controller = await _controller.future;
-            controller.animateCamera(CameraUpdate.newLatLngZoom(
-                LatLng(myMarker.position.latitude, myMarker.position.longitude),
-                _zoom));
-            setState(() {});
+            LatLng currentLocation = await getMyCurrentLocation();
+            mapController!.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(target: currentLocation, zoom: 12.5),
+            ));
           },
           child: const Icon(
             Icons.my_location_outlined,
@@ -75,24 +264,17 @@ class DriverMapState extends State<DriverMap> {
       drawer: _drawer(),
       body: Stack(
         children: <Widget>[
-          GoogleMap(
-            polylines: {
-              Polyline(
-                polylineId: const PolylineId('Delivery route'),
-                points: polyLineCoordinates,
-                color: color3,
-                width: 5,
-              ),
-            },
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            markers: _markers,
-            myLocationEnabled: true,
+          MapboxMap(
+            styleString: MapboxStyles.LIGHT,
+            accessToken: HomePage.ACCESS_TOKEN,
             onMapCreated: _onMapCreated,
-            initialCameraPosition: _initialPosition,
+            initialCameraPosition: const CameraPosition(
+                target: LatLng(45.46785215366453, 9.182147988302752),
+                zoom: 12.5),
+            onStyleLoadedCallback: _onStyleLoadedCallback,
           ),
           Visibility(
-            visible: deliveryIsVisible,
+            visible: collectedIsVisible,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -105,14 +287,12 @@ class DriverMapState extends State<DriverMap> {
                         context: context,
                         primaryColor: color3,
                         pressColor: color2,
-                        text: 'Start delivery',
+                        text: 'Already Collected!',
                         onPressed: () async {
-                          var myLocation = await Location().getLocation();
-                          LatLng sourceLocation = LatLng(
-                              myLocation.latitude!, myLocation.longitude!);
-                          getPolyPoints(
-                              origin: sourceLocation, destination: destination);
-                          deliveryIsVisible = false;
+                          await CloudService().setCollected(userId: userId);
+                          collectedIsVisible = false;
+                          await refreshMap();
+                          setState(() {});
                         },
                         textColor: color2),
                   ),
@@ -165,8 +345,8 @@ class DriverMapState extends State<DriverMap> {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                 case ConnectionState.active:
-                  final docs = snapshot.data.docs!;
                   if (snapshot.hasData) {
+                    final docs = snapshot.data.docs!;
                     return ListView.separated(
                       separatorBuilder: (context, index) {
                         return const Divider(
@@ -207,29 +387,6 @@ class DriverMapState extends State<DriverMap> {
 
   List<LatLng> polyLineCoordinates = [];
 
-  void getPolyPoints({
-    required LatLng origin,
-    required LatLng destination,
-  }) async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleApiKey,
-      PointLatLng(origin.latitude, origin.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polyLineCoordinates.add(
-          LatLng(
-            point.latitude,
-            point.longitude,
-          ),
-        );
-      });
-      setState(() {});
-    }
-  }
-
   Future<void> _goToCustomer({
     required String name,
     required String item,
@@ -237,23 +394,17 @@ class DriverMapState extends State<DriverMap> {
     required double lat,
     required double long,
   }) async {
-    GoogleMapController controller = await _controller.future;
-    controller
-        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, long), _zoom));
-
     setState(() {
-      _markers.add(
-        Marker(
-          onTap: () {
-            deliveryIsVisible = true;
-            destination = LatLng(lat, long);
-            setState(() {});
-          },
-          markerId: MarkerId(name),
-          position: LatLng(lat, long),
-          infoWindow: InfoWindow(title: name, snippet: "Item: $item"),
-        ),
-      );
+      // _markers.add(
+      //   Marker(
+      //     onTap: () {
+      //       deliveryIsVisible = true;
+      //       setState(() {});
+      //     },
+      //     markerId: MarkerId(name),
+      //     infoWindow: InfoWindow(title: name, snippet: "Item: $item"),
+      //   ),
+      // );
     });
   }
 }

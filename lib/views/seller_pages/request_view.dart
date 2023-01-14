@@ -123,6 +123,7 @@ class _RequestsState extends State<Requests> {
         ),
       );
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Kindly fill out all the fields'),

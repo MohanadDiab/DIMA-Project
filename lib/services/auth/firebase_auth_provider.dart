@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:testapp/firebase_options.dart';
 import 'package:testapp/services/auth/auth_user.dart';
 import 'package:testapp/services/auth/auth_provider.dart';
 import 'package:testapp/services/auth/auth_exceptions.dart';
-
+import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 
@@ -13,6 +15,51 @@ class FirebaseAuthProvider implements AuthProvider {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  }
+
+  Future<void> bindNotification(uid) async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    bool isDriver = await CloudService().isDriver(userId: uid);
+    await CloudService().updateNotificationToken(
+        userId: uid, token: fcmToken, isDriver: isDriver);
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('FCM authorized: ${settings.authorizationStatus}');
+    //print(fcmToken);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        RemoteNotification? notification = message.notification;
+
+        ///show the notification
+        if (notification != null && notification.android != null) {
+          FlutterLocalNotificationsPlugin().show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              const NotificationDetails(
+                android: AndroidNotificationDetails(
+                  'channel id',
+                  'channel name',
+                  icon: "launch_background",
+                  channelDescription: 'channelDescription',
+                ),
+              ),
+              payload: message.data.toString());
+        }
+      }
+    });
   }
 
   @override
@@ -50,6 +97,7 @@ class FirebaseAuthProvider implements AuthProvider {
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      bindNotification(user.uid);
       return AuthUser.fromFirebase(user);
     } else {
       return null;

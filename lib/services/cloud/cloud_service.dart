@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class CloudService {
   // Instantiating
@@ -24,6 +25,18 @@ class CloudService {
     required String pictureUrl,
   }) async {
     await sellerCollection.doc(userId).set(
+      {
+        'picture_url': pictureUrl,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> uploadDriverImage({
+    required String userId,
+    required String pictureUrl,
+  }) async {
+    await driverCollection.doc(userId).set(
       {
         'picture_url': pictureUrl,
       },
@@ -119,11 +132,29 @@ class CloudService {
     return driverId;
   }
 
-  Future<String> getSellerIDFromName({required String name}) async {
-    final sellerInfo =
-        await sellerCollection.where('name', isEqualTo: name).get();
-    final sellerId = sellerInfo.docs[0].data()['user_id'];
-    return sellerId;
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getAssignedSeller(
+      {required String userId}) {
+    return driverCollection.doc(userId).get().asStream();
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getSellerLocation(
+      {required String userId}) {
+    return sellerCollection.doc(userId).get().asStream();
+  }
+
+  Future<bool> getIfDriverCollected({required String userId}) async {
+    final driver = await driverCollection.doc(userId).get();
+    final is_Collected = driver.data()!['is_Collected'];
+    if (is_Collected == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getDriverAsStream(
+      {required String userId}) {
+    return driverCollection.doc(userId).get().asStream();
   }
 
   Future<bool> sellerRequestsIsEmpty({required String userId}) async {
@@ -139,7 +170,7 @@ class CloudService {
 
   Future<bool> isDriver({required String userId}) async {
     final driver = await driverCollection.doc(userId).get();
-    await Future.delayed(const Duration(seconds: 3));
+    //await Future.delayed(const Duration(seconds: 3));
     if (driver.exists) {
       return true;
     } else {
@@ -163,7 +194,6 @@ class CloudService {
     final driverId = seller.data()!['assigned_driver'];
     final driverInfo =
         await driverCollection.where('user_id', isEqualTo: driverId).get();
-
     return driverInfo.docs[0].data();
   }
 
@@ -175,6 +205,25 @@ class CloudService {
     } else {
       return false;
     }
+  }
+
+  Future<void> setRoute(
+      {required String userId, required List<GeoPoint> route}) async {
+    await driverCollection
+        .doc(userId)
+        .set({'route': route}, SetOptions(merge: true));
+  }
+
+  Future<List<GeoPoint>> getRoute({required String userId}) async {
+    final driver = await driverCollection.doc(userId).get();
+    return driver.data()!['route'];
+  }
+
+  Future<void> setCollected({required String userId}) async {
+    await driverCollection.doc(userId).set(
+      {'is_Collected': true},
+      SetOptions(merge: true),
+    );
   }
 
   Future<Map<String, dynamic>?> getDriverProfile(
@@ -267,6 +316,27 @@ class CloudService {
     return request.data();
   }
 
+  Future<void> updateNotificationToken({
+    required String userId,
+    required String? token,
+    required bool? isDriver,
+  }) async {
+    switch (isDriver) {
+      case true:
+        await driverCollection.doc(userId).set(
+          {'token': token},
+          SetOptions(merge: true),
+        );
+        break;
+      case false:
+        await sellerCollection.doc(userId).set(
+          {'token': token},
+          SetOptions(merge: true),
+        );
+        break;
+    }
+  }
+
   //update
 
   Future<void> publishSeller({required userId}) async {
@@ -292,12 +362,14 @@ class CloudService {
       {
         'is_assigned': true,
         'assigned_driver': driverID,
+        'is_Collected': false,
       },
       SetOptions(merge: true),
     );
     driverCollection.doc(userId).set(
       {
         'assigned_seller': sellerId,
+        'is_Collected': false,
       },
       SetOptions(merge: true),
     );

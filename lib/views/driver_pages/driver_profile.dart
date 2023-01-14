@@ -47,7 +47,7 @@ class _DriverProfileState extends State<DriverProfile> {
     storageName = userId;
     storage.uploadImage(fileName: storageName, filePath: filePath);
     final pictureURL = await storage.getImageURL(imageName: storageName);
-    CloudService().uploadSellerImage(
+    CloudService().uploadDriverImage(
       userId: userId,
       pictureUrl: pictureURL!,
     );

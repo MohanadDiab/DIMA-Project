@@ -9,6 +9,7 @@ import 'package:testapp/views/seller_pages/seller_requests_info.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/requests_archived.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/requests_empty.dart';
 
+
 class DriverRequests extends StatefulWidget {
   const DriverRequests({Key? key}) : super(key: key);
 
@@ -19,75 +20,80 @@ class DriverRequests extends StatefulWidget {
 class _DriverRequestsState extends State<DriverRequests> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: DefaultTabController(
         length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            shape: Border(
-              bottom: BorderSide(
-                color: Colors.grey[200]!,
-              ),
-            ),
-            bottom: TabBar(
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.task,
-                        color: color3,
-                      ),
-                      const SizedBox(width: 5),
-                      genericText(
-                        text: 'Active',
-                        color: color5,
-                      ),
-                    ],
-                  ),
+        child: SizedBox(
+          height: size.height,
+          width: size.height,
+          child: Scaffold(
+            appBar: AppBar(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
+              shape: Border(
+                bottom: BorderSide(
+                  color: Colors.grey[200]!,
                 ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.archive,
-                        color: color3,
-                      ),
-                      const SizedBox(width: 5),
-                      genericText(
-                        text: 'Archive',
-                        color: color5,
-                      ),
-                    ],
+              ),
+              bottom: TabBar(
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.task,
+                          color: color3,
+                        ),
+                        const SizedBox(width: 5),
+                        genericText(
+                          text: 'Active',
+                          color: color5,
+                        ),
+                      ],
+                    ),
                   ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.archive,
+                          color: color3,
+                        ),
+                        const SizedBox(width: 5),
+                        genericText(
+                          text: 'Archive',
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              title: bigText(
+                text: 'My Requests',
+                color: color5,
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_active_outlined),
+                  color: color5,
                 ),
               ],
             ),
-            title: bigText(
-              text: 'My Requests',
-              color: color5,
+            drawer: const SellerRequestsInfoDrawer(),
+            body: const TabBarView(
+              children: [
+                DriverRequestsView(),
+                DriverArchivedRequests(),
+              ],
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_active_outlined),
-                color: color5,
-              ),
-            ],
-          ),
-          drawer: const SellerRequestsInfoDrawer(),
-          body: const TabBarView(
-            children: [
-              DriverRequestsView(),
-              DriverArchivedRequests(),
-            ],
-          ),
+          ), // Your Widget
         ),
       ),
     );

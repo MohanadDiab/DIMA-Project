@@ -214,11 +214,11 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                                   MyRoute(
                                     builder: (BuildContext context) =>
                                         SellerRequestsInfoPage(
-                                      number: number,
-                                      name: name,
-                                      picture: pic,
-                                      city: city,
-                                    ),
+                                            number: number,
+                                            name: name,
+                                            picture: pic,
+                                            city: city,
+                                            userId: userId),
                                   ),
                                 );
                               },
