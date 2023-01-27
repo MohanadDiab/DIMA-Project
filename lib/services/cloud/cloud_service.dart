@@ -57,6 +57,7 @@ class CloudService {
         'is_published': false,
         'number': number,
         'user_id': userId,
+        'picture_url': null,
       },
     );
   }
@@ -73,6 +74,7 @@ class CloudService {
         'city': city,
         'number': number,
         'user_id': userId,
+        'picture_url': null,
       },
     );
   }

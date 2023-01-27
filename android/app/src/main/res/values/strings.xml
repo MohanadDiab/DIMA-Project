@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Delever</string>
+    <string name="facebook_app_id">1381246835964598</string>
+    <string name="fb_login_protocol_scheme">fb1381246835964598</string>
+    <string name="facebook_client_token">66af761a844b439ababc0731972a8732</string>
+</resources>
