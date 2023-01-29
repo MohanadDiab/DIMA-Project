@@ -22,8 +22,7 @@ class DriverProfile extends StatefulWidget {
   State<DriverProfile> createState() => _DriverProfileState();
 }
 
-class _DriverProfileState extends State<DriverProfile>
-    with AutomaticKeepAliveClientMixin {
+class _DriverProfileState extends State<DriverProfile> {
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final CloudStorage storage = CloudStorage();
 
@@ -46,7 +45,7 @@ class _DriverProfileState extends State<DriverProfile>
     storageName = userId;
     storage.uploadImage(fileName: storageName, filePath: filePath);
     final pictureURL = await storage.getImageURL(imageName: storageName);
-    CloudService().uploadDriverImage(
+    CloudService().uploadSellerImage(
       userId: userId,
       pictureUrl: pictureURL!,
     );
@@ -320,4 +319,4 @@ class _DriverProfileState extends State<DriverProfile>
       },
     );
   }
-
+}

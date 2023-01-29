@@ -33,12 +33,11 @@ class _RequestsState extends State<Requests> {
   late final TextEditingController _imageTextController;
   double lat = 0;
   double long = 0;
-
+  bool isVisible = true;
   String storageName = '';
 
   late final String imageName;
   List<dynamic> _placesList = [];
-  bool isVisible = true;
 
   @override
   void initState() {
@@ -77,14 +76,14 @@ class _RequestsState extends State<Requests> {
   }
 
   void getSuggestion(String input) async {
-    const String KAPIKey =
-        'pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A';
-    final request =
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/$input.json?types=address%2Cplace%2Cpoi%2Clocality&access_token=$KAPIKey';
+    const String KAPIKey = 'AIzaSyAktuBhmVOtCZN12HIOe3mSkJMit0Oqs04';
+    const baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    final request = '$baseURL?input=$input&key=$KAPIKey';
     var response = await get(Uri.parse(request));
     if (response.statusCode == 200) {
       setState(() {
-        _placesList = jsonDecode(response.body.toString())['features'];
+        _placesList = jsonDecode(response.body.toString())['predictions'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -118,8 +117,17 @@ class _RequestsState extends State<Requests> {
         long: long,
         pictureUrl: pictureURL!,
       );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Request created successfully'),
+        ),
+      );
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Kindly fill out all the fields'),
+        ),
+      );
     }
   }
 
@@ -294,13 +302,15 @@ class _RequestsState extends State<Requests> {
                     itemBuilder: ((context, index) {
                       return ListTile(
                         onTap: (() async {
-                          long = _placesList[index]['center'][0];
-                          lat = _placesList[index]['center'][1];
+                          List<Location> locations = await locationFromAddress(
+                              _placesList[index]['description']);
+                          long = locations.last.longitude;
+                          lat = locations.last.latitude;
                           _locationTextController.text =
-                              _placesList[index]['place_name'];
+                              _placesList[index]['description'];
                           isVisible = false;
                         }),
-                        title: Text(_placesList[index]['place_name']),
+                        title: Text(_placesList[index]['description']),
                       );
                     }),
                   ),
