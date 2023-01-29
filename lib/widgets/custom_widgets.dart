@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/constants/customPageRouter.dart';
+import 'package:testapp/constants/custom_page_router.dart';
 import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/constants/skeleton.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
@@ -17,17 +17,36 @@ Widget genericButton({
   required textColor,
   required BuildContext context,
 }) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      onPrimary: pressColor,
-      primary: primaryColor,
-      fixedSize: Size(getWidth(context: context) * .6, 60),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-    ),
-    onPressed: onPressed,
-    child: genericText(text: text, color: textColor),
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth < 600) {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: pressColor,
+            primary: primaryColor,
+            fixedSize: Size(getWidth(context: context) * .6, 60),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: onPressed,
+          child: genericText(text: text, color: textColor),
+        );
+      } else {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: pressColor,
+            primary: primaryColor,
+            fixedSize: Size(getWidth(context: context) * .3, 60),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: onPressed,
+          child: genericText(text: text, color: textColor),
+        );
+      }
+    },
   );
 }
 
@@ -71,164 +90,10 @@ Widget genericButton3({
   );
 }
 
-Widget genericButton2({
-  required primaryColor,
-  required pressColor,
-  required text,
-  required textColor,
-  required BuildContext context,
-}) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      onPrimary: pressColor,
-      primary: primaryColor,
-      fixedSize: Size(getWidth(context: context) * .8, 60),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-    ),
-    onPressed: () {},
-    child: genericText(text: text, color: textColor),
-  );
-}
-
-Widget box({
-  required name,
-  required numberOfOrders,
-  required context,
-}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: color2,
-      border: Border.all(color: color4),
-      borderRadius: BorderRadius.circular(25),
-    ),
-    padding: const EdgeInsets.all(10),
-    child: Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            genericText(
-              text: name,
-              color: color4,
-            ),
-            const Expanded(child: SizedBox()),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.call),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-        Container(
-          height: 2.5,
-          color: color4,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            genericText(
-              text: '$numberOfOrders Customers',
-              color: color4,
-            ),
-            const Expanded(child: SizedBox()),
-            const Icon(Icons.location_on_outlined),
-            const SizedBox(
-              width: 5,
-            ),
-            genericText(
-              text: 'Milan',
-              color: color4,
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: genericButton(
-              context: context,
-              primaryColor: color4,
-              pressColor: color2,
-              text: 'Request',
-              onPressed: () {},
-              textColor: color2),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget box1({
-  required name,
-  required order,
-  required context,
-}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: color2,
-      borderRadius: BorderRadius.circular(25),
-    ),
-    padding: const EdgeInsets.all(10),
-    child: Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            genericText(
-              text: name,
-              color: color4,
-            ),
-            const Expanded(child: SizedBox()),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.call),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-        Container(
-          height: 2.5,
-          color: color4,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            genericText(
-              text: order,
-              color: color4,
-            ),
-            const Expanded(child: SizedBox()),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.photo_size_select_actual_rounded),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: genericButton(
-              context: context,
-              primaryColor: color4,
-              pressColor: color2,
-              text: 'See location',
-              onPressed: () {},
-              textColor: color2),
-        )
-      ],
-    ),
-  );
-}
-
 Widget genericText({required text, required color}) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w400,
       fontSize: 22,
@@ -242,6 +107,7 @@ Widget genericText({required text, required color}) {
 Widget genericText2({required text, required color}) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w200,
       fontSize: 14,
@@ -255,6 +121,7 @@ Widget genericText2({required text, required color}) {
 Widget genericText3({required String text, required Color color}) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w300,
       fontSize: 28,
@@ -272,6 +139,7 @@ Widget genericText4({
 }) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: stringWeight,
       fontSize: 18,
@@ -286,9 +154,10 @@ Widget genericText4({
 Widget genericText5({required String text, required Color color}) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w200,
-        fontSize: 18,
+        fontWeight: FontWeight.w400,
+        fontSize: 20,
         color: color,
         decoration: TextDecoration.underline),
     maxLines: 5,
@@ -299,6 +168,7 @@ Widget genericText5({required String text, required Color color}) {
 Widget bigText({required text, required color}) {
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w600,
       fontSize: 24,
@@ -325,11 +195,12 @@ Widget genericRequestRow({
         color: color5,
         stringWeight: FontWeight.w400,
       ),
-      genericText4(
+      Expanded(
+          child: genericText4(
         text: name,
         color: color5,
         stringWeight: FontWeight.w200,
-      ),
+      )),
     ],
   );
 }
@@ -490,7 +361,103 @@ Widget genericExpandableList({
   );
 }
 
+Widget genericExpandableCard({
+  required name,
+  required address,
+  required numberC,
+  required item,
+  required price,
+  required notes,
+  required pic,
+  required BuildContext context,
+}) {
+  return Card(
+    color: Colors.grey[100],
+    elevation: 2,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          genericRequestRow(
+            title: 'Name',
+            name: name,
+            icon: const Icon(Icons.person_outline),
+          ),
+          genericRequestRow(
+            title: 'Address',
+            name: address,
+            icon: const Icon(Icons.location_history_outlined),
+          ),
+          genericRequestRow(
+            title: 'Number',
+            name: numberC.toString(),
+            icon: const Icon(
+              Icons.call_outlined,
+            ),
+          ),
+          genericRequestRow(
+            title: 'Item',
+            name: item,
+            icon: const Icon(
+              Icons.store_outlined,
+            ),
+          ),
+          genericRequestRow(
+            title: 'Price',
+            name: price.toString(),
+            icon: const Icon(Icons.attach_money_outlined),
+          ),
+          genericRequestRow(
+            title: 'Notes',
+            name: notes,
+            icon: const Icon(Icons.textsms_outlined),
+          ),
+          Row(
+            children: [
+              const Icon(Icons.image_outlined),
+              genericText4(
+                text: 'Item image: ',
+                color: color5,
+                stringWeight: FontWeight.w400,
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(pic),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Center(
+              child: circularAvatarImage(
+                networkImage: pic,
+                placeholderIcon: Icons.catching_pokemon_outlined,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget genericExpandableList2({
+  required itemId,
   required userId,
   required name,
   required address,
@@ -606,7 +573,7 @@ Widget genericExpandableList2({
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => EditRequests(cname: name),
+                        builder: (context) => EditRequests(itemId: itemId),
                       ),
                     );
                   },
@@ -652,7 +619,7 @@ Widget genericExpandableList2({
                   },
                   onLongPress: () async {
                     await CloudService()
-                        .deleteSellerRequest(userId: userId, name: name);
+                        .deleteSellerRequest(userId: userId, itemId: name);
                   },
                   child: Row(
                     children: [
@@ -924,5 +891,327 @@ Widget textFieldwithIconObscured({
         ),
       ),
     ],
+  );
+}
+
+Widget orders({required BuildContext context, required snapshot}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth > 600) {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableCard(
+                    name: name,
+                    address: address,
+                    numberC: numberC,
+                    item: item,
+                    price: price,
+                    notes: notes,
+                    pic: pic,
+                    context: context);
+              },
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 15,
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableList(
+                  name: name,
+                  address: address,
+                  numberC: numberC,
+                  item: item,
+                  price: price,
+                  notes: notes,
+                  pic: pic,
+                  context: context,
+                );
+              },
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
+Widget driverButton({required driverSnapshot, required BuildContext context}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth < 600) {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            primary: Colors.grey[100],
+            onPrimary: color3,
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          onPressed: () {
+            call(number: driverSnapshot['number'].toString());
+          },
+          child: Row(
+            children: [
+              circularAvatarImageSmall(
+                networkImage: driverSnapshot['picture_url'],
+                placeholderIcon: Icons.person,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.person_outline),
+                      const SizedBox(width: 5),
+                      genericText2(
+                        text: driverSnapshot['name'],
+                        color: color5,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.location_on_outlined),
+                      const SizedBox(width: 5),
+                      genericText2(
+                        text: driverSnapshot['city'],
+                        color: color5,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const Expanded(child: SizedBox()),
+              Column(
+                children: [
+                  CircleAvatar(
+                    child: Icon(
+                      Icons.call_outlined,
+                      color: color2,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
+        );
+      } else {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            primary: Colors.grey[100],
+            onPrimary: color3,
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          onPressed: () {
+            call(number: driverSnapshot['number'].toString());
+          },
+          child: SizedBox(
+            width: getWidth(context: context) * 0.5,
+            child: Row(
+              children: [
+                circularAvatarImageSmall(
+                  networkImage: driverSnapshot['picture_url'],
+                  placeholderIcon: Icons.person,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.person_outline),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: driverSnapshot['name'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.location_on_outlined),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: driverSnapshot['city'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  children: [
+                    CircleAvatar(
+                      child: Icon(
+                        Icons.call_outlined,
+                        color: color2,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 20),
+              ],
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
+Widget genericProfileButton(
+    {required String field,
+    required icon,
+    required function,
+    required context}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth < 600) {
+        return Padding(
+          padding: const EdgeInsets.all(7.5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: function,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: icon,
+                  ),
+                  const SizedBox(width: 15),
+                  genericText(
+                    text: field,
+                    color: color5,
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(7.5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: function,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: SizedBox(
+                width: getWidth(context: context) * 0.4,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: icon,
+                    ),
+                    const SizedBox(width: 15),
+                    genericText(
+                      text: field,
+                      color: color5,
+                    ),
+                    const SizedBox(width: 15),
+                    const Expanded(child: SizedBox()),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    },
   );
 }

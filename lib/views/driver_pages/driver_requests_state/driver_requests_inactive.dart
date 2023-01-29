@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/constants/customPageRouter.dart';
+import 'package:testapp/constants/custom_page_router.dart';
 import 'package:testapp/constants/url.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
@@ -191,11 +191,11 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           itemCount: docs.length,
                           itemBuilder: (context, index) {
                             final name = docs[index].data()['name'];
+                            final sellerUserId = docs[index].data()['user_id'];
                             var pic = docs[index].data()['picture_url'];
                             pic ??= profilePlaceholderImage;
                             final number = docs[index].data()['number'];
-                            final String city =
-                                docs[index].data()['city'].split(',')[0];
+                            final String city = docs[index].data()['city'];
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 elevation: 1,
@@ -218,7 +218,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                                             name: name,
                                             picture: pic,
                                             city: city,
-                                            userId: userId),
+                                            sellerUserId: sellerUserId),
                                   ),
                                 );
                               },

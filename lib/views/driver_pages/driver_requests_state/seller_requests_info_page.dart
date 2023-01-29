@@ -12,14 +12,14 @@ class SellerRequestsInfoPage extends StatefulWidget {
   final String picture;
   final String city;
   final number;
-  final userId;
+  final sellerUserId;
   const SellerRequestsInfoPage({
     Key? key,
     required this.name,
     required this.picture,
     required this.city,
     required this.number,
-    required this.userId,
+    required this.sellerUserId,
   }) : super(key: key);
 
   @override
@@ -209,7 +209,8 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
                                     await showConfirmRequestsDialog(context);
                                 if (shouldConfirm) {
                                   CloudService().assignToDriver(
-                                      userId: userId, sellerName: widget.name);
+                                      driverUserId: userId,
+                                      sellerUserId: widget.sellerUserId);
                                   Navigator.of(context).pop();
                                 }
                               },

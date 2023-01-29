@@ -13,7 +13,7 @@ import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
-import 'package:testapp/views/common_pages/Help_and_support.dart';
+import 'package:testapp/views/common_pages/help_and_support.dart';
 import 'package:testapp/views/login_view.dart';
 import 'package:testapp/views/seller_pages/seller_user_details.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,7 +25,8 @@ class SellerProfile extends StatefulWidget {
   State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _SellerProfileState extends State<SellerProfile> {
+class _SellerProfileState extends State<SellerProfile>
+    with AutomaticKeepAliveClientMixin {
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final CloudStorage storage = CloudStorage();
 
@@ -156,61 +157,160 @@ class _SellerProfileState extends State<SellerProfile> {
                           ],
                         ),
                       ),
-                      genericProfileButton(
-                        field: 'User Details',
-                        icon: Icon(
-                          Icons.person,
-                          color: color5,
-                        ),
-                        function: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const EditUserDetailsSeller(),
-                            ),
-                          );
-                        },
-                      ),
-                      genericProfileButton(
-                        field: 'Help & Support',
-                        icon: Icon(
-                          Icons.help_center,
-                          color: color5,
-                        ),
-                        function: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const HelpAndSupportView(),
-                            ),
-                          );
-                        },
-                      ),
-                      genericProfileButton(
-                        field: 'Privacy Policy',
-                        icon: Icon(
-                          Icons.verified_user_outlined,
-                          color: color5,
-                        ),
-                        function: () {
-                          launchUrl(
-                            Uri.parse(
-                                "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
-                          );
-                        },
-                      ),
-                      genericProfileButton(
-                        field: 'Logout',
-                        icon: Icon(
-                          Icons.logout_outlined,
-                          color: color5,
-                        ),
-                        function: () async {
-                          final shouldLogout = await showLogOutDialog(context);
-                          if (shouldLogout) {
-                            context.read<AuthBloc>().add(
-                                  const AuthEventLogOut(),
-                                );
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth < 600) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                genericProfileButton(
+                                  context: context,
+                                  field: 'User Details',
+                                  icon: Icon(
+                                    Icons.person,
+                                    color: color5,
+                                  ),
+                                  function: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const EditUserDetailsSeller(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                genericProfileButton(
+                                  context: context,
+                                  field: 'Help & Support',
+                                  icon: Icon(
+                                    Icons.help_center,
+                                    color: color5,
+                                  ),
+                                  function: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const HelpAndSupportView(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                genericProfileButton(
+                                  context: context,
+                                  field: 'Privacy Policy',
+                                  icon: Icon(
+                                    Icons.verified_user_outlined,
+                                    color: color5,
+                                  ),
+                                  function: () {
+                                    launchUrl(
+                                      Uri.parse(
+                                          "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
+                                    );
+                                  },
+                                ),
+                                genericProfileButton(
+                                  context: context,
+                                  field: 'Logout',
+                                  icon: Icon(
+                                    Icons.logout_outlined,
+                                    color: color5,
+                                  ),
+                                  function: () async {
+                                    final shouldLogout =
+                                        await showLogOutDialog(context);
+                                    if (shouldLogout) {
+                                      context.read<AuthBloc>().add(
+                                            const AuthEventLogOut(),
+                                          );
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    genericProfileButton(
+                                      context: context,
+                                      field: 'User Details',
+                                      icon: Icon(
+                                        Icons.person,
+                                        color: color5,
+                                      ),
+                                      function: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const EditUserDetailsSeller(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    genericProfileButton(
+                                      context: context,
+                                      field: 'Help & Support',
+                                      icon: Icon(
+                                        Icons.help_center,
+                                        color: color5,
+                                      ),
+                                      function: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const HelpAndSupportView(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    genericProfileButton(
+                                      context: context,
+                                      field: 'Privacy Policy',
+                                      icon: Icon(
+                                        Icons.verified_user_outlined,
+                                        color: color5,
+                                      ),
+                                      function: () {
+                                        launchUrl(
+                                          Uri.parse(
+                                              "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
+                                        );
+                                      },
+                                    ),
+                                    genericProfileButton(
+                                      context: context,
+                                      field: 'Logout',
+                                      icon: Icon(
+                                        Icons.logout_outlined,
+                                        color: color5,
+                                      ),
+                                      function: () async {
+                                        final shouldLogout =
+                                            await showLogOutDialog(context);
+                                        if (shouldLogout) {
+                                          context.read<AuthBloc>().add(
+                                                const AuthEventLogOut(),
+                                              );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
                           }
                         },
                       ),
@@ -226,6 +326,7 @@ class _SellerProfileState extends State<SellerProfile> {
       },
     );
   }
+<<<<<<< HEAD
 
   Padding genericProfileButton(
       {required String field, required icon, required function}) {
@@ -269,4 +370,10 @@ class _SellerProfileState extends State<SellerProfile> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+=======
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
 }

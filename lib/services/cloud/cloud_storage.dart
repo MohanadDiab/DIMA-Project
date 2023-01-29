@@ -21,6 +21,7 @@ class CloudStorage {
           await storage.ref('items').child(imageName).getDownloadURL();
       return downloadURL;
     } on FirebaseException catch (_) {
+      print(_);
       return 'there has been an error';
     }
   }

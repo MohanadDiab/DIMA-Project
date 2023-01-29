@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+import 'package:flutter/scheduler.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/customPageRouter.dart';
+=======
+import 'package:testapp/constants/custom_page_router.dart';
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
@@ -14,25 +19,35 @@ class DriverPageBuilder extends StatefulWidget {
 
 class _DriverPageBuilderState extends State<DriverPageBuilder> {
   int _currentIndex = 1;
-
-  late PageController _pageController;
+  final pageController = PageController();
+  void onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    SchedulerBinding.instance
+        .addPostFrameCallback((_) => {pageController.jumpToPage(1)});
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Scaffold(
-      body: _widgetList[_currentIndex],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: onPageChanged,
+        children: _widgetList,
+      ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           elevation: 50,
@@ -50,12 +65,51 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) => setState(
             () {
-              _currentIndex = index;
+              print(index + 100);
+              pageController.jumpToPage(index);
             },
           ),
           destinations: navyItems,
         ),
       ),
+=======
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          return Scaffold(
+            body: _widgetList[_currentIndex],
+            bottomNavigationBar: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                elevation: 50,
+                backgroundColor: Colors.white,
+                indicatorColor: Colors.grey[200],
+                labelTextStyle: MaterialStateProperty.all(
+                  const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+              ),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) => setState(
+                  () {
+                    _currentIndex = index;
+                  },
+                ),
+                destinations: navyItems,
+              ),
+            ),
+          );
+        } else {
+          return Scaffold(
+            body: _widgetList[_currentIndex],
+          );
+        }
+      },
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
     );
   }
 }

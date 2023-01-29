@@ -20,9 +20,9 @@ class FirebaseAuthProvider implements AuthProvider {
   Future<void> bindNotification(uid) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    bool isDriver = await CloudService().isDriver(userId: uid);
-    await CloudService().updateNotificationToken(
-        userId: uid, token: fcmToken, isDriver: isDriver);
+    if (await CloudService().isDriver(userId: uid)) {
+      await FirebaseMessaging.instance.subscribeToTopic("driver");
+    }
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -40,7 +40,9 @@ class FirebaseAuthProvider implements AuthProvider {
       print('Message data: ${message.data}');
 
       if (message.notification != null) {
-        RemoteNotification? notification = message.notification;
+        RemoteNotification notification = message.notification!;
+        CloudService().storeReceivedMsg(
+            userId: uid, title: notification.title!, msg: notification.body!);
 
         ///show the notification
         if (notification != null && notification.android != null) {

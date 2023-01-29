@@ -16,9 +16,15 @@ import flutter_local_notifications
 import flutter_secure_storage_macos
 import location
 import package_info_plus
+<<<<<<< HEAD
 import path_provider_macos
 import share_plus
 import shared_preferences_macos
+=======
+import path_provider_foundation
+import share_plus
+import shared_preferences_foundation
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
 import sqflite
 import url_launcher_macos
 
@@ -30,7 +36,10 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
   FLTFirebaseMessagingPlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseMessagingPlugin"))
   FLTFirebaseStoragePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseStoragePlugin"))
+<<<<<<< HEAD
   FlutterLocalNotificationsPlugin.register(with: registry.registrar(forPlugin: "FlutterLocalNotificationsPlugin"))
+=======
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
   FlutterSecureStoragePlugin.register(with: registry.registrar(forPlugin: "FlutterSecureStoragePlugin"))
   LocationPlugin.register(with: registry.registrar(forPlugin: "LocationPlugin"))
   FLTPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FLTPackageInfoPlusPlugin"))

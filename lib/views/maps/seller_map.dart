@@ -1,15 +1,23 @@
 import 'dart:async';
+//import 'dart:ffi';
+import 'dart:ui';
+import 'dart:convert' as convert;
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:rating_dialog/rating_dialog.dart';
+import 'package:http/http.dart' as http;
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:location/location.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+import 'package:scroll_snap_list/scroll_snap_list.dart';
 import '../../main.dart';
+import '../driver_pages/driver_camera.dart';
 
 class SellerMap extends StatefulWidget {
   const SellerMap({Key? key}) : super(key: key);
@@ -17,23 +25,13 @@ class SellerMap extends StatefulWidget {
   State<SellerMap> createState() => SellerMapState();
 }
 
-class SellerMapState extends State<SellerMap> {
+class SellerMapState extends State<SellerMap>
+    with AutomaticKeepAliveClientMixin {
   MapboxMapController? mapController;
-  GeoPoint? sellerLocation;
-  bool collectedIsVisible = false;
-  late LatLng destination;
-  LocationData? currentLocation;
   String userId = FirebaseAuth.instance.currentUser!.uid;
-  StreamSubscription<LocationData>? locationSubscription;
-  var location = Location();
-  String? assigned_driver;
   SymbolOptions _getSymbolOptions(LatLng geometry, String text, String image) {
     return SymbolOptions(
-      geometry: geometry,
-      textField: text,
-      textOffset: Offset(0, 0.8),
-      iconImage: image,
-    );
+        geometry: geometry, textOffset: Offset(0, 0.8), iconImage: image);
   }
 
   Future<void> removeAll(MapboxMapController _mapController) async {
@@ -53,88 +51,163 @@ class SellerMapState extends State<SellerMap> {
     }
   }
 
-  Future<void> refreshMap() async {
-    await removeAll(mapController!);
-    locationSubscription?.cancel();
-    location.changeSettings(
-        accuracy: LocationAccuracy.high, interval: 5000, distanceFilter: 5);
-    CloudService().getDriverRequests(userId: userId).listen((event) async {
-      if (event.size > 0) {
-        if (await CloudService().getIfDriverCollected(userId: userId)) {
-          //to costumers
-          collectedIsVisible = false;
-          List<LatLng> destinations = [];
-          mapController!.symbols.forEach((symbol) {
-            if (symbol.options.iconImage == 'mountain-15') {
-              mapController!.removeSymbol(symbol);
-            }
-          });
-          for (QueryDocumentSnapshot<Map<String, dynamic>> deliveringItem
-              in event.docs) {
-            GeoPoint _location = deliveringItem.data()['location'];
-            destinations.add(LatLng(_location.latitude, _location.longitude));
-            mapController?.addSymbol(_getSymbolOptions(
-                LatLng(_location.latitude, _location.longitude),
-                '',
-                'mountain-15'));
+  Map<String, dynamic> currentSituation = {
+    'sellerLocation': null,
+    'driverLocation': null,
+    'assignedDriver': '',
+    'collectingRoute': [],
+    'currentTask': [],
+    'isAssigned': false,
+    'isCollected': false,
+  };
+
+  Future<void> updateMap() async {
+    if (currentSituation['sellerLocation'] == null ||
+        currentSituation['driverLocation'] == null ||
+        currentSituation['assignedDriver'] == '' ||
+        currentSituation['collectingRoute'] == [] ||
+        currentSituation['isAssigned'] == false ||
+        currentSituation['currentTask'] == []) {
+      print('initialization unfinished or no task is undergoing.');
+    } else {
+      //what task should we do
+      //not assigned
+      if (currentSituation['isAssigned'] != true) {
+        print('notask');
+        await removeAll(mapController!);
+      } else {
+        await removeAll(mapController!);
+        //add driver location
+        LatLng driverLocation = LatLng(
+            currentSituation['driverLocation'].latitude,
+            currentSituation['driverLocation'].longitude);
+        await mapController
+            ?.addSymbol(_getSymbolOptions(driverLocation, '', 'bicycle-15'));
+        //add seller location
+        LatLng sellerLocation = LatLng(
+            currentSituation['sellerLocation'].latitude,
+            currentSituation['sellerLocation'].longitude);
+        await mapController?.addSymbol(
+            _getSymbolOptions(sellerLocation, 'seller', 'restaurant-15'));
+        //assgined but not collected, show collecting route
+        if (currentSituation['isCollected'] != true) {
+          print('collecting');
+          print(currentSituation['isCollected']);
+          //add collecting route
+          var geometry = <LatLng>[];
+          List route = currentSituation['collectingRoute'];
+          for (GeoPoint point in route) {
+            geometry.add(LatLng(point.latitude, point.longitude));
           }
-          locationSubscription = location.onLocationChanged
-              .listen((LocationData _currentLocation) {
-            currentLocation = _currentLocation;
-            LatLng _LatLngCurrentLocation =
-                LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
-            mapController!.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(target: _LatLngCurrentLocation, zoom: 12),
-            ));
-            mapController!.symbols.forEach((symbol) {
-              if (symbol.options.iconImage == 'bicycle-15') {
-                mapController!.removeSymbol(symbol);
-              }
-            });
-            mapController?.addSymbol(
-                _getSymbolOptions(_LatLngCurrentLocation, '', 'bicycle-15'));
-          });
-        } else {
-          //to sellers
-          collectedIsVisible = true;
-          CloudService()
-              .getAssignedSeller(userId: userId)
-              .listen((event) async {
-            final assignedSeller = event.data()!['assigned_seller'];
-            CloudService()
-                .getSellerLocation(userId: assignedSeller)
-                .listen((event) async {
-              final sellerLocation = event.data()!['location'];
-              locationSubscription = location.onLocationChanged
-                  .listen((LocationData currentLocation) {
-                LatLng _currentLocation = LatLng(
-                    currentLocation.latitude!, currentLocation.longitude!);
-                mapController!.symbols.forEach((symbol) {
-                  if (symbol.options.iconImage == 'bicycle-15') {
-                    mapController!.removeSymbol(symbol);
-                  }
-                });
-                mapController!.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(target: _currentLocation, zoom: 12),
-                ));
-                mapController?.addSymbol(
-                    _getSymbolOptions(_currentLocation, '', 'bicycle-15'));
-              });
-              mapController!.addSymbol(_getSymbolOptions(
-                  LatLng(sellerLocation!.latitude, sellerLocation!.longitude),
-                  'seller',
-                  'restaurant-15'));
-            });
-          });
+          LineOptions computedLine = LineOptions(
+              geometry: geometry,
+              lineColor: "#ff0000",
+              lineWidth: 6,
+              lineOpacity: 0.5,
+              draggable: false);
+          await mapController!.addLine(computedLine);
+        }
+        //delivering
+        else {
+          print('delivering');
+          for (QueryDocumentSnapshot<Map<String, dynamic>> deliveringItem
+              in currentSituation['currentTask']) {
+            var geometry = <LatLng>[];
+            Map<String, dynamic> symbolData = {};
+            symbolData['name'] = deliveringItem.data()['name'];
+            symbolData['remainedDistance'] =
+                deliveringItem.data()['remainedDistance'] ?? '';
+            symbolData['remainedTime'] =
+                deliveringItem.data()['remainedTime'] ?? '';
+            List route = deliveringItem.data()['route'];
+            await mapController?.addSymbol(
+                _getSymbolOptions(
+                    LatLng(route.last.latitude, route.last.longitude),
+                    '',
+                    'mountain-15'),
+                symbolData);
+            print(LatLng(route.last.latitude, route.last.longitude));
+            for (GeoPoint point in route) {
+              geometry.add(LatLng(point.latitude, point.longitude));
+            }
+            LineOptions computedLine = LineOptions(
+                geometry: geometry,
+                lineColor: "#ff0000",
+                lineWidth: 3.0,
+                lineOpacity: 0.5,
+                draggable: false);
+            await mapController!.addLine(computedLine);
+          }
         }
       }
+      setState(() {});
+    }
+  }
+
+  _showSnackBar(String info) {
+    final snackBar = SnackBar(
+        content: Text(info,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        backgroundColor: Theme.of(context).primaryColor);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _onSymbolTapped(Symbol symbol) {
+    print(symbol.data!["name"]);
+    _showSnackBar(
+        'Name:${symbol.data!["name"]},Remained Time: ${(symbol.data!["remainedTime"] / 60).toStringAsFixed(1)} min');
+  }
+
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+      driverSnapshotSubscription;
+  void changeDriverUserId({required String userId}) {
+    driverSnapshotSubscription?.cancel();
+    driverSnapshotSubscription =
+        CloudService().getDriverAsSnapshot(userId: userId).listen((event) {
+      final driverProfile = event.data();
+      currentSituation['collectingRoute'] = driverProfile!['route'];
+
+      if (currentSituation['isCollected'] != driverProfile['is_collected']) {
+        currentSituation['isCollected'] = driverProfile['is_collected'];
+      }
+      print(currentSituation['isCollected']);
+      currentSituation['driverLocation'] = driverProfile['location'];
+      //
+      updateMap();
     });
   }
 
-  _onMapCreated(MapboxMapController controller) {
+  _onMapCreated(MapboxMapController controller) async {
     mapController = controller;
-    refreshMap();
-    setState(() {});
+    controller.onSymbolTapped.add(_onSymbolTapped);
+
+    CloudService().getSellerAsSnapshot(userId: userId).listen((event) {
+      final sellerProfile = event.data();
+      final sellerLocation = sellerProfile!['location'] ?? 0;
+      final assignedDriver = sellerProfile['assigned_driver'] ?? '';
+      final isAssigned = sellerProfile['is_assigned'] ?? false;
+      if (sellerLocation != currentSituation['sellerLocation']) {
+        currentSituation['sellerLocation'] = sellerLocation;
+      }
+      if (assignedDriver != currentSituation['assignedDriver']) {
+        currentSituation['assignedDriver'] = assignedDriver;
+        changeDriverUserId(userId: assignedDriver);
+      }
+      if (isAssigned != currentSituation['isAssigned']) {
+        currentSituation['isAssigned'] = isAssigned;
+      }
+      //
+      updateMap();
+    });
+    CloudService().getSellerRequests(userId: userId).listen((event) async {
+      List requests = event.docs;
+      if (requests != currentSituation['currentTask']) {
+        currentSituation['currentTask'] = requests;
+        //
+        updateMap();
+      }
+    });
   }
 
   _onStyleLoadedCallback() {
@@ -145,31 +218,22 @@ class SellerMapState extends State<SellerMap> {
     // ));
   }
 
+  CameraDescription? firstCamera;
+
   @override
   void initState() {
     super.initState();
   }
 
-  Future getMyCurrentLocation() async {
-    mapController!.symbols.forEach((s) => print(s.options.iconImage));
-    final myLocation = await Location().getLocation();
-    return LatLng(myLocation.latitude!, myLocation.longitude!);
-  }
-
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Obtain a list of the available cameras on the device.
+    super.build(context);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            LatLng currentLocation = await getMyCurrentLocation();
-            mapController!.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(target: currentLocation, zoom: 12.5),
-            ));
-          },
-          child: const Icon(
-            Icons.my_location_outlined,
-          )),
       appBar: AppBar(
         title: genericText(text: "Orders", color: color2),
         centerTitle: true,
@@ -178,18 +242,171 @@ class SellerMapState extends State<SellerMap> {
       body: Stack(
         children: <Widget>[
           MapboxMap(
-            styleString: MapboxStyles.LIGHT,
-            accessToken: HomePage.ACCESS_TOKEN,
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: const CameraPosition(
-                target: LatLng(45.46785215366453, 9.182147988302752),
-                zoom: 12.5),
-            onStyleLoadedCallback: _onStyleLoadedCallback,
+              styleString: MapboxStyles.LIGHT,
+              accessToken: HomePage.ACCESS_TOKEN,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: const CameraPosition(
+                  target: LatLng(45.46785215366453, 9.182147988302752),
+                  zoom: 12.5),
+              onStyleLoadedCallback: _onStyleLoadedCallback,
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                  () => EagerGestureRecognizer(),
+                ),
+              }),
+          Visibility(
+            visible: (!(currentSituation['currentTask'].length == 0) &&
+                currentSituation['isCollected']),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Expanded(child: SizedBox()),
+                  SizedBox(
+                    height: 230,
+                    child: StreamBuilder(
+                        stream:
+                            CloudService().getSellerRequests(userId: userId),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                            case ConnectionState.active:
+                              if (snapshot.hasData) {
+                                final docs = snapshot.data.docs!;
+                                return ScrollSnapList(
+                                  itemBuilder: (context, index) {
+                                    var product = docs[index].data();
+                                    final size = MediaQuery.of(context).size;
+                                    final width = size.width;
+                                    final height = size.height;
+                                    return SizedBox(
+                                      width: width * 0.8,
+                                      height: 230,
+                                      child: Card(
+                                        elevation: 12,
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                          child: Column(
+                                            children: [
+                                              Image.network(
+                                                product['picture_url'],
+                                                fit: BoxFit.cover,
+                                                width: width * 0.8,
+                                                height: 180,
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                product['name'],
+                                                style: const TextStyle(
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  itemCount: docs.length,
+                                  itemSize: width * 0.8,
+                                  onItemFocus: (index) {},
+                                  dynamicItemSize: true,
+                                );
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            default:
+                              return const CircularProgressIndicator();
+                          }
+                        }),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: (!(currentSituation['currentTask'].length == 0) &&
+                !currentSituation['isCollected']),
+            child: Center(
+                child: Column(
+              children: [
+                SizedBox(
+                  height: height * 0.55,
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 0,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  child: SizedBox(
+                    width: width * 0.9,
+                    height: height * 0.1,
+                    child: Row(children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          SizedBox(
+                            height: 18,
+                          ),
+                          Text(
+                            'Retrieve Items',
+                            textScaleFactor: 2,
+                          )
+                        ],
+                      ),
+                    ]),
+                  ),
+                ),
+              ],
+            )),
           ),
         ],
       ),
     );
   }
+
+  final _dialog = RatingDialog(
+    initialRating: 1.0,
+    // your app's name?
+    title: Text(
+      'How about the service?',
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    // encourage your user to leave a high rating?
+    message: Text(
+      'Tap a star to set your rating. Add more description here if you want.',
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 15),
+    ),
+    // your app's logo?
+    image: const FlutterLogo(size: 100),
+    submitButtonText: 'Submit',
+    commentHint: 'Write here if you have more to say!',
+    onCancelled: () => print('cancelled'),
+    onSubmitted: (response) {
+      print('rating: ${response.rating}, comment: ${response.comment}');
+
+      // TODO: add your own logic
+      if (response.rating < 3.0) {
+        print(1);
+      } else {
+        print(2);
+      }
+    },
+  );
 
   Widget _drawer() {
     return Drawer(
@@ -197,7 +414,7 @@ class SellerMapState extends State<SellerMap> {
       child: Column(
         children: <Widget>[
           FutureBuilder(
-            future: CloudService().getDriverProfile(userId: userId),
+            future: CloudService().getSellerProfile(userId: userId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
@@ -241,6 +458,17 @@ class SellerMapState extends State<SellerMap> {
                       shrinkWrap: true,
                       itemCount: docs.length,
                       itemBuilder: (context, index) {
+                        String remainedDistance =
+                            docs[index].data()["remainedDistance"] == null
+                                ? '...'
+                                : (docs[index].data()["remainedDistance"] /
+                                        1000)
+                                    .toStringAsFixed(1);
+                        String remainedTime =
+                            docs[index].data()["remainedTime"] == null
+                                ? '...'
+                                : (docs[index].data()["remainedTime"] / 60)
+                                    .toStringAsFixed(1);
                         return ListTile(
                           onTap: () {
                             _goToCustomer(
@@ -254,6 +482,8 @@ class SellerMapState extends State<SellerMap> {
                           },
                           title: Text(docs[index].data()['name']),
                           trailing: const Icon(Icons.my_location_outlined),
+                          subtitle: Text(
+                              '$remainedDistance km left,$remainedTime min left'),
                         );
                       },
                     );
@@ -280,6 +510,11 @@ class SellerMapState extends State<SellerMap> {
     required double long,
   }) async {
     setState(() {
+      mapController?.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(lat, long),
+        ),
+      );
       // _markers.add(
       //   Marker(
       //     onTap: () {
@@ -292,4 +527,8 @@ class SellerMapState extends State<SellerMap> {
       // );
     });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

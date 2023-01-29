@@ -64,11 +64,13 @@ class SellerRequestNotActive extends StatelessWidget {
                       final notes = snapshot[index].data()['notes'];
                       final pic = snapshot[index].data()['picture_url'];
                       final numberC = snapshot[index].data()['number'];
+                      final itemId = snapshot[index].id;
                       final String address =
                           snapshot[index].data()['address'].split(',')[0];
 
                       return Column(children: [
                         genericExpandableList2(
+                          itemId: itemId,
                           userId: userId,
                           name: name,
                           address: address,
@@ -109,7 +111,7 @@ class SellerRequestNotActive extends StatelessWidget {
                   ),
                   genericButton3(
                     color: color3,
-                    text: "Publish orders",
+                    text: "Publish",
                     icon: Icon(
                       Icons.publish_outlined,
                       color: color2,

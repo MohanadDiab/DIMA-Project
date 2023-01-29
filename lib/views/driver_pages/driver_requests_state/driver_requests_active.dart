@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
@@ -42,7 +41,7 @@ class DriverRequestsActive extends StatelessWidget {
               ],
             ),
             FutureBuilder(
-              future: CloudService().getDriverSeller(userId: userId),
+              future: CloudService().getDriverSellerInfo(userId: userId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -50,6 +49,7 @@ class DriverRequestsActive extends StatelessWidget {
 
                   case ConnectionState.done:
                     if (snapshot.hasData) {
+                      print(snapshot);
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -125,6 +125,7 @@ class DriverRequestsActive extends StatelessWidget {
               },
             ),
             const Divider(),
+<<<<<<< HEAD
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
               child: SizedBox(
@@ -144,8 +145,7 @@ class DriverRequestsActive extends StatelessWidget {
                     final notes = snapshot[index].data()['notes'];
                     final pic = snapshot[index].data()['picture_url'];
                     final numberC = snapshot[index].data()['number'];
-                    final String address =
-                        snapshot[index].data()['address'].split(',')[0];
+                    final String address = snapshot[index].data()['address'];
 
                     return genericExpandableList(
                       context: context,
@@ -161,6 +161,9 @@ class DriverRequestsActive extends StatelessWidget {
                 ),
               ),
             ),
+=======
+            orders(context: context, snapshot: snapshot),
+>>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
           ],
         ),
       ),

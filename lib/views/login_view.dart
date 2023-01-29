@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
-import 'package:testapp/constants/customPageRouter.dart';
-import 'package:testapp/views/phone_login.dart';
+import 'package:testapp/services/auth/social/facebook_sign_in.dart';
+import 'package:testapp/services/auth/social/google_sign_in.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
 import 'package:testapp/services/auth/auth_exceptions.dart';
@@ -10,6 +10,7 @@ import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/auth/bloc/auth_state.dart';
 import 'package:testapp/utilities/dialogs/error_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:line_icons/line_icons.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -158,32 +159,16 @@ class _LoginViewState extends State<LoginView> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
-                        backgroundColor: color3,
+                        backgroundColor: Colors.blue,
                         radius: 35,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MyRoute(
-                                builder: (BuildContext context) =>
-                                    const PhoneScreen(),
-                              ),
-                            );
+                            context.read<AuthBloc>().add(
+                                  const AuthEventLogInWithSocial("facebook"),
+                                );
                           },
-                          icon: const Icon(Icons.phone),
-                          iconSize: 35,
-                          color: color2,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundColor: color3,
-                        radius: 35,
-                        child: IconButton(
-                          onPressed: () {},
                           icon: const Icon(Icons.facebook),
-                          iconSize: 35,
+                          iconSize: 40,
                           color: color2,
                         ),
                       ),
@@ -191,17 +176,26 @@ class _LoginViewState extends State<LoginView> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
-                        backgroundColor: color3,
+                        backgroundColor: Colors.blue,
                         radius: 35,
                         child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.mail),
+                          onPressed: () async {
+                            context
+                                .read<AuthBloc>()
+                                .add(const AuthEventLogInWithSocial("google"));
+                          },
+                          icon: const Icon(LineIcons.googleLogo),
                           iconSize: 35,
                           color: color2,
                         ),
                       ),
                     ),
                   ],
+                ),
+                genericText4(
+                  text: "Above methods support only seller profiles!",
+                  color: color5,
+                  stringWeight: FontWeight.w300,
                 ),
                 TextButton(
                   onPressed: () {

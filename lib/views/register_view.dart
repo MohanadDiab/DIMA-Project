@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/extensions/buildcontext/loc.dart';
@@ -10,6 +13,7 @@ import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/auth/bloc/auth_state.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/utilities/dialogs/error_dialog.dart';
+import 'package:http/http.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -109,6 +113,13 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
 
   late final TextEditingController _number;
 
+  late final TextEditingController _locationTextController;
+
+  List<dynamic> _placesList = [];
+  bool isVisible = true;
+  double lat = 0;
+  double long = 0;
+
   @override
   void initState() {
     _email = TextEditingController();
@@ -116,6 +127,10 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
     _name = TextEditingController();
     _number = TextEditingController();
     _city = TextEditingController();
+    _locationTextController = TextEditingController();
+    _locationTextController.addListener(() {
+      onChange();
+    });
     super.initState();
   }
 
@@ -127,6 +142,26 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
     _city.dispose();
     _number.dispose();
     super.dispose();
+  }
+
+  void getSuggestion(String input) async {
+    const String KAPIKey = 'AIzaSyAktuBhmVOtCZN12HIOe3mSkJMit0Oqs04';
+    const baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    final request = '$baseURL?input=$input&key=$KAPIKey';
+    var response = await get(Uri.parse(request));
+    if (response.statusCode == 200) {
+      setState(() {
+        _placesList = jsonDecode(response.body.toString())['predictions'];
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  void onChange() {
+    isVisible = true;
+    getSuggestion(_locationTextController.text);
   }
 
   @override
@@ -163,6 +198,37 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
                       passwordController: _password,
                       cityController: _city,
                       numberController: _number),
+                  textFieldwithIcon(
+                    hintText: "Please provide the city and street name",
+                    controller: _locationTextController,
+                    title: 'Address',
+                    icon: Icons.door_front_door,
+                  ),
+                  Visibility(
+                    visible: isVisible,
+                    child: SizedBox(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _placesList.length,
+                        itemBuilder: ((context, index) {
+                          return ListTile(
+                            onTap: (() async {
+                              print(_placesList);
+                              List<Location> locations =
+                                  await locationFromAddress(
+                                      _placesList[index]['description']);
+                              long = locations.last.longitude;
+                              lat = locations.last.latitude;
+                              _locationTextController.text =
+                                  _placesList[index]['description'];
+                              isVisible = false;
+                            }),
+                            title: Text(_placesList[index]['description']),
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: genericButton(
@@ -176,6 +242,7 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
                           final city = _city.text;
                           final number = _number.text;
                           final name = _name.text;
+                          final location = _locationTextController.text;
                           final userCredentials = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                             email: email,
@@ -183,11 +250,13 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
                           );
                           final userId = userCredentials.user!.uid;
                           await CloudService().createSellerProfile(
-                            userId: userId,
-                            name: name,
-                            city: city,
-                            number: int.parse(number),
-                          );
+                              userId: userId,
+                              name: name,
+                              city: city,
+                              number: int.parse(number),
+                              address: location,
+                              lat: lat,
+                              lng: long);
                           context.read<AuthBloc>().add(
                                 const AuthEventLogOut(),
                               );
@@ -240,6 +309,7 @@ class _RegisterTabDriverState extends State<RegisterTabDriver> {
     _name = TextEditingController();
     _number = TextEditingController();
     _city = TextEditingController();
+
     super.initState();
   }
 
@@ -383,7 +453,7 @@ Widget registerFields({
         title: 'City',
         icon: Icons.location_city_outlined,
       ),
-      const SizedBox(height: 15),
+      const SizedBox(height: 25),
     ],
   );
 }
