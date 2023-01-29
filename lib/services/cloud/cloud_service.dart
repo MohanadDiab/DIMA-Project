@@ -88,14 +88,12 @@ class CloudService {
         'is_published': false,
         'number': number,
         'user_id': userId,
-<<<<<<< HEAD
+
         'address': address,
         'location': GeoPoint(lat, lng),
         'picture_utl':
-            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
-=======
-        'picture_url': null,
->>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
+            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50',
+     
       },
     );
   }
@@ -112,13 +110,11 @@ class CloudService {
         'city': city,
         'number': number,
         'user_id': userId,
-<<<<<<< HEAD
         'is_assigned': false,
         'picture_utl':
             'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
-=======
-        'picture_url': null,
->>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
+
+
       },
     );
   }

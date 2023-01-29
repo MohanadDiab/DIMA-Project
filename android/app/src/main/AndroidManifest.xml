@@ -9,13 +9,10 @@
     </queries>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-=======
-    <uses-permission android:name="android.permission.INTERNET"/>
+   
         
->>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
    <application
         android:usesCleartextTraffic="true"
         android:label="Delever"

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter/scheduler.dart';
 import 'package:testapp/constants/customPageRouter.dart';
-=======
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/custom_page_router.dart';
->>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
+import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/custom_page_router.dart';
 import 'package:testapp/views/maps/seller_map.dart';
-
 import 'seller_profile.dart';
 import 'seller_requests.dart';
 
@@ -42,7 +40,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
+
     return Scaffold(
       body: PageView(
         controller: pageController,
@@ -73,7 +71,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
           destinations: navyItems,
         ),
       ),
-=======
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
@@ -103,6 +101,37 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
                 destinations: navyItems,
               ),
             ),
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          return Scaffold(
+            body: _widgetList[_currentIndex],
+            bottomNavigationBar: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                elevation: 50,
+                backgroundColor: Colors.white,
+                indicatorColor: color2,
+                labelTextStyle: MaterialStateProperty.all(
+                  const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+              ),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) => setState(
+                  () {
+                    _currentIndex = index;
+                  },
+                ),
+                destinations: navyItems,
+              ),
+            ),
+
           );
         } else {
           return Scaffold(
@@ -110,7 +139,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
           );
         }
       },
->>>>>>> 4da23c17d79bd9df15f526055da353bcb47e56e4
+
     );
   }
 }
