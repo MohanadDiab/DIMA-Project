@@ -1,7 +1,5 @@
 import 'dart:async';
 //import 'dart:ffi';
-import 'dart:ui';
-import 'dart:convert' as convert;
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,14 +8,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:rating_dialog/rating_dialog.dart';
-import 'package:http/http.dart' as http;
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
-import 'package:location/location.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import '../../main.dart';
-import '../driver_pages/driver_camera.dart';
 
 class SellerMap extends StatefulWidget {
   const SellerMap({Key? key}) : super(key: key);

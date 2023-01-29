@@ -5,7 +5,7 @@
     <string name="facebook_app_id">1381246835964598</string>
     <string name="fb_login_protocol_scheme">fb1381246835964598</string>
     <string name="facebook_client_token">66af761a844b439ababc0731972a8732</string>
-    <string name="app_name">Navigation map</string>
+ 
     <string name="mapbox_access_token" translatable="false">pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A</string>
     <string name="user_location_permission_explanation">This app needs location permissions to show its functionality.</string>
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>

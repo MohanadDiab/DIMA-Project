@@ -321,3 +321,7 @@ class _DriverProfileState extends State<DriverProfile>
     );
   }
 
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+}

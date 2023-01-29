@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter/scheduler.dart';
-import 'package:testapp/constants/colors.dart';
-import 'package:testapp/constants/customPageRouter.dart';
-
 import 'package:testapp/constants/custom_page_router.dart';
-
-import 'package:testapp/constants/custom_page_router.dart';
-
 import 'package:testapp/views/maps/driver_map.dart';
 import 'package:testapp/views/driver_pages/driver_profile.dart';
 import 'package:testapp/views/driver_pages/driver_requests.dart';
@@ -43,43 +36,15 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: onPageChanged,
-        children: _widgetList,
-      ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          elevation: 50,
-          backgroundColor: Colors.white,
-          indicatorColor: Colors.grey[200],
-          labelTextStyle: MaterialStateProperty.all(
-            const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) => setState(
-            () {
-              print(index + 100);
-              pageController.jumpToPage(index);
-            },
-          ),
-          destinations: navyItems,
-        ),
-      ),
-
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
           return Scaffold(
-            body: _widgetList[_currentIndex],
+            body: PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: _widgetList,
+            ),
             bottomNavigationBar: NavigationBarTheme(
               data: NavigationBarThemeData(
                 elevation: 50,
@@ -98,43 +63,13 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
                 selectedIndex: _currentIndex,
                 onDestinationSelected: (index) => setState(
                   () {
-                    _currentIndex = index;
+                    print(index + 100);
+                    pageController.jumpToPage(index);
                   },
                 ),
                 destinations: navyItems,
               ),
             ),
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
-          return Scaffold(
-            body: _widgetList[_currentIndex],
-            bottomNavigationBar: NavigationBarTheme(
-              data: NavigationBarThemeData(
-                elevation: 50,
-                backgroundColor: Colors.white,
-                indicatorColor: Colors.grey[200],
-                labelTextStyle: MaterialStateProperty.all(
-                  const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                labelBehavior:
-                    NavigationDestinationLabelBehavior.onlyShowSelected,
-              ),
-              child: NavigationBar(
-                selectedIndex: _currentIndex,
-                onDestinationSelected: (index) => setState(
-                  () {
-                    _currentIndex = index;
-                  },
-                ),
-                destinations: navyItems,
-              ),
-            ),
-
           );
         } else {
           return Scaffold(
@@ -142,7 +77,6 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
           );
         }
       },
-
     );
   }
 }

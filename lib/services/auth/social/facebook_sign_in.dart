@@ -24,7 +24,14 @@ Future<AuthUser> signInWithFacebookProvider() async {
       final number = int.parse(phoneNumber);
       const city = "Milan";
       CloudService().createSellerProfile(
-          userId: userId, name: name, city: city, number: number);
+        userId: userId,
+        name: name,
+        city: city,
+        number: number,
+        address: 'null',
+        lat: 10,
+        lng: 10,
+      );
     }
     final user = currentUser;
     if (user != null) {
