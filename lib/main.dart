@@ -44,7 +44,8 @@ void main() {
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
+  static const String ACCESS_TOKEN =
+      'pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A';
   @override
   State<HomePage> createState() => _HomePageState();
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/views/seller_pages/seller_msg_info.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/seller_pages/seller_requests_info.dart';
@@ -18,7 +19,9 @@ class SellerRequests extends StatefulWidget {
   State<SellerRequests> createState() => _SellerRequestsState();
 }
 
-class _SellerRequestsState extends State<SellerRequests> {
+class _SellerRequestsState extends State<SellerRequests>
+    with AutomaticKeepAliveClientMixin {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -84,6 +87,7 @@ class _SellerRequestsState extends State<SellerRequests> {
             ],
           ),
           drawer: const SellerRequestsInfoDrawer(),
+          endDrawer: SellerMessagesInfoDrawer(userId: userId),
           body: const TabBarView(
             children: [
               SellerActiveRequests(),
@@ -94,6 +98,10 @@ class _SellerRequestsState extends State<SellerRequests> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class SellerActiveRequests extends StatefulWidget {
@@ -111,22 +119,15 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future.wait(
-        [
-          CloudService().sellerIsPublished(userId: userId),
-          CloudService().sellerIsAssigned(userId: userId),
-          CloudService().sellerAssignedDriver(userId: userId),
-        ],
-      ),
+    return StreamBuilder(
+      stream: CloudService().getSellerAsSnapshot(userId: userId),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
-          case (ConnectionState.waiting):
-            return Container();
-          case (ConnectionState.done):
-            isPublished = snapshot.data[0];
-            isAssigned = snapshot.data[1];
-            driver = snapshot.data[2];
+          case (ConnectionState.active):
+            final docs = snapshot.data.data();
+            isAssigned = docs['is_assigned'] ?? false;
+            isPublished = docs['is_published'] ?? false;
+            driver = docs['assigned_driver'] ?? '';
             return StreamBuilder(
               stream: CloudService().getSellerRequests(userId: userId),
               builder: (BuildContext context,
@@ -139,7 +140,6 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
 
                   case ConnectionState.active:
                     final docs = snapshot.data!.docs;
-
                     if (!snapshot.data!.docs.isNotEmpty) {
                       return const SellerRequestsIsEmpty();
                     } else if (isAssigned) {
@@ -157,7 +157,7 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
               },
             );
           default:
-            return requestsPageShimmer(context: context);
+            return Container();
         }
       },
     );

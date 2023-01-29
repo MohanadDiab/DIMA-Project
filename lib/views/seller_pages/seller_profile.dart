@@ -25,7 +25,8 @@ class SellerProfile extends StatefulWidget {
   State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _SellerProfileState extends State<SellerProfile> {
+class _SellerProfileState extends State<SellerProfile>
+    with AutomaticKeepAliveClientMixin {
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final CloudStorage storage = CloudStorage();
 
@@ -325,4 +326,4 @@ class _SellerProfileState extends State<SellerProfile> {
       },
     );
   }
-}
+

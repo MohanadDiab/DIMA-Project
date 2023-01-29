@@ -6,10 +6,12 @@ import 'package:testapp/services/cloud/cloud_service.dart';
 
 class RequestsMap extends StatefulWidget {
   final String userId;
+  final String name;
   final String address;
   const RequestsMap({
     Key? key,
     required this.userId,
+    required this.name,
     required this.address,
   }) : super(key: key);
 
@@ -48,9 +50,8 @@ class RequestsMapState extends State<RequestsMap> {
   Future<void> _addCustomers({
     required String userId,
   }) async {
-    final realUserId = await CloudService().getSellerIDFromName(name: userId);
     final customerRequests =
-        await CloudService().getSellerRequestsFuture(userId: realUserId);
+        await CloudService().getSellerRequestsFuture(userId: userId);
 
     for (var k in customerRequests) {
       final lat = k.data()['location'].latitude;

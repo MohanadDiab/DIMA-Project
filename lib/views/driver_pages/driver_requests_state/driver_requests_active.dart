@@ -41,7 +41,7 @@ class DriverRequestsActive extends StatelessWidget {
               ],
             ),
             FutureBuilder(
-              future: CloudService().getDriverSeller(userId: userId),
+              future: CloudService().getDriverSellerInfo(userId: userId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -49,6 +49,7 @@ class DriverRequestsActive extends StatelessWidget {
 
                   case ConnectionState.done:
                     if (snapshot.hasData) {
+                      print(snapshot);
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
