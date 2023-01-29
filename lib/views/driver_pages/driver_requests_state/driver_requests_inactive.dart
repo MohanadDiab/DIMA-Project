@@ -191,11 +191,11 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           itemCount: docs.length,
                           itemBuilder: (context, index) {
                             final name = docs[index].data()['name'];
-                            final sellerUserId = docs[index].data()['user_id'];
                             var pic = docs[index].data()['picture_url'];
                             pic ??= profilePlaceholderImage;
                             final number = docs[index].data()['number'];
-                            final String city = docs[index].data()['city'];
+                            final String city =
+                                docs[index].data()['city'].split(',')[0];
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 elevation: 1,
@@ -214,11 +214,11 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                                   MyRoute(
                                     builder: (BuildContext context) =>
                                         SellerRequestsInfoPage(
-                                            number: number,
-                                            name: name,
-                                            picture: pic,
-                                            city: city,
-                                            sellerUserId: sellerUserId),
+                                      number: number,
+                                      name: name,
+                                      picture: pic,
+                                      city: city,
+                                    ),
                                   ),
                                 );
                               },

@@ -93,7 +93,6 @@ Widget genericButton3({
 Widget genericText({required text, required color}) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w400,
       fontSize: 22,
@@ -107,7 +106,6 @@ Widget genericText({required text, required color}) {
 Widget genericText2({required text, required color}) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w200,
       fontSize: 14,
@@ -121,7 +119,6 @@ Widget genericText2({required text, required color}) {
 Widget genericText3({required String text, required Color color}) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w300,
       fontSize: 28,
@@ -139,7 +136,6 @@ Widget genericText4({
 }) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: stringWeight,
       fontSize: 18,
@@ -154,7 +150,6 @@ Widget genericText4({
 Widget genericText5({required String text, required Color color}) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
         fontWeight: FontWeight.w400,
         fontSize: 20,
@@ -168,7 +163,6 @@ Widget genericText5({required String text, required Color color}) {
 Widget bigText({required text, required color}) {
   return Text(
     text,
-    overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
       fontWeight: FontWeight.w600,
       fontSize: 24,
@@ -195,12 +189,11 @@ Widget genericRequestRow({
         color: color5,
         stringWeight: FontWeight.w400,
       ),
-      Expanded(
-          child: genericText4(
+      genericText4(
         text: name,
         color: color5,
         stringWeight: FontWeight.w200,
-      )),
+      ),
     ],
   );
 }
@@ -457,7 +450,6 @@ Widget genericExpandableCard({
 }
 
 Widget genericExpandableList2({
-  required itemId,
   required userId,
   required name,
   required address,
@@ -573,7 +565,7 @@ Widget genericExpandableList2({
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => EditRequests(itemId: itemId),
+                        builder: (context) => EditRequests(cname: name),
                       ),
                     );
                   },
@@ -619,7 +611,7 @@ Widget genericExpandableList2({
                   },
                   onLongPress: () async {
                     await CloudService()
-                        .deleteSellerRequest(userId: userId, itemId: name);
+                        .deleteSellerRequest(userId: userId, name: name);
                   },
                   child: Row(
                     children: [

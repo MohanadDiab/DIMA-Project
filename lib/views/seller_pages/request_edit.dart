@@ -12,15 +12,15 @@ import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:http/http.dart';
 
 class EditRequests extends StatefulWidget {
-  const EditRequests({Key? key, required this.itemId}) : super(key: key);
-  final String itemId;
+  const EditRequests({Key? key, required this.cname}) : super(key: key);
+  final String cname;
   @override
-  State<EditRequests> createState() => _EditRequestsState(itemId);
+  State<EditRequests> createState() => _EditRequestsState(cname);
 }
 
 class _EditRequestsState extends State<EditRequests> {
-  final String itemId;
-  _EditRequestsState(this.itemId);
+  final String cname;
+  _EditRequestsState(this.cname);
 
   String userId = FirebaseAuth.instance.currentUser!.uid;
   final CloudStorage storage = CloudStorage();
@@ -165,8 +165,8 @@ class _EditRequestsState extends State<EditRequests> {
           ),
         ),
         body: FutureBuilder(
-          future: CloudService()
-              .getSellerRequestInfo(userId: userId, itemId: itemId),
+          future:
+              CloudService().getSellerRequestInfo(userId: userId, name: cname),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -402,8 +402,8 @@ class _EditRequestsState extends State<EditRequests> {
                         pressColor: color2,
                         text: 'Save order',
                         onPressed: () async {
-                          CloudService().deleteSellerRequest(
-                              userId: userId, itemId: itemId);
+                          CloudService()
+                              .deleteSellerRequest(userId: userId, name: cname);
                           savingCustomerInfo(
                             emailController: _emailTextController,
                             locationController: _locationTextController,
