@@ -78,12 +78,18 @@ class _SellerRequestsState extends State<SellerRequests>
               text: 'My Requests',
               color: color5,
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_active_outlined),
-                color: color5,
-              ),
+            actions: <Widget>[
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: const Icon(Icons.notifications_active_outlined),
+                    color: color5,
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                },
+              )
             ],
           ),
           drawer: const SellerRequestsInfoDrawer(),

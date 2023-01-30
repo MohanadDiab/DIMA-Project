@@ -145,14 +145,14 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
   }
 
   void getSuggestion(String input) async {
-    const String KAPIKey = 'AIzaSyAktuBhmVOtCZN12HIOe3mSkJMit0Oqs04';
-    const baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    final request = '$baseURL?input=$input&key=$KAPIKey';
+    const String KAPIKey =
+        'pk.eyJ1Ijoic2hlbmdzaGVubGkiLCJhIjoiY2twZTA1MzVzMWpmbjJvbXVnMDd4aTQwZiJ9.UjJrmHYz6yPmy7jHT5RB_A';
+    final request =
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/$input.json?types=address%2Cplace%2Cpoi%2Clocality&access_token=$KAPIKey';
     var response = await get(Uri.parse(request));
     if (response.statusCode == 200) {
       setState(() {
-        _placesList = jsonDecode(response.body.toString())['predictions'];
+        _placesList = jsonDecode(response.body.toString())['features'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -213,17 +213,13 @@ class _RegisterTabSellerState extends State<RegisterTabSeller> {
                         itemBuilder: ((context, index) {
                           return ListTile(
                             onTap: (() async {
-                              print(_placesList);
-                              List<Location> locations =
-                                  await locationFromAddress(
-                                      _placesList[index]['description']);
-                              long = locations.last.longitude;
-                              lat = locations.last.latitude;
+                              long = _placesList[index]['center'][0];
+                              lat = _placesList[index]['center'][1];
                               _locationTextController.text =
-                                  _placesList[index]['description'];
+                                  _placesList[index]['place_name'];
                               isVisible = false;
                             }),
-                            title: Text(_placesList[index]['description']),
+                            title: Text(_placesList[index]['place_name']),
                           );
                         }),
                       ),

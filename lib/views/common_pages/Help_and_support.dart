@@ -144,39 +144,37 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                               'Please enter anything on your mind here reagrding the app',
                         ),
                       ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: genericButton(
-                            context: context,
-                            primaryColor: color3,
-                            pressColor: color2,
-                            text: 'Send',
-                            onPressed: () {
-                              if (_emailTextController.text.isEmpty &&
-                                  _subjectTextController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Kindly provide the email and a subject to send a support request'),
-                                  ),
-                                );
-                              } else {
-                                CloudService().createSellerSupportRequest(
-                                  userId: userId,
-                                  email: _emailTextController.text,
-                                  subject: _subjectTextController.text,
-                                );
-                                Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Request sent successfully'),
-                                  ),
-                                );
-                              }
-                            },
-                            textColor: color2,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: genericButton(
+                          context: context,
+                          primaryColor: color3,
+                          pressColor: color2,
+                          text: 'Send',
+                          onPressed: () {
+                            if (_emailTextController.text.isEmpty &&
+                                _subjectTextController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'Kindly provide the email and a subject to send a support request'),
+                                ),
+                              );
+                            } else {
+                              CloudService().createSellerSupportRequest(
+                                userId: userId,
+                                email: _emailTextController.text,
+                                subject: _subjectTextController.text,
+                              );
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Request sent successfully'),
+                                ),
+                              );
+                            }
+                          },
+                          textColor: color2,
                         ),
                       ),
                     ],
@@ -195,7 +193,7 @@ const String q1 = "Q: I can't see any requests:";
 const String q2 = "Q:I can't add any new requests";
 // ignore: unnecessary_string_escapes
 const String q3 =
-    "Q:I am trying to contact the driver or seller but can't get a response";
+    "Q:I am trying to contact the driver\seller but can't get a response";
 
 const String a1 =
     "A: This is a common issue if your internet connection is not stable, kindly try to exit the app and enter again. if that doesn't work try to logout and login.\n If the problem persists, kindly contact the customer service via the contact us service below.";
@@ -205,4 +203,4 @@ const String a2 =
 // ignore: unnecessary_string_escapes
 
 const String a3 =
-    "A: If the other party is not completing their assigned tasks and not replying to communication, kindly contact the customer service in order to reassign or cancel the order";
+    "A: If the other party is not completing their assigned tasks and not replying to communication, kindly contact the customer service in order to reassign\cancel the order";

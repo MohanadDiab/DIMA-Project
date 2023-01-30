@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/url.dart';
-import 'package:testapp/utilities/show_snackbar.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/auth/bloc/auth_bloc.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
 import 'package:testapp/utilities/dialogs/logout_dialog.dart';
-import 'package:testapp/views/common_pages/help_and_support.dart';
+import 'package:testapp/views/common_pages/Help_and_support.dart';
 import 'package:testapp/views/driver_pages/driver_user_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,8 +37,11 @@ class _DriverProfileState extends State<DriverProfile>
       allowedExtensions: ['png', 'jpg'],
     );
     if (imageResult == null) {
-      // ignore: use_build_context_synchronously
-      showSnackBar(context, "Kindly upload a valid image");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Kindly upload a valid image'),
+        ),
+      );
       return null;
     }
     final filePath = imageResult.files.single.path!;
@@ -151,160 +153,61 @@ class _DriverProfileState extends State<DriverProfile>
                           ],
                         ),
                       ),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          if (constraints.maxWidth < 600) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                genericProfileButton(
-                                  context: context,
-                                  field: 'User Details',
-                                  icon: Icon(
-                                    Icons.person,
-                                    color: color5,
-                                  ),
-                                  function: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const EditUserDetailsDriver(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                genericProfileButton(
-                                  context: context,
-                                  field: 'Help & Support',
-                                  icon: Icon(
-                                    Icons.help_center,
-                                    color: color5,
-                                  ),
-                                  function: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const HelpAndSupportView(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                genericProfileButton(
-                                  context: context,
-                                  field: 'Privacy Policy',
-                                  icon: Icon(
-                                    Icons.verified_user_outlined,
-                                    color: color5,
-                                  ),
-                                  function: () {
-                                    launchUrl(
-                                      Uri.parse(
-                                          "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
-                                    );
-                                  },
-                                ),
-                                genericProfileButton(
-                                  context: context,
-                                  field: 'Logout',
-                                  icon: Icon(
-                                    Icons.logout_outlined,
-                                    color: color5,
-                                  ),
-                                  function: () async {
-                                    final shouldLogout =
-                                        await showLogOutDialog(context);
-                                    if (shouldLogout) {
-                                      context.read<AuthBloc>().add(
-                                            const AuthEventLogOut(),
-                                          );
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    genericProfileButton(
-                                      context: context,
-                                      field: 'User Details',
-                                      icon: Icon(
-                                        Icons.person,
-                                        color: color5,
-                                      ),
-                                      function: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const EditUserDetailsDriver(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    genericProfileButton(
-                                      context: context,
-                                      field: 'Help & Support',
-                                      icon: Icon(
-                                        Icons.help_center,
-                                        color: color5,
-                                      ),
-                                      function: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const HelpAndSupportView(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    genericProfileButton(
-                                      context: context,
-                                      field: 'Privacy Policy',
-                                      icon: Icon(
-                                        Icons.verified_user_outlined,
-                                        color: color5,
-                                      ),
-                                      function: () {
-                                        launchUrl(
-                                          Uri.parse(
-                                              "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
-                                        );
-                                      },
-                                    ),
-                                    genericProfileButton(
-                                      context: context,
-                                      field: 'Logout',
-                                      icon: Icon(
-                                        Icons.logout_outlined,
-                                        color: color5,
-                                      ),
-                                      function: () async {
-                                        final shouldLogout =
-                                            await showLogOutDialog(context);
-                                        if (shouldLogout) {
-                                          context.read<AuthBloc>().add(
-                                                const AuthEventLogOut(),
-                                              );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
+                      genericProfileButton(
+                        field: 'User Details',
+                        icon: Icon(
+                          Icons.person,
+                          color: color5,
+                        ),
+                        function: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const EditUserDetailsDriver(),
+                            ),
+                          );
+                        },
+                      ),
+                      genericProfileButton(
+                        field: 'Help & Support',
+                        icon: Icon(
+                          Icons.help_center,
+                          color: color5,
+                        ),
+                        function: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const HelpAndSupportView(),
+                            ),
+                          );
+                        },
+                      ),
+                      genericProfileButton(
+                        field: 'Privacy Policy',
+                        icon: Icon(
+                          Icons.verified_user_outlined,
+                          color: color5,
+                        ),
+                        function: () {
+                          launchUrl(
+                            Uri.parse(
+                                "https://www.termsfeed.com/live/3f0f2c07-67bb-4085-9291-be39e2585ada"),
+                          );
+                        },
+                      ),
+                      genericProfileButton(
+                        field: 'Logout',
+                        icon: Icon(
+                          Icons.logout_outlined,
+                          color: color5,
+                        ),
+                        function: () async {
+                          final shouldLogout = await showLogOutDialog(context);
+                          if (shouldLogout) {
+                            context.read<AuthBloc>().add(
+                                  const AuthEventLogOut(),
+                                );
                           }
                         },
                       ),
@@ -321,7 +224,49 @@ class _DriverProfileState extends State<DriverProfile>
     );
   }
 
+  Padding genericProfileButton(
+      {required String field, required icon, required function}) {
+    return Padding(
+      padding: const EdgeInsets.all(7.5),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          primary: Colors.grey[100],
+          onPrimary: color3,
+          padding: const EdgeInsets.only(
+            left: 15,
+            right: 15,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        onPressed: function,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: icon,
+              ),
+              const SizedBox(width: 15),
+              genericText(
+                text: field,
+                color: color5,
+              ),
+              const Expanded(child: SizedBox()),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.black,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

@@ -88,12 +88,10 @@ class CloudService {
         'is_published': false,
         'number': number,
         'user_id': userId,
-
         'address': address,
         'location': GeoPoint(lat, lng),
         'picture_utl':
-            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50',
-     
+            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
       },
     );
   }
@@ -113,8 +111,6 @@ class CloudService {
         'is_assigned': false,
         'picture_utl':
             'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
-
-
       },
     );
   }
@@ -355,6 +351,13 @@ class CloudService {
   Future<void> publishSeller({required userId}) async {
     return sellerCollection.doc(userId).set(
       {'is_published': true},
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> setItemRate({required itemId, required double rate}) async {
+    return requestCollection.doc(itemId).set(
+      {'rate': rate},
       SetOptions(merge: true),
     );
   }

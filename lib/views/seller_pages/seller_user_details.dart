@@ -1,10 +1,14 @@
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/services/cloud/cloud_storage.dart';
+import 'package:http/http.dart';
 
 class EditUserDetailsSeller extends StatefulWidget {
   const EditUserDetailsSeller({Key? key}) : super(key: key);

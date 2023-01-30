@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:testapp/constants/custom_page_router.dart';
+import 'package:testapp/constants/customPageRouter.dart';
 import 'package:testapp/views/maps/seller_map.dart';
+
 import 'seller_profile.dart';
 import 'seller_requests.dart';
 
@@ -36,47 +37,36 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
-          return Scaffold(
-            body: PageView(
-              controller: pageController,
-              onPageChanged: onPageChanged,
-              children: _widgetList,
+    return Scaffold(
+      body: PageView(
+        controller: pageController,
+        onPageChanged: onPageChanged,
+        children: _widgetList,
+      ),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          elevation: 50,
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.grey[200],
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-            bottomNavigationBar: NavigationBarTheme(
-              data: NavigationBarThemeData(
-                elevation: 50,
-                backgroundColor: Colors.white,
-                indicatorColor: Colors.grey[200],
-                labelTextStyle: MaterialStateProperty.all(
-                  const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                labelBehavior:
-                    NavigationDestinationLabelBehavior.onlyShowSelected,
-              ),
-              child: NavigationBar(
-                selectedIndex: _currentIndex,
-                onDestinationSelected: (index) => setState(
-                  () {
-                    print(index + 100);
-                    pageController.jumpToPage(index);
-                  },
-                ),
-                destinations: navyItems,
-              ),
-            ),
-          );
-        } else {
-          return Scaffold(
-            body: _widgetList[_currentIndex],
-          );
-        }
-      },
+          ),
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) => setState(
+            () {
+              print(index + 100);
+              pageController.jumpToPage(index);
+            },
+          ),
+          destinations: navyItems,
+        ),
+      ),
     );
   }
 }

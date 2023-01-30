@@ -63,7 +63,6 @@ dependencies:
   firebase_storage: ^11.0.10
   file_picker: ^5.0.1
   flutter_google_places: ^0.3.0
-  geocoding: ^2.0.4
   url_launcher: ^6.1.5
   flutter_email_sender: ^5.1.0
   shimmer: ^2.0.0
@@ -78,7 +77,6 @@ dependencies:
   rating_dialog: ^2.0.4
   camera: ^0.10.2+1
   empty_widget: ^0.0.5
-  line_icons: ^2.0.1
 
 dev_dependencies:
   flutter_test:

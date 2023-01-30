@@ -22,6 +22,8 @@ class FirebaseAuthProvider implements AuthProvider {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     if (await CloudService().isDriver(userId: uid)) {
       await FirebaseMessaging.instance.subscribeToTopic("driver");
+    } else {
+      await FirebaseMessaging.instance.subscribeToTopic("seller");
     }
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
