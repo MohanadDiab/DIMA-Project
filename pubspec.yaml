@@ -77,6 +77,8 @@ dependencies:
   rating_dialog: ^2.0.4
   camera: ^0.10.2+1
   empty_widget: ^0.0.5
+  geocoding: ^2.0.5
+  line_icons: ^2.0.1
 
 dev_dependencies:
   flutter_test:

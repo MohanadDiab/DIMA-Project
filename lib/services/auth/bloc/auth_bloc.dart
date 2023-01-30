@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:testapp/services/auth/auth_provider.dart';
 import 'package:testapp/services/auth/bloc/auth_event.dart';
 import 'package:testapp/services/auth/bloc/auth_state.dart';
+import 'package:testapp/services/auth/social/facebook_sign_in.dart';
+import 'package:testapp/services/auth/social/google_sign_in.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider)
@@ -122,6 +124,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               isLoading: false,
             ),
           );
+          emit(
+            AuthStateLoggedIn(
+              user: user,
+              isLoading: false,
+            ),
+          );
+        }
+      } on Exception catch (e) {
+        emit(
+          AuthStateLoggedOut(
+            exception: e,
+            isLoading: false,
+          ),
+        );
+      }
+    });
+    // log in with social
+    on<AuthEventLogInWithSocial>((event, emit) async {
+      final signIn = event.signIn;
+      try {
+        if (signIn == "facebook") {
+          final user = await signInWithFacebookProvider();
+          emit(
+            AuthStateLoggedIn(
+              user: user,
+              isLoading: false,
+            ),
+          );
+        } else {
+          final user = await signInWithGoogleProvider();
           emit(
             AuthStateLoggedIn(
               user: user,

@@ -293,7 +293,7 @@ Widget genericText5({required String text, required Color color}) {
     text,
     overflow: TextOverflow.ellipsis,
     style: GoogleFonts.oswald(
-        fontWeight: FontWeight.w200,
+        fontWeight: FontWeight.w400,
         fontSize: 18,
         color: color,
         decoration: TextDecoration.underline),
@@ -1087,5 +1087,277 @@ Widget textFieldwithIconObscured({
         ),
       ),
     ],
+  );
+}
+
+Widget genericProfileButton(
+    {required String field,
+    required icon,
+    required function,
+    required context}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth < 600) {
+        return Padding(
+          padding: const EdgeInsets.all(7.5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: function,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: icon,
+                  ),
+                  const SizedBox(width: 15),
+                  genericText(
+                    text: field,
+                    color: color5,
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(7.5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: function,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: SizedBox(
+                width: getWidth(context: context) * 0.4,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: icon,
+                    ),
+                    const SizedBox(width: 15),
+                    genericText(
+                      text: field,
+                      color: color5,
+                    ),
+                    const SizedBox(width: 15),
+                    const Expanded(child: SizedBox()),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
+Widget orders({required BuildContext context, required snapshot}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth > 600) {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableCard(
+                    name: name,
+                    address: address,
+                    numberC: numberC,
+                    item: item,
+                    price: price,
+                    notes: notes,
+                    pic: pic,
+                    context: context);
+              },
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 15,
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableList(
+                  name: name,
+                  address: address,
+                  numberC: numberC,
+                  item: item,
+                  price: price,
+                  notes: notes,
+                  pic: pic,
+                  context: context,
+                );
+              },
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
+Widget genericExpandableCard({
+  required name,
+  required address,
+  required numberC,
+  required item,
+  required price,
+  required notes,
+  required pic,
+  required BuildContext context,
+}) {
+  return Card(
+    color: Colors.grey[100],
+    elevation: 2,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          genericRequestRow(
+            title: 'Name',
+            name: name,
+            icon: const Icon(Icons.person_outline),
+          ),
+          genericRequestRow(
+            title: 'Address',
+            name: address,
+            icon: const Icon(Icons.location_history_outlined),
+          ),
+          genericRequestRow(
+            title: 'Number',
+            name: numberC.toString(),
+            icon: const Icon(
+              Icons.call_outlined,
+            ),
+          ),
+          genericRequestRow(
+            title: 'Item',
+            name: item,
+            icon: const Icon(
+              Icons.store_outlined,
+            ),
+          ),
+          genericRequestRow(
+            title: 'Price',
+            name: price.toString(),
+            icon: const Icon(Icons.attach_money_outlined),
+          ),
+          genericRequestRow(
+            title: 'Notes',
+            name: notes,
+            icon: const Icon(Icons.textsms_outlined),
+          ),
+          Row(
+            children: [
+              const Icon(Icons.image_outlined),
+              genericText4(
+                text: 'Item image: ',
+                color: color5,
+                stringWeight: FontWeight.w400,
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(pic),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Center(
+              child: circularAvatarImage(
+                networkImage: pic,
+                placeholderIcon: Icons.catching_pokemon_outlined,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

@@ -37,36 +37,47 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: onPageChanged,
-        children: _widgetList,
-      ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          elevation: 50,
-          backgroundColor: Colors.white,
-          indicatorColor: Colors.grey[200],
-          labelTextStyle: MaterialStateProperty.all(
-            const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          return Scaffold(
+            body: PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: _widgetList,
             ),
-          ),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) => setState(
-            () {
-              print(index + 100);
-              pageController.jumpToPage(index);
-            },
-          ),
-          destinations: navyItems,
-        ),
-      ),
+            bottomNavigationBar: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                elevation: 50,
+                backgroundColor: Colors.white,
+                indicatorColor: Colors.grey[200],
+                labelTextStyle: MaterialStateProperty.all(
+                  const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+              ),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) => setState(
+                  () {
+                    print(index + 100);
+                    pageController.jumpToPage(index);
+                  },
+                ),
+                destinations: navyItems,
+              ),
+            ),
+          );
+        } else {
+          return Scaffold(
+            body: _widgetList[_currentIndex],
+          );
+        }
+      },
     );
   }
 }

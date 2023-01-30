@@ -126,41 +126,7 @@ class DriverRequestsActive extends StatelessWidget {
               },
             ),
             const Divider(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-              child: SizedBox(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(
-                      height: 15,
-                    );
-                  },
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: snapshot.length,
-                  itemBuilder: (context, index) {
-                    final price = snapshot[index].data()['price'];
-                    final name = snapshot[index].data()['name'];
-                    final item = snapshot[index].data()['item'];
-                    final notes = snapshot[index].data()['notes'];
-                    final pic = snapshot[index].data()['picture_url'];
-                    final numberC = snapshot[index].data()['number'];
-                    final String address = snapshot[index].data()['address'];
-
-                    return genericExpandableList(
-                      context: context,
-                      name: name,
-                      address: address,
-                      numberC: numberC,
-                      item: item,
-                      price: price,
-                      notes: notes,
-                      pic: pic,
-                    );
-                  },
-                ),
-              ),
-            ),
+            orders(context: context, snapshot: snapshot),
           ],
         ),
       ),

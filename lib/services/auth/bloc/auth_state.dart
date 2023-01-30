@@ -43,6 +43,13 @@ class AuthStateLoggedIn extends AuthState {
   }) : super(isLoading: isLoading);
 }
 
+class AuthStateLoggedInWithSocial extends AuthState {
+  final String signIn;
+  const AuthStateLoggedInWithSocial(
+      {required this.signIn, required bool isLoading})
+      : super(isLoading: isLoading);
+}
+
 class AuthStateNeedsVerification extends AuthState {
   const AuthStateNeedsVerification({required bool isLoading})
       : super(isLoading: isLoading);
