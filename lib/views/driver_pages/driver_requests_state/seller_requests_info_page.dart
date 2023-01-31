@@ -13,14 +13,18 @@ class SellerRequestsInfoPage extends StatefulWidget {
   final String city;
   final number;
   final sellerUserId;
-  const SellerRequestsInfoPage({
-    Key? key,
-    required this.name,
-    required this.picture,
-    required this.city,
-    required this.number,
-    required this.sellerUserId,
-  }) : super(key: key);
+  final int orderNum;
+  final double money;
+  const SellerRequestsInfoPage(
+      {Key? key,
+      required this.name,
+      required this.picture,
+      required this.city,
+      required this.number,
+      required this.sellerUserId,
+      required this.orderNum,
+      required this.money})
+      : super(key: key);
 
   @override
   State<SellerRequestsInfoPage> createState() => _SellerRequestsInfoPageState();
@@ -118,7 +122,8 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
               ),
               SizedBox(
                   child: StreamBuilder(
-                stream: CloudService().getSellerRequests(userId: userId),
+                stream:
+                    CloudService().getSellerRequestsNotAssigned(userId: userId),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -127,9 +132,9 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
                       );
                     case ConnectionState.active:
                       final docs = snapshot.data!.docs;
-                      final numOfOrders = docs.length;
+                      final numOfOrders = docs.length.toString();
+                      ;
                       final compensation = (docs.length * 4).toString();
-                      final numOfOrdersString = docs.length.toString();
                       return Column(
                         children: [
                           Padding(
@@ -147,12 +152,12 @@ class _SellerRequestsInfoPageState extends State<SellerRequestsInfoPage> {
                                           color: color5),
                                       genericText4(
                                           text:
-                                              'Total number of orders: $numOfOrdersString',
+                                              'Total number of orders: ${widget.orderNum}',
                                           color: color5,
                                           stringWeight: FontWeight.w300),
                                       genericText4(
                                           text:
-                                              'Your total revenue will sum up to: $compensation euros',
+                                              'Your total revenue will sum up to: ${widget.money} euros',
                                           color: color5,
                                           stringWeight: FontWeight.w300),
                                     ],

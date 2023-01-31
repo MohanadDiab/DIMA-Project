@@ -136,7 +136,7 @@ class _DriverRequestsViewState extends State<DriverRequestsView> {
               case ConnectionState.waiting:
                 return requestsPageShimmer(context: context);
               case ConnectionState.active:
-                if (!snapshot.data!.docs.isEmpty) {
+                if (snapshot.data!.docs.isNotEmpty) {
                   final docs = snapshot.data!.docs;
                   return DriverRequestsActive(snapshot: docs);
                 } else {

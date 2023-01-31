@@ -38,7 +38,7 @@ class SellerRequestsArchived extends StatelessWidget {
               text: 'Note: The deliveries shown here are already finished',
               color: color5,
             ),
-            orders(context: context, snapshot: snapshot),
+            ordersArchived(context: context, snapshot: snapshot),
           ],
         ),
       ),

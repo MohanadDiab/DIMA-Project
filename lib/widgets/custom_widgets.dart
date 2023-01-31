@@ -452,21 +452,6 @@ Widget genericExpandableList({
                 name: notes,
                 icon: const Icon(Icons.textsms_outlined),
               ),
-              RatingBar.builder(
-                initialRating: 3,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
               Row(
                 children: [
                   const Icon(Icons.image_outlined),
@@ -585,6 +570,7 @@ Widget genericExpandableArchivedList({
                   Expanded(
                       child: Center(
                     child: RatingBar.builder(
+                      ignoreGestures: true,
                       itemSize: 18,
                       initialRating: rate,
                       minRating: 1,
@@ -596,12 +582,7 @@ Widget genericExpandableArchivedList({
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      onRatingUpdate: (rating) {
-                        CloudService()
-                            .setItemRate(itemId: itemId, rate: rating);
-                        print(itemId);
-                        print(rating);
-                      },
+                      onRatingUpdate: (rating) {},
                     ),
                   )),
                 ],
@@ -1258,6 +1239,93 @@ Widget orders({required BuildContext context, required snapshot}) {
                   pic: pic,
                   context: context,
                 );
+              },
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
+Widget ordersArchived({required BuildContext context, required snapshot}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth > 600) {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final itemId = snapshot[index].id;
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final rate = snapshot[index].data()['rate'] ?? 0.0;
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableArchivedList(
+                    itemId: itemId,
+                    name: name,
+                    address: address,
+                    numberC: numberC,
+                    item: item,
+                    price: price,
+                    notes: notes,
+                    pic: pic,
+                    context: context,
+                    rate: rate);
+              },
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 15,
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final itemId = snapshot[index].id;
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final rate = snapshot[index].data()['rate'] ?? 0.0;
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+                return genericExpandableArchivedList(
+                    itemId: itemId,
+                    name: name,
+                    address: address,
+                    numberC: numberC,
+                    item: item,
+                    price: price,
+                    notes: notes,
+                    pic: pic,
+                    context: context,
+                    rate: rate);
               },
             ),
           ),

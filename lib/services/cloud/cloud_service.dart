@@ -254,11 +254,40 @@ class CloudService {
         .snapshots();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNotAliveDriverRequests() {
+    return requestCollection
+        .where('is_delivered', isEqualTo: false)
+        .where('is_assigned', isEqualTo: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getPublishedSellerList() {
+    return sellerCollection.where('is_published', isEqualTo: true).snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequestsAssigned(
+      {required String userId}) {
+    return requestCollection
+        .where('assigned_seller', isEqualTo: userId)
+        .where('is_delivered', isEqualTo: false)
+        .where('is_assigned', isEqualTo: true)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequests(
       {required String userId}) {
     return requestCollection
         .where('assigned_seller', isEqualTo: userId)
         .where('is_delivered', isEqualTo: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSellerRequestsNotAssigned(
+      {required String userId}) {
+    return requestCollection
+        .where('assigned_seller', isEqualTo: userId)
+        .where('is_delivered', isEqualTo: false)
+        .where('is_assigned', isEqualTo: false)
         .snapshots();
   }
 
@@ -307,15 +336,6 @@ class CloudService {
     return sellerCollection
         .where('is_assigned', isEqualTo: false)
         .where('is_published', isEqualTo: true)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> getClosestRequests(
-      {required String city}) {
-    return sellerCollection
-        .where('is_assigned', isEqualTo: false)
-        .where('is_published', isEqualTo: true)
-        .where('city', isEqualTo: city)
         .snapshots();
   }
 

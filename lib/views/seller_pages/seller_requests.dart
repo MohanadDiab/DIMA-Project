@@ -145,17 +145,27 @@ class _SellerActiveRequestsState extends State<SellerActiveRequests> {
                     );
 
                   case ConnectionState.active:
+                    List assignedRequests = [];
+                    List notAssignedRequests = [];
                     final docs = snapshot.data!.docs;
-                    if (!snapshot.data!.docs.isNotEmpty) {
+                    for (var request in docs) {
+                      if ((request.data()! as Map)['is_assigned']) {
+                        assignedRequests.add(request);
+                      } else {
+                        notAssignedRequests.add(request);
+                      }
+                    }
+                    if (docs.isEmpty) {
                       return const SellerRequestsIsEmpty();
-                    } else if (isAssigned) {
+                    } else if (assignedRequests.isNotEmpty) {
                       return SellerRequestsAssigned(
-                          snapshot: docs, driver: driver);
-                    } else if (isPublished) {
-                      return SellerRequestsActive(snapshot: docs);
+                          snapshot: assignedRequests, driver: driver);
+                    } else if (notAssignedRequests.isNotEmpty && isPublished) {
+                      return SellerRequestsActive(
+                          snapshot: notAssignedRequests);
                     } else {
                       return SellerRequestNotActive(
-                          snapshot: docs, userId: userId);
+                          snapshot: notAssignedRequests, userId: userId);
                     }
                   default:
                     return requestsPageShimmer(context: context);

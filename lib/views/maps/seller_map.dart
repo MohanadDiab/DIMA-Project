@@ -67,7 +67,7 @@ class SellerMapState extends State<SellerMap>
         currentSituation['assignedDriver'] == '' ||
         currentSituation['collectingRoute'] == [] ||
         currentSituation['isAssigned'] == false ||
-        currentSituation['currentTask'] == []) {
+        currentSituation['currentTask'].isEmpty()) {
       print('initialization unfinished or no task is undergoing.');
     } else {
       //what task should we do
@@ -96,16 +96,18 @@ class SellerMapState extends State<SellerMap>
           //add collecting route
           var geometry = <LatLng>[];
           List route = currentSituation['collectingRoute'];
-          for (GeoPoint point in route) {
-            geometry.add(LatLng(point.latitude, point.longitude));
+          if (route.isNotEmpty) {
+            for (GeoPoint point in route) {
+              geometry.add(LatLng(point.latitude, point.longitude));
+            }
+            LineOptions computedLine = LineOptions(
+                geometry: geometry,
+                lineColor: "#ff0000",
+                lineWidth: 6,
+                lineOpacity: 0.5,
+                draggable: false);
+            await mapController!.addLine(computedLine);
           }
-          LineOptions computedLine = LineOptions(
-              geometry: geometry,
-              lineColor: "#ff0000",
-              lineWidth: 6,
-              lineOpacity: 0.5,
-              draggable: false);
-          await mapController!.addLine(computedLine);
         }
         //delivering
         else {
@@ -120,23 +122,24 @@ class SellerMapState extends State<SellerMap>
             symbolData['remainedTime'] =
                 deliveringItem.data()['remainedTime'] ?? '';
             List route = deliveringItem.data()['route'];
-            await mapController?.addSymbol(
-                _getSymbolOptions(
-                    LatLng(route.last.latitude, route.last.longitude),
-                    '',
-                    'mountain-15'),
-                symbolData);
-            print(LatLng(route.last.latitude, route.last.longitude));
-            for (GeoPoint point in route) {
-              geometry.add(LatLng(point.latitude, point.longitude));
+            if (route.isNotEmpty) {
+              await mapController?.addSymbol(
+                  _getSymbolOptions(
+                      LatLng(route.last.latitude, route.last.longitude),
+                      '',
+                      'mountain-15'),
+                  symbolData);
+              for (GeoPoint point in route) {
+                geometry.add(LatLng(point.latitude, point.longitude));
+              }
+              LineOptions computedLine = LineOptions(
+                  geometry: geometry,
+                  lineColor: "#ff0000",
+                  lineWidth: 3.0,
+                  lineOpacity: 0.5,
+                  draggable: false);
+              await mapController!.addLine(computedLine);
             }
-            LineOptions computedLine = LineOptions(
-                geometry: geometry,
-                lineColor: "#ff0000",
-                lineWidth: 3.0,
-                lineOpacity: 0.5,
-                draggable: false);
-            await mapController!.addLine(computedLine);
           }
         }
       }
@@ -200,7 +203,9 @@ class SellerMapState extends State<SellerMap>
       //
       updateMap();
     });
-    CloudService().getSellerRequests(userId: userId).listen((event) async {
+    CloudService()
+        .getSellerRequestsAssigned(userId: userId)
+        .listen((event) async {
       List requests = event.docs;
       if (requests != currentSituation['currentTask']) {
         currentSituation['currentTask'] = requests;
@@ -266,8 +271,8 @@ class SellerMapState extends State<SellerMap>
                   SizedBox(
                     height: 230,
                     child: StreamBuilder(
-                        stream:
-                            CloudService().getSellerRequests(userId: userId),
+                        stream: CloudService()
+                            .getSellerRequestsAssigned(userId: userId),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           switch (snapshot.connectionState) {
@@ -442,7 +447,7 @@ class SellerMapState extends State<SellerMap>
           ),
           const Divider(),
           StreamBuilder(
-            stream: CloudService().getSellerRequests(userId: userId),
+            stream: CloudService().getSellerRequestsAssigned(userId: userId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
