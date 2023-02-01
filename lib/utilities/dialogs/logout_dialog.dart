@@ -29,3 +29,17 @@ Future<bool> showConfirmRequestsDialog(BuildContext context) {
     (value) => value ?? false,
   );
 }
+
+Future<bool> showConfirmPublishDialog(BuildContext context) {
+  return showGenericDialog<bool>(
+    context: context,
+    title: 'Publishing orders',
+    content: 'Are you sure you want to publish your orders?',
+    optionsBuilder: () => {
+      context.loc.cancel: false,
+      "Confirm": true,
+    },
+  ).then(
+    (value) => value ?? false,
+  );
+}

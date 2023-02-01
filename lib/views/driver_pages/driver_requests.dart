@@ -8,7 +8,6 @@ import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:testapp/views/driver_pages/driver_requests_state/driver_requests_inactive.dart';
 import 'package:testapp/views/driver_pages/driver_requests_state/driver_requests_active.dart';
 import 'package:testapp/views/seller_pages/seller_requests_info.dart';
-import 'package:testapp/views/seller_pages/seller_msg_info.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/requests_archived.dart';
 import 'package:testapp/views/seller_pages/seller_requests_states/requests_empty.dart';
 

@@ -22,7 +22,7 @@ class CloudStorage {
       return downloadURL;
     } on FirebaseException catch (_) {
       print(_);
-      return 'there has been an error';
+      return 'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2FkR9hsBdVwTe8jhWAT0X9O3H1C602?alt=media&token=1beb78e7-2429-4185-9920-9dca7887e8f7';
     }
   }
 }

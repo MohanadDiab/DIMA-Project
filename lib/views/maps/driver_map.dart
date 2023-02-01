@@ -12,6 +12,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:testapp/constants/colors.dart';
+import 'package:testapp/constants/dimensions.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
 import 'package:location/location.dart';
@@ -361,7 +362,6 @@ class DriverMapState extends State<DriverMap>
                 children: [
                   const Expanded(child: SizedBox()),
                   SizedBox(
-                    height: 265,
                     child: StreamBuilder(
                         stream: CloudService()
                             .getAliveDriverRequests(userId: userId),
@@ -372,106 +372,152 @@ class DriverMapState extends State<DriverMap>
                             case ConnectionState.active:
                               if (snapshot.hasData) {
                                 final docs = snapshot.data.docs!;
-                                return ScrollSnapList(
-                                  itemBuilder: (context, index) {
-                                    var product = docs[index].data();
-                                    final size = MediaQuery.of(context).size;
-                                    final width = size.width;
-                                    final height = size.height;
-                                    return SizedBox(
-                                      width: width * 0.8,
-                                      height: 265,
-                                      child: Card(
-                                        elevation: 12,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10)),
-                                          child: Column(
-                                            children: [
-                                              Image.network(
-                                                product['picture_url'],
-                                                fit: BoxFit.cover,
-                                                width: width * 0.8,
-                                                height: 180,
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                product['name'],
-                                                style: const TextStyle(
-                                                    fontSize: 15),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                return Center(
+                                  child: SizedBox(
+                                    height: getHeight(context: context) * 0.4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: ScrollSnapList(
+                                        itemCount: docs.length,
+                                        itemSize:
+                                            getWidth(context: context) * 0.8,
+                                        onItemFocus: (index) {},
+                                        itemBuilder: (context, index) {
+                                          var product = docs[index].data();
+                                          var picture = "";
+                                          if (product["picture_url"] ==
+                                              'there has been an error') {
+                                            picture =
+                                                "https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2FkR9hsBdVwTe8jhWAT0X9O3H1C602?alt=media&token=1beb78e7-2429-4185-9920-9dca7887e8f7";
+                                          } else {
+                                            picture = product["picture_url"]
+                                                .toString();
+                                          }
+
+                                          return SizedBox(
+                                            width: getWidth(context: context) *
+                                                0.8,
+                                            child: Card(
+                                              elevation: 12,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10)),
+                                                child: Column(
                                                   children: [
-                                                    ElevatedButton(
-                                                      onPressed: () async {
-                                                        // showDialog(
-                                                        //   context: context,
-                                                        //   barrierDismissible:
-                                                        //       true, // set to false if you want to force a rating
-                                                        //   builder: (context) =>
-                                                        //       _dialog,
-                                                        // );
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                            return TakePictureScreen(
-                                                              camera:
-                                                                  firstCamera!,
-                                                              userId: userId,
-                                                              itemId:
-                                                                  docs[index]
-                                                                      .id,
-                                                            );
-                                                          }),
-                                                        );
-                                                      },
-                                                      style: ElevatedButton.styleFrom(
-                                                          minimumSize:
-                                                              const Size(10, 5),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3))),
-                                                      child:
-                                                          Text('Take Picture'),
+                                                    Image.network(
+                                                      picture,
+                                                      fit: BoxFit.cover,
+                                                      width: getWidth(
+                                                              context:
+                                                                  context) *
+                                                          0.8,
+                                                      height: 180,
                                                     ),
-                                                    ElevatedButton(
-                                                      onPressed: () async {},
-                                                      style: ElevatedButton.styleFrom(
-                                                          minimumSize:
-                                                              const Size(10, 5),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3))),
-                                                      child: Text('Call'),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    genericText(
+                                                        text: product["name"],
+                                                        color: color5),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 8),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              // showDialog(
+                                                              //   context: context,
+                                                              //   barrierDismissible:
+                                                              //       true, // set to false if you want to force a rating
+                                                              //   builder: (context) =>
+                                                              //       _dialog,
+                                                              // );
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                                  return TakePictureScreen(
+                                                                    camera:
+                                                                        firstCamera!,
+                                                                    userId:
+                                                                        userId,
+                                                                    itemId:
+                                                                        docs[index]
+                                                                            .id,
+                                                                  );
+                                                                }),
+                                                              );
+                                                            },
+                                                            style: ElevatedButton.styleFrom(
+                                                                minimumSize:
+                                                                    const Size(
+                                                                        10, 5),
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            3))),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5),
+                                                              child: genericText4(
+                                                                  text:
+                                                                      'Take Picture',
+                                                                  color: color2,
+                                                                  stringWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              call(
+                                                                  number: product[
+                                                                          "number"]
+                                                                      .toString());
+                                                            },
+                                                            style: ElevatedButton.styleFrom(
+                                                                minimumSize:
+                                                                    const Size(
+                                                                        10, 5),
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            3))),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5),
+                                                              child: genericText4(
+                                                                  text:
+                                                                      'Call Customer',
+                                                                  color: color2,
+                                                                  stringWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                  itemCount: docs.length,
-                                  itemSize: width * 0.8,
-                                  onItemFocus: (index) {},
-                                  dynamicItemSize: true,
+                                    ),
+                                  ),
                                 );
                               } else {
                                 return const CircularProgressIndicator();
@@ -492,69 +538,58 @@ class DriverMapState extends State<DriverMap>
             child: Center(
                 child: Column(
               children: [
-                SizedBox(
-                  height: height * 0.55,
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  elevation: 0,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  child: SizedBox(
-                    width: width * 0.9,
-                    height: height * 0.22,
-                    child: Row(children: [
-                      SizedBox(
-                        width: 10,
+                const Expanded(child: SizedBox()),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 2,
+                    color: Colors.grey[100],
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            genericText(
+                                text: "Retrieve items from seller",
+                                color: color5),
+                            genericText4(
+                              text: "Seller location",
+                              color: color5,
+                              stringWeight: FontWeight.w300,
+                            ),
+                            genericText4(
+                              text: "Via Dora Riparia, 14",
+                              color: color5,
+                              stringWeight: FontWeight.w300,
+                            ),
+                            Divider(),
+                            Container(
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await CloudService()
+                                      .setCollected(userId: userId);
+                                  setState(() {});
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(30, 40),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(3))),
+                                child: genericText(
+                                  text: "Confirm collection",
+                                  color: color2,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 18,
-                          ),
-                          Text(
-                            'Retrieve Items',
-                            textScaleFactor: 2,
-                          ),
-                          Text(
-                            'Seller Location',
-                            textScaleFactor: 1.15,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            'Via Dora Riparia, 14',
-                            textScaleFactor: 1.15,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Divider(
-                            height: 1.0,
-                            indent: 60.0,
-                            color: Colors.grey,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                await CloudService()
-                                    .setCollected(userId: userId);
-                                setState(() {});
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(30, 40),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3))),
-                              child: Text('Already Collected!'),
-                            ),
-                          )
-                        ],
-                      ),
-                    ]),
+                    ),
                   ),
                 ),
               ],
@@ -602,91 +637,114 @@ class DriverMapState extends State<DriverMap>
   Widget _drawer() {
     return Drawer(
       elevation: 16.0,
-      child: Column(
-        children: <Widget>[
-          FutureBuilder(
-            future: CloudService().getDriverProfile(userId: userId),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.done:
-                  if (snapshot.hasData) {
-                    return UserAccountsDrawerHeader(
-                      accountName: Text(snapshot.data['name']),
-                      accountEmail: Text(snapshot.data['city']),
-                      currentAccountPicture: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(snapshot.data['picture_url']),
-                      ),
-                    );
-                  } else {
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            FutureBuilder(
+              future: CloudService().getDriverProfile(userId: userId),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      return UserAccountsDrawerHeader(
+                        accountName: Text(snapshot.data['name']),
+                        accountEmail: Text(snapshot.data['city']),
+                        currentAccountPicture: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(snapshot.data['picture_url']),
+                        ),
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  default:
                     return const CircularProgressIndicator();
-                  }
-                default:
-                  return const CircularProgressIndicator();
-              }
-            },
-          ),
-          const ListTile(
-            title: Text("Deliveries"),
-            leading: Icon(Icons.delivery_dining),
-          ),
-          const Divider(),
-          StreamBuilder(
-            stream: CloudService().getAliveDriverRequests(userId: userId),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.active:
-                  if (snapshot.hasData) {
-                    final docs = snapshot.data.docs!;
-                    return ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          height: 10,
-                        );
-                      },
-                      shrinkWrap: true,
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        String remainedDistance =
-                            docs[index].data()["remainedDistance"] == null
-                                ? '...'
-                                : (docs[index].data()["remainedDistance"] /
-                                        1000)
-                                    .toStringAsFixed(1);
-                        String remainedTime =
-                            docs[index].data()["remainedTime"] == null
-                                ? '...'
-                                : (docs[index].data()["remainedTime"] / 60)
-                                    .toStringAsFixed(1);
-                        return ListTile(
-                          onTap: () {
-                            _goToCustomer(
-                              name: docs[index].data()['name'],
-                              item: docs[index].data()['item'],
-                              notes: docs[index].data()['notes'],
-                              lat: docs[index].data()['location'].latitude,
-                              long: docs[index].data()['location'].longitude,
-                            );
-                            Navigator.of(context).pop();
-                          },
-                          title: Text(docs[index].data()['name']),
-                          trailing: const Icon(Icons.my_location_outlined),
-                          subtitle: Text(
-                              '$remainedDistance km left,$remainedTime min left'),
-                        );
-                      },
-                    );
-                  } else {
+                }
+              },
+            ),
+            const ListTile(
+              title: Text("Deliveries"),
+              leading: Icon(Icons.delivery_dining),
+            ),
+            const Divider(),
+            StreamBuilder(
+              stream: CloudService().getAliveDriverRequests(userId: userId),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.active:
+                    if (!snapshot.data.docs.isEmpty) {
+                      final docs = snapshot.data.docs!;
+                      return ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            height: 10,
+                          );
+                        },
+                        shrinkWrap: true,
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          String remainedDistance =
+                              docs[index].data()["remainedDistance"] == null
+                                  ? '...'
+                                  : (docs[index].data()["remainedDistance"] /
+                                          1000)
+                                      .toStringAsFixed(1);
+                          String remainedTime =
+                              docs[index].data()["remainedTime"] == null
+                                  ? '...'
+                                  : (docs[index].data()["remainedTime"] / 60)
+                                      .toStringAsFixed(1);
+                          return ListTile(
+                            onTap: () {
+                              _goToCustomer(
+                                name: docs[index].data()['name'],
+                                item: docs[index].data()['item'],
+                                notes: docs[index].data()['notes'],
+                                lat: docs[index].data()['location'].latitude,
+                                long: docs[index].data()['location'].longitude,
+                              );
+                              Navigator.of(context).pop();
+                            },
+                            title: Text(docs[index].data()['name']),
+                            trailing: const Icon(Icons.my_location_outlined),
+                            subtitle: Text(
+                                '$remainedDistance km left,$remainedTime min left'),
+                          );
+                        },
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: SizedBox(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              genericText4(
+                                  text:
+                                      "Oops, it seems you aren't handling any orders at the moment!",
+                                  color: color5,
+                                  stringWeight: FontWeight.w300),
+                              Icon(
+                                Icons.inbox_outlined,
+                                size: 200,
+                                color: color5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  default:
                     return const CircularProgressIndicator();
-                  }
-                default:
-                  return const CircularProgressIndicator();
-              }
-            },
-          ),
-        ],
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

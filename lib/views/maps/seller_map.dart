@@ -416,91 +416,114 @@ class SellerMapState extends State<SellerMap>
   Widget _drawer() {
     return Drawer(
       elevation: 16.0,
-      child: Column(
-        children: <Widget>[
-          FutureBuilder(
-            future: CloudService().getSellerProfile(userId: userId),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.done:
-                  if (snapshot.hasData) {
-                    return UserAccountsDrawerHeader(
-                      accountName: Text(snapshot.data['name']),
-                      accountEmail: Text(snapshot.data['city']),
-                      currentAccountPicture: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(snapshot.data['picture_url']),
-                      ),
-                    );
-                  } else {
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            FutureBuilder(
+              future: CloudService().getSellerProfile(userId: userId),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      return UserAccountsDrawerHeader(
+                        accountName: Text(snapshot.data['name']),
+                        accountEmail: Text(snapshot.data['city']),
+                        currentAccountPicture: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(snapshot.data['picture_url']),
+                        ),
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  default:
                     return const CircularProgressIndicator();
-                  }
-                default:
-                  return const CircularProgressIndicator();
-              }
-            },
-          ),
-          const ListTile(
-            title: Text("Deliveries"),
-            leading: Icon(Icons.delivery_dining),
-          ),
-          const Divider(),
-          StreamBuilder(
-            stream: CloudService().getSellerRequestsAssigned(userId: userId),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.active:
-                  if (snapshot.hasData) {
-                    final docs = snapshot.data.docs!;
-                    return ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          height: 10,
-                        );
-                      },
-                      shrinkWrap: true,
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        String remainedDistance =
-                            docs[index].data()["remainedDistance"] == null
-                                ? '...'
-                                : (docs[index].data()["remainedDistance"] /
-                                        1000)
-                                    .toStringAsFixed(1);
-                        String remainedTime =
-                            docs[index].data()["remainedTime"] == null
-                                ? '...'
-                                : (docs[index].data()["remainedTime"] / 60)
-                                    .toStringAsFixed(1);
-                        return ListTile(
-                          onTap: () {
-                            _goToCustomer(
-                              name: docs[index].data()['name'],
-                              item: docs[index].data()['item'],
-                              notes: docs[index].data()['notes'],
-                              lat: docs[index].data()['location'].latitude,
-                              long: docs[index].data()['location'].longitude,
-                            );
-                            Navigator.of(context).pop();
-                          },
-                          title: Text(docs[index].data()['name']),
-                          trailing: const Icon(Icons.my_location_outlined),
-                          subtitle: Text(
-                              '$remainedDistance km left,$remainedTime min left'),
-                        );
-                      },
-                    );
-                  } else {
+                }
+              },
+            ),
+            const ListTile(
+              title: Text("Deliveries"),
+              leading: Icon(Icons.delivery_dining),
+            ),
+            const Divider(),
+            StreamBuilder(
+              stream: CloudService().getSellerRequestsAssigned(userId: userId),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.active:
+                    if (!snapshot.data.docs.isEmpty) {
+                      final docs = snapshot.data.docs!;
+                      return ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            height: 10,
+                          );
+                        },
+                        shrinkWrap: true,
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          String remainedDistance =
+                              docs[index].data()["remainedDistance"] == null
+                                  ? '...'
+                                  : (docs[index].data()["remainedDistance"] /
+                                          1000)
+                                      .toStringAsFixed(1);
+                          String remainedTime =
+                              docs[index].data()["remainedTime"] == null
+                                  ? '...'
+                                  : (docs[index].data()["remainedTime"] / 60)
+                                      .toStringAsFixed(1);
+                          return ListTile(
+                            onTap: () {
+                              _goToCustomer(
+                                name: docs[index].data()['name'],
+                                item: docs[index].data()['item'],
+                                notes: docs[index].data()['notes'],
+                                lat: docs[index].data()['location'].latitude,
+                                long: docs[index].data()['location'].longitude,
+                              );
+                              Navigator.of(context).pop();
+                            },
+                            title: Text(docs[index].data()['name']),
+                            trailing: const Icon(Icons.my_location_outlined),
+                            subtitle: Text(
+                                '$remainedDistance km left,$remainedTime min left'),
+                          );
+                        },
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: SizedBox(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              genericText4(
+                                  text:
+                                      "Oops, seems your orders haven't been handled by a driver yet!",
+                                  color: color5,
+                                  stringWeight: FontWeight.w300),
+                              Icon(
+                                Icons.car_crash_outlined,
+                                size: 200,
+                                color: color5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  default:
                     return const CircularProgressIndicator();
-                  }
-                default:
-                  return const CircularProgressIndicator();
-              }
-            },
-          ),
-        ],
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

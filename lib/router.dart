@@ -33,8 +33,8 @@ class _PageRouterState extends State<PageRouter> {
               return const SellerPageBuilder();
             }
           default:
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: requestsPageShimmer(context: context),
             );
         }
       },

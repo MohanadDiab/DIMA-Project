@@ -39,7 +39,7 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
+        if (constraints.maxHeight > constraints.maxWidth) {
           return Scaffold(
             body: PageView(
               controller: pageController,
@@ -74,7 +74,11 @@ class _DriverPageBuilderState extends State<DriverPageBuilder> {
           );
         } else {
           return Scaffold(
-            body: _widgetList[_currentIndex],
+            body: PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: _widgetList,
+            ),
           );
         }
       },

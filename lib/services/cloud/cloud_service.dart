@@ -90,7 +90,7 @@ class CloudService {
         'user_id': userId,
         'address': address,
         'location': GeoPoint(lat, lng),
-        'picture_utl':
+        'picture_url':
             'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
       },
     );
@@ -109,7 +109,7 @@ class CloudService {
         'number': number,
         'user_id': userId,
         'is_assigned': false,
-        'picture_utl':
+        'picture_url':
             'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
       },
     );

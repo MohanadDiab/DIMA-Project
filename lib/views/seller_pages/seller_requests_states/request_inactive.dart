@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/routes.dart';
+import 'package:testapp/utilities/dialogs/logout_dialog.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
-import 'package:testapp/views/seller_pages/request_edit.dart';
 
 class SellerRequestNotActive extends StatelessWidget {
   const SellerRequestNotActive({
@@ -45,47 +45,7 @@ class SellerRequestNotActive extends StatelessWidget {
                     'Note: once you publish the orders, you can no longer edit them',
                 color: color5,
               ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: SizedBox(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 15,
-                      );
-                    },
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.length,
-                    itemBuilder: (context, index) {
-                      final price = snapshot[index].data()['price'];
-                      final name = snapshot[index].data()['name'];
-                      final item = snapshot[index].data()['item'];
-                      final notes = snapshot[index].data()['notes'];
-                      final pic = snapshot[index].data()['picture_url'];
-                      final numberC = snapshot[index].data()['number'];
-                      final itemId = snapshot[index].id;
-                      final String address =
-                          snapshot[index].data()['address'].split(',')[0];
-
-                      return Column(children: [
-                        genericExpandableList2(
-                          itemId: itemId,
-                          userId: userId,
-                          name: name,
-                          address: address,
-                          numberC: numberC,
-                          item: item,
-                          price: price,
-                          notes: notes,
-                          pic: pic,
-                          context: context,
-                        ),
-                      ]);
-                    },
-                  ),
-                ),
-              ),
+              orders2(context: context, snapshot: snapshot, userId: userId),
               const SizedBox(height: 100),
             ],
           ),
@@ -99,6 +59,7 @@ class SellerRequestNotActive extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   genericButton3(
+                    context: context,
                     color: Colors.green,
                     text: "Add order",
                     icon: Icon(
@@ -109,7 +70,9 @@ class SellerRequestNotActive extends StatelessWidget {
                       Navigator.of(context).pushNamed(requests);
                     },
                   ),
+                  const SizedBox(width: 15),
                   genericButton3(
+                    context: context,
                     color: color3,
                     text: "Publish",
                     icon: Icon(
@@ -117,7 +80,11 @@ class SellerRequestNotActive extends StatelessWidget {
                       color: color2,
                     ),
                     onPressed: () async {
-                      CloudService().publishSeller(userId: userId);
+                      final shouldConfirm =
+                          await showConfirmPublishDialog(context);
+                      if (shouldConfirm) {
+                        CloudService().publishSeller(userId: userId);
+                      }
                     },
                   ),
                 ],

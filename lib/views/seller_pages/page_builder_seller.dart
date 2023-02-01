@@ -39,7 +39,7 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
+        if (constraints.maxWidth < constraints.maxHeight) {
           return Scaffold(
             body: PageView(
               controller: pageController,
@@ -74,7 +74,11 @@ class _SellerPageBuilderState extends State<SellerPageBuilder> {
           );
         } else {
           return Scaffold(
-            body: _widgetList[_currentIndex],
+            body: PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: _widgetList,
+            ),
           );
         }
       },

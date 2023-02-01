@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/widgets/custom_widgets.dart';
 import 'package:testapp/services/cloud/cloud_service.dart';
@@ -50,73 +51,7 @@ class DriverRequestsActive extends StatelessWidget {
 
                   case ConnectionState.done:
                     if (snapshot.hasData) {
-                      print(snapshot);
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          primary: Colors.grey[100],
-                          onPrimary: color3,
-                          padding: const EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        onPressed: () {
-                          call(number: snapshot.data['number'].toString());
-                        },
-                        child: Row(
-                          children: [
-                            circularAvatarImageSmall(
-                              networkImage: snapshot.data['picture_url'],
-                              placeholderIcon: Icons.person,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.person_outline),
-                                    const SizedBox(width: 5),
-                                    genericText2(
-                                      text: snapshot.data['name'],
-                                      color: color5,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.location_on_outlined),
-                                    const SizedBox(width: 5),
-                                    genericText2(
-                                      text: snapshot.data['city'],
-                                      color: color5,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const Expanded(child: SizedBox()),
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  child: Icon(
-                                    Icons.call_outlined,
-                                    color: color2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      );
+                      return sellerCard(context: context, snapshot: snapshot);
                     } else {
                       return const CircularProgressIndicator();
                     }
@@ -130,6 +65,147 @@ class DriverRequestsActive extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget sellerCard(
+      {required AsyncSnapshot<dynamic> snapshot,
+      required BuildContext context}) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 600) {
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(400, 125),
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+            onPressed: () {
+              call(number: snapshot.data['number'].toString());
+            },
+            child: Row(
+              children: [
+                circularAvatarImageSmall(
+                  networkImage: snapshot.data['picture_url'],
+                  placeholderIcon: Icons.person,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.person_outline),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: snapshot.data['name'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.location_on_outlined),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: snapshot.data['city'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                CircleAvatar(
+                  child: Icon(
+                    Icons.call_outlined,
+                    color: color2,
+                  ),
+                ),
+                const SizedBox(width: 20),
+              ],
+            ),
+          );
+        } else {
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              primary: Colors.grey[100],
+              onPrimary: color3,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+            onPressed: () {
+              call(number: snapshot.data['number'].toString());
+            },
+            child: Row(
+              children: [
+                circularAvatarImageSmall(
+                  networkImage: snapshot.data['picture_url'],
+                  placeholderIcon: Icons.person,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.person_outline),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: snapshot.data['name'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.location_on_outlined),
+                        const SizedBox(width: 5),
+                        genericText2(
+                          text: snapshot.data['city'],
+                          color: color5,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  children: [
+                    CircleAvatar(
+                      child: Icon(
+                        Icons.call_outlined,
+                        color: color2,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 20),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

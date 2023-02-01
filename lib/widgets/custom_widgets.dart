@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path/path.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:testapp/constants/colors.dart';
 import 'package:testapp/constants/customPageRouter.dart';
@@ -18,18 +20,35 @@ Widget genericButton({
   required textColor,
   required BuildContext context,
 }) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      onPrimary: pressColor,
-      primary: primaryColor,
-      fixedSize: Size(getWidth(context: context) * .6, 60),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-    ),
-    onPressed: onPressed,
-    child: genericText(text: text, color: textColor),
-  );
+  return LayoutBuilder(builder: (context, constraints) {
+    if (constraints.maxWidth < 600) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onPrimary: pressColor,
+          primary: primaryColor,
+          fixedSize: Size(getWidth(context: context) * .6, 60),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        onPressed: onPressed,
+        child: genericText(text: text, color: textColor),
+      );
+    } else {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onPrimary: pressColor,
+          primary: primaryColor,
+          fixedSize: Size(getWidth(context: context) * .3, 60),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        onPressed: onPressed,
+        child: genericText(text: text, color: textColor),
+      );
+    }
+  });
 }
 
 Widget genericButton3({
@@ -37,38 +56,70 @@ Widget genericButton3({
   required icon,
   required onPressed,
   required color,
+  required BuildContext context,
 }) {
-  return Expanded(
-    child: Padding(
-      padding: const EdgeInsets.all(10),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          onPrimary: color2,
-          primary: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth < constraints.maxHeight) {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(getWidth(context: context) * .3, 60),
+            onPrimary: color2,
+            primary: color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
           ),
-        ),
-        onPressed: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(width: 5),
-              genericText4(
-                text: text,
-                color: color2,
-                stringWeight: FontWeight.w300,
-              ),
-              const SizedBox(width: 5),
-            ],
+          onPressed: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(width: 5),
+                genericText4(
+                  text: text,
+                  color: color2,
+                  stringWeight: FontWeight.w300,
+                ),
+                const SizedBox(width: 5),
+              ],
+            ),
           ),
-        ),
-      ),
-    ),
+        );
+      } else {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(getWidth(context: context) * .425, 60),
+            onPrimary: color2,
+            primary: color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(width: 5),
+                genericText4(
+                  text: text,
+                  color: color2,
+                  stringWeight: FontWeight.w300,
+                ),
+                const SizedBox(width: 5),
+              ],
+            ),
+          ),
+        );
+      }
+    },
   );
 }
 
@@ -849,43 +900,6 @@ Widget requestsPageShimmer({required BuildContext context}) {
           color: color5,
         ),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size(25, 50),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.task,
-                  color: color3,
-                ),
-                const SizedBox(width: 5),
-                genericText(
-                  text: 'Active',
-                  color: color5,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.archive,
-                  color: color3,
-                ),
-                const SizedBox(width: 5),
-                genericText(
-                  text: 'Archive',
-                  color: color5,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     ),
     drawer: Container(),
     backgroundColor: Colors.white,
@@ -1138,7 +1152,7 @@ Widget genericProfileButton(
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: SizedBox(
-                width: getWidth(context: context) * 0.4,
+                width: getWidth(context: context) * 0.35,
                 child: Row(
                   children: [
                     Padding(
@@ -1248,6 +1262,91 @@ Widget orders({required BuildContext context, required snapshot}) {
   );
 }
 
+Widget orders2(
+    {required BuildContext context, required snapshot, required userId}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth > 600) {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableCard(
+                    name: name,
+                    address: address,
+                    numberC: numberC,
+                    item: item,
+                    price: price,
+                    notes: notes,
+                    pic: pic,
+                    context: context);
+              },
+            ),
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: SizedBox(
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 15,
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.length,
+              itemBuilder: (context, index) {
+                final price = snapshot[index].data()['price'];
+                final name = snapshot[index].data()['name'];
+                final item = snapshot[index].data()['item'];
+                final notes = snapshot[index].data()['notes'];
+                final pic = snapshot[index].data()['picture_url'];
+                final numberC = snapshot[index].data()['number'];
+                final itemId = snapshot[index].id;
+                final String address =
+                    snapshot[index].data()['address'].split(',')[0];
+
+                return genericExpandableList2(
+                  itemId: itemId,
+                  userId: userId,
+                  name: name,
+                  address: address,
+                  numberC: numberC,
+                  item: item,
+                  price: price,
+                  notes: notes,
+                  pic: pic,
+                  context: context,
+                );
+              },
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
+
 Widget ordersArchived({required BuildContext context, required snapshot}) {
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -1276,8 +1375,7 @@ Widget ordersArchived({required BuildContext context, required snapshot}) {
                 final String address =
                     snapshot[index].data()['address'].split(',')[0];
 
-                return genericExpandableArchivedList(
-                    itemId: itemId,
+                return genericExpandableCard(
                     name: name,
                     address: address,
                     numberC: numberC,
@@ -1285,8 +1383,7 @@ Widget ordersArchived({required BuildContext context, required snapshot}) {
                     price: price,
                     notes: notes,
                     pic: pic,
-                    context: context,
-                    rate: rate);
+                    context: context);
               },
             ),
           ),

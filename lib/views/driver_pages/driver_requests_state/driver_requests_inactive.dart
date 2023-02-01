@@ -93,7 +93,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           }
                         }
                         if (validRequestsNum == 0) {
-                          return emptyInavtiveRequets();
+                          return emptyInactiveRequets();
                         }
                         for (int sellerNo = 0;
                             sellerNo < sellerList.length;
@@ -360,7 +360,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                           ),
                         );
                       } else {
-                        return emptyInavtiveRequets();
+                        return emptyInactiveRequets();
                       }
                     default:
                       return const Center(child: CircularProgressIndicator());
@@ -373,7 +373,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
         });
   }
 
-  Widget emptyInavtiveRequets() {
+  Widget emptyInactiveRequets() {
     return SingleChildScrollView(
       child: Column(
         children: [

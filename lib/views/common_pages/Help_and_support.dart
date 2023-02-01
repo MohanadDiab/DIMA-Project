@@ -144,37 +144,39 @@ class _HelpAndSupportViewState extends State<HelpAndSupportView> {
                               'Please enter anything on your mind here reagrding the app',
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: genericButton(
-                          context: context,
-                          primaryColor: color3,
-                          pressColor: color2,
-                          text: 'Send',
-                          onPressed: () {
-                            if (_emailTextController.text.isEmpty &&
-                                _subjectTextController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Kindly provide the email and a subject to send a support request'),
-                                ),
-                              );
-                            } else {
-                              CloudService().createSellerSupportRequest(
-                                userId: userId,
-                                email: _emailTextController.text,
-                                subject: _subjectTextController.text,
-                              );
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Request sent successfully'),
-                                ),
-                              );
-                            }
-                          },
-                          textColor: color2,
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: genericButton(
+                            context: context,
+                            primaryColor: color3,
+                            pressColor: color2,
+                            text: 'Send',
+                            onPressed: () {
+                              if (_emailTextController.text.isEmpty &&
+                                  _subjectTextController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Kindly provide the email and a subject to send a support request'),
+                                  ),
+                                );
+                              } else {
+                                CloudService().createSellerSupportRequest(
+                                  userId: userId,
+                                  email: _emailTextController.text,
+                                  subject: _subjectTextController.text,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Request sent successfully'),
+                                  ),
+                                );
+                              }
+                            },
+                            textColor: color2,
+                          ),
                         ),
                       ),
                     ],

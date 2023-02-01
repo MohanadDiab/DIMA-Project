@@ -10,7 +10,6 @@ class SellerRequestsInfoDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: getWidth(context: context) * 0.9,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -173,17 +172,6 @@ class SellerRequestsInfoDrawer extends StatelessWidget {
                       ],
                     ),
                     const Expanded(child: SizedBox()),
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          child: Icon(
-                            Icons.call_outlined,
-                            color: color2,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 20),
                   ],
                 ),
               ),
