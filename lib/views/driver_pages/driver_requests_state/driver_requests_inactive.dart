@@ -95,13 +95,15 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                         if (validRequestsNum == 0) {
                           return emptyInactiveRequets();
                         }
+                        List _sellerList = [];
                         for (int sellerNo = 0;
                             sellerNo < sellerList.length;
                             sellerNo++) {
-                          if (sellerList[sellerNo]['orders'] == 0) {
-                            sellerList.removeAt(sellerNo);
+                          if (sellerList[sellerNo]['orders'] != 0) {
+                            _sellerList.add(sellerList[sellerNo]);
                           }
                         }
+                        sellerList = _sellerList;
                         return SingleChildScrollView(
                           child: Column(
                             children: [
@@ -242,7 +244,7 @@ class _DriverRequestsListState extends State<DriverRequestsList> {
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: docs.length,
+                                    itemCount: sellerList.length,
                                     itemBuilder: (context, index) {
                                       final name =
                                           sellerList[index]['data']['name'];

@@ -67,12 +67,14 @@ class SellerMapState extends State<SellerMap>
         currentSituation['assignedDriver'] == '' ||
         currentSituation['collectingRoute'] == [] ||
         currentSituation['isAssigned'] == false ||
-        currentSituation['currentTask'].isEmpty()) {
+        currentSituation['currentTask'].isEmpty) {
       print('initialization unfinished or no task is undergoing.');
+      await removeAll(mapController!);
     } else {
       //what task should we do
       //not assigned
-      if (currentSituation['isAssigned'] != true) {
+      if (currentSituation['isAssigned'] != true ||
+          currentSituation['currentTask'].isEmpty) {
         print('notask');
         await removeAll(mapController!);
       } else {
@@ -121,7 +123,7 @@ class SellerMapState extends State<SellerMap>
                 deliveringItem.data()['remainedDistance'] ?? '';
             symbolData['remainedTime'] =
                 deliveringItem.data()['remainedTime'] ?? '';
-            List route = deliveringItem.data()['route'];
+            List route = deliveringItem.data()['route'] ?? [];
             if (route.isNotEmpty) {
               await mapController?.addSymbol(
                   _getSymbolOptions(
@@ -147,19 +149,22 @@ class SellerMapState extends State<SellerMap>
     }
   }
 
-  _showSnackBar(String info) {
+  _showSnackBar(String info, Duration duration) {
     final snackBar = SnackBar(
-        content: Text(info,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor);
-    ScaffoldMessenger.of(context).clearSnackBars();
+      content: Text(info,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      backgroundColor: Theme.of(context).primaryColor,
+      duration: duration,
+    );
+    //ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _onSymbolTapped(Symbol symbol) {
     print(symbol.data!["name"]);
     _showSnackBar(
-        'Name:${symbol.data!["name"]},Remained Time: ${(symbol.data!["remainedTime"] / 60).toStringAsFixed(1)} min');
+        'Name:${symbol.data!["name"]},Remained Time: ${(symbol.data!["remainedTime"] / 60).toStringAsFixed(1)} min',
+        Duration(seconds: 3));
   }
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
@@ -334,84 +339,14 @@ class SellerMapState extends State<SellerMap>
               ),
             ),
           ),
-          Visibility(
-            visible: (!(currentSituation['currentTask'].length == 0) &&
-                !currentSituation['isCollected']),
-            child: Center(
-                child: Column(
-              children: [
-                SizedBox(
-                  height: height * 0.55,
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  elevation: 0,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  child: SizedBox(
-                    width: width * 0.9,
-                    height: height * 0.1,
-                    child: Row(children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          SizedBox(
-                            height: 18,
-                          ),
-                          Text(
-                            'Retrieve Items',
-                            textScaleFactor: 2,
-                          )
-                        ],
-                      ),
-                    ]),
-                  ),
-                ),
-              ],
-            )),
-          ),
+          // Visibility(
+          //     visible: (!(currentSituation['currentTask'].length == 0) &&
+          //         !currentSituation['isCollected']),
+          //     child: Scaffold()),
         ],
       ),
     );
   }
-
-  final _dialog = RatingDialog(
-    initialRating: 1.0,
-    // your app's name?
-    title: Text(
-      'How about the service?',
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    // encourage your user to leave a high rating?
-    message: Text(
-      'Tap a star to set your rating. Add more description here if you want.',
-      textAlign: TextAlign.center,
-      style: const TextStyle(fontSize: 15),
-    ),
-    // your app's logo?
-    image: const FlutterLogo(size: 100),
-    submitButtonText: 'Submit',
-    commentHint: 'Write here if you have more to say!',
-    onCancelled: () => print('cancelled'),
-    onSubmitted: (response) {
-      print('rating: ${response.rating}, comment: ${response.comment}');
-
-      // TODO: add your own logic
-      if (response.rating < 3.0) {
-        print(1);
-      } else {
-        print(2);
-      }
-    },
-  );
 
   Widget _drawer() {
     return Drawer(
@@ -453,7 +388,7 @@ class SellerMapState extends State<SellerMap>
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                   case ConnectionState.active:
-                    if (!snapshot.data.docs.isEmpty) {
+                    if (snapshot.data != null) {
                       final docs = snapshot.data.docs!;
                       return ListView.separated(
                         separatorBuilder: (context, index) {

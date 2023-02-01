@@ -91,7 +91,7 @@ class CloudService {
         'address': address,
         'location': GeoPoint(lat, lng),
         'picture_url':
-            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
+            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=b7ca28d2-1ab2-4533-a9e8-fb8ac16d738a'
       },
     );
   }
@@ -110,7 +110,7 @@ class CloudService {
         'user_id': userId,
         'is_assigned': false,
         'picture_url':
-            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=3f98705c-a749-4a3a-869c-074951369f50'
+            'https://firebasestorage.googleapis.com/v0/b/my-dima-test-app.appspot.com/o/items%2Fuser.png?alt=media&token=b7ca28d2-1ab2-4533-a9e8-fb8ac16d738a'
       },
     );
   }

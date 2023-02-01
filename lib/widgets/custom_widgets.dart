@@ -696,7 +696,8 @@ Widget genericExpandableList2({
   required pic,
   required BuildContext context,
 }) {
-  return Container(
+  return Center(
+      child: Container(
     color: Colors.grey[100],
     child: ExpansionTile(
       title: Column(
@@ -873,7 +874,7 @@ Widget genericExpandableList2({
         ),
       ],
     ),
-  );
+  ));
 }
 
 Widget requestsPageShimmer({required BuildContext context}) {
@@ -1267,7 +1268,8 @@ Widget orders2(
   return LayoutBuilder(
     builder: (context, constraints) {
       if (constraints.maxWidth > 600) {
-        return Padding(
+        return Center(
+            child: Padding(
           padding: const EdgeInsets.all(15),
           child: SizedBox(
             child: GridView.builder(
@@ -1301,9 +1303,10 @@ Widget orders2(
               },
             ),
           ),
-        );
+        ));
       } else {
-        return Padding(
+        return Center(
+            child: Padding(
           padding: const EdgeInsets.all(15),
           child: SizedBox(
             child: ListView.separated(
@@ -1341,7 +1344,7 @@ Widget orders2(
               },
             ),
           ),
-        );
+        ));
       }
     },
   );
@@ -1442,7 +1445,8 @@ Widget genericExpandableCard({
   required pic,
   required BuildContext context,
 }) {
-  return Card(
+  return Center(
+      child: Card(
     color: Colors.grey[100],
     elevation: 2,
     child: Padding(
@@ -1524,5 +1528,5 @@ Widget genericExpandableCard({
         ],
       ),
     ),
-  );
+  ));
 }

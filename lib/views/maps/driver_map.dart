@@ -674,7 +674,7 @@ class DriverMapState extends State<DriverMap>
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                   case ConnectionState.active:
-                    if (!snapshot.data.docs.isEmpty) {
+                    if (snapshot.data != null) {
                       final docs = snapshot.data.docs!;
                       return ListView.separated(
                         separatorBuilder: (context, index) {
